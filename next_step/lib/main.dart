@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'language_selection_screen.dart'; // Import the new file
+import 'package:next_step/NextStepStart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LanguageSelectionScreen(), // Use the imported widget
+      home: NextStepStart(), // Use the imported widget
     );
   }
 }
