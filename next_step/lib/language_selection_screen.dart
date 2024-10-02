@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
-  const LanguageSelectionScreen({Key? key}) : super(key: key);
+  const LanguageSelectionScreen({super.key});
 
   @override
   _LanguageSelectionScreenState createState() =>

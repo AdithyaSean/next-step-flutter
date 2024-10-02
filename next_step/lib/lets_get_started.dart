@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NextStepStart extends StatelessWidget {
+  const NextStepStart({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +18,7 @@ class NextStepStart extends StatelessWidget {
                 child: Container(
                   height: 200,
                   width: 200,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('images/next_step.png'), // Top Image
                       fit: BoxFit.contain,
@@ -31,7 +33,7 @@ class NextStepStart extends StatelessWidget {
               child: Center(
                 child: Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('images/start.jpg'), // Add another image here
                       fit: BoxFit.cover,
@@ -54,9 +56,9 @@ class NextStepStart extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Get Start',
                     style: TextStyle(
                       fontSize: 18,
