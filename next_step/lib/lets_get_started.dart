@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'language_selection_screen.dart';
 
 class NextStepStart extends StatelessWidget {
   const NextStepStart({super.key});
@@ -49,7 +50,12 @@ class NextStepStart extends StatelessWidget {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add navigation or functionality here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LanguageSelectionScreen(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue, // Background color
