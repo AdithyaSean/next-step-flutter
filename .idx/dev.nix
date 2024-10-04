@@ -5,8 +5,8 @@
     pkgs.unzip
   ];
   idx.extensions = [
-    
-  ];
+ "Dart-Code.flutter"
+ "Dart-Code.dart-code"];
   idx.previews = {
     previews = {
       web = {
