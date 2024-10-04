@@ -40,7 +40,7 @@ class _InterestsPageState extends State<InterestsPage> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'Choose Your Interests',
@@ -48,14 +48,12 @@ class _InterestsPageState extends State<InterestsPage> {
                 color: Colors.black,
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-
               ),
-              textAlign: TextAlign.center,
             ),
             SizedBox(height: 40,),
             Wrap(
-              spacing: 20.0,
-              runSpacing: 20.0,
+              spacing: 18.0,
+              runSpacing: 18.0,
               children: interests.map((interest) {
                 bool isSelected = selectedInterests.contains(interest);
                 return ChoiceChip(
