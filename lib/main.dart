@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/interest.dart';
-import 'package:next_step/lets_get_started.dart';
 
 void main() {
   runApp(const MyApp());
