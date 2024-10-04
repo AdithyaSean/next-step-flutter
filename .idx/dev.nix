@@ -1,6 +1,7 @@
 {pkgs}: {
-  channel = "stable-23.11";
+  channel = "unstable";
   packages = [
+    pkgs.flutter
     pkgs.jdk17
     pkgs.unzip
   ];
