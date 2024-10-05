@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/interest.dart';
 import'package:next_step/lets_get_started.dart';
+import 'package:next_step/change_password.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const NextStepStart(), // Use the imported widget
+      home: ChangePassword(), // Use the imported widget
     );
   }
 }
