@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/interest.dart';
+import'package:next_step/lets_get_started.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: InterestsPage(), // Use the imported widget
+      home: const NextStepStart(), // Use the imported widget
     );
   }
 }

@@ -60,7 +60,7 @@ class NextStepStart extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue, // Background color
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   ),
