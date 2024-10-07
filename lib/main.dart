@@ -3,6 +3,7 @@ import 'package:next_step/interest.dart';
 import'package:next_step/lets_get_started.dart';
 import 'package:next_step/change_password.dart';
 import 'package:next_step/forgot_password.dart';
+import 'package:next_step/sign_in.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ForgotPasswordScreen(), // Use the imported widget
+      home: const ResponsiveSignIn(), // Use the imported widget
     );
   }
 }
