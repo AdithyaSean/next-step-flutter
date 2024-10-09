@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/forgot_password.dart';
 //import 'package:next_step/sign_in.dart';
 import 'package:next_step/sign_up.dart';
+import 'package:next_step/settings_ui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ResponsiveSignUp(), // Use the imported widget
+      home: const ResponsiveSettings(), // Use the imported widget
     );
   }
 }
