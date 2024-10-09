@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/change_password.dart';
 //import 'package:next_step/forgot_password.dart';
 //import 'package:next_step/sign_in.dart';
-import 'package:next_step/sign_up.dart';
+//import 'package:next_step/sign_up.dart';
 import 'package:next_step/settings_ui.dart';
 
 void main() {
