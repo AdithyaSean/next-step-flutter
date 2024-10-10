@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/nav_bar.dart';
+
 
 class ResponsiveSettings extends StatefulWidget {
   const ResponsiveSettings({Key? key}) : super(key: key);
@@ -15,11 +17,9 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          // Determine layout based on screen width
           bool isLargeScreen = constraints.maxWidth > 600;
           bool isExtraLargeScreen = constraints.maxWidth > 1200;
 
-          // Adjust the settings panel width based on device size
           double settingsPanelWidth = constraints.maxWidth;
           if (isLargeScreen) {
             settingsPanelWidth = constraints.maxWidth * 0.5;
@@ -35,7 +35,6 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header with logo and notification icon
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -64,7 +63,6 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Search bar
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Explore',
@@ -75,7 +73,6 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Settings options
                   _buildSettingsButton(
                     icon: Icons.settings,
                     title: 'General',
@@ -101,8 +98,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     title: 'Licenses',
                     isSelected: selectedMainOption == 'Licenses',
                   ),
-                  const SizedBox(height: 280),
-                  // Sign out button
+                  const SizedBox(height: 240),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -123,26 +119,9 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
           );
         },
       ),
-      bottomNavigationBar: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth <= 600) {
-            return BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.black,
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.white,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home ,size: 30,) ,label: 'Home'),
-                BottomNavigationBarItem(icon: Icon(Icons.workspace_premium,size: 30,), label: 'Recomendation'),
-                BottomNavigationBarItem(icon: Icon(Icons.language , size: 30,), label: 'Explore'),
-                BottomNavigationBarItem(icon: Icon(Icons.settings, size: 30,), label: 'Settings'),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3), // Use the BottomNavContainer widget here
     );
+
   }
 
   Widget _buildSettingsButton({
@@ -167,7 +146,6 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
         setState(() {
           selectedMainOption = title;
         });
-        // For mobile devices, show sub-settings in a new screen
         if (MediaQuery.of(context).size.width <= 600) {
           Navigator.push(
             context,

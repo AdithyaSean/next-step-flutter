@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/sign_up.dart';
 import 'package:next_step/settings_ui.dart';
 //import 'package:next_step/set_change_password.dart';
+//import 'package:next_step/nav_bar.dart';
 
 
 void main() {
