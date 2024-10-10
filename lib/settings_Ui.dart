@@ -101,7 +101,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     title: 'Licenses',
                     isSelected: selectedMainOption == 'Licenses',
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 280),
                   // Sign out button
                   ElevatedButton(
                     onPressed: () {},
@@ -113,7 +113,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text('Sign out'),
+                    child: const Text('Sign out', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                   if (selectedMainOption != null && isLargeScreen)
                     Expanded(child: _buildSubSettings()),
@@ -132,10 +132,10 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
               selectedItemColor: Colors.white,
               unselectedItemColor: Colors.white,
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(icon: Icon(Icons.workspace_premium), label: 'Recomendation'),
-                BottomNavigationBarItem(icon: Icon(Icons.language), label: 'Explore'),
-                BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+                BottomNavigationBarItem(icon: Icon(Icons.home ,size: 30,) ,label: 'Home'),
+                BottomNavigationBarItem(icon: Icon(Icons.workspace_premium,size: 30,), label: 'Recomendation'),
+                BottomNavigationBarItem(icon: Icon(Icons.language , size: 30,), label: 'Explore'),
+                BottomNavigationBarItem(icon: Icon(Icons.settings, size: 30,), label: 'Settings'),
               ],
             );
           }
