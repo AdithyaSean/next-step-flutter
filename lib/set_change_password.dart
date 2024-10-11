@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/nav_bar.dart';
 
 class SetChangePasswordScreen extends StatelessWidget {
   const SetChangePasswordScreen({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class SetChangePasswordScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 70),
                     TextFormField(
                       obscureText: true,
                       decoration: InputDecoration(
@@ -72,7 +73,7 @@ class SetChangePasswordScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 50),
                     ElevatedButton(
                       onPressed: () {
                         // Implement password change logic
@@ -86,7 +87,7 @@ class SetChangePasswordScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Update Password',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
                   ],
@@ -96,22 +97,7 @@ class SetChangePasswordScreen extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.workspace_premium), label: 'Recomendation'),
-          BottomNavigationBarItem(icon: Icon(Icons.language), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
-        currentIndex: 3, // Settings selected
-        onTap: (index) {
-          // Implement navigation
-        },
-      ),
+    bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
     );
   }
 }
