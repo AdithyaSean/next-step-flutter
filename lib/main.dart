@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/nav_bar.dart';
 //import 'package:next_step/set_language_selection.dart';
 //import 'package:next_step/two_factor.dart';
-import 'package:next_step/two_factor_mobile.dart';
+//import 'package:next_step/two_factor_mobile.dart';
+import 'package:next_step/two_factor_email.dart';
 
 
 void main() {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const TwoFactorAuthScreenMobile(), // Use the imported widget
+      home: const EmailTwoFactorAuthScreen(), // Use the imported widget
     );
   }
 }
