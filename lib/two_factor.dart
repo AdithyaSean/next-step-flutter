@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/nav_bar.dart';
+import 'package:next_step/two_factor_email.dart';
+import 'package:next_step/two_factor_mobile.dart';
 
 class TwoFactorAuthScreen extends StatefulWidget {
   const TwoFactorAuthScreen({Key? key}) : super(key: key);
@@ -42,7 +44,12 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                   children: [
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
-                      onPressed: () => _selectMethod('mobile'),
+                      onPressed: () {
+                        _selectMethod('mobile');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const TwoFactorAuthScreenMobile()),
+                        );},
                       icon: const Icon(Icons.phone_android, color: Colors.white),
                       label: const Text(
                         'Mobile',
@@ -61,7 +68,13 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () => _selectMethod('email'),
+                      onPressed: () {
+                        _selectMethod('email');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const EmailTwoFactorAuthScreen()),
+                        );
+                        },
                       icon: const Icon(Icons.email, color: Colors.white),
                       label: const Text(
                         'Email',
