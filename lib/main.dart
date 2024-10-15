@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/set_change_password.dart';
 //import 'package:next_step/nav_bar.dart';
 //import 'package:next_step/set_language_selection.dart';
-import 'package:next_step/two_factor.dart';
+//import 'package:next_step/two_factor.dart';
 //import 'package:next_step/two_factor_mobile.dart';
 //import 'package:next_step/two_factor_email.dart';
+import 'package:next_step/notifications.dart';
 
 
 void main() {
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const TwoFactorAuthScreen(), // Use the imported widget
+      home: const NotificationsScreen(), // Use the imported widget
     );
   }
 }
