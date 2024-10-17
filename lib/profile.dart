@@ -157,10 +157,13 @@ class ProfileScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Icon(
-            Icons.edit,
-            size: 20,
+          IconButton(
+            icon: const Icon(Icons.edit),
+            iconSize: 20,
             color: Colors.black,
+            onPressed: () {
+              // Handle edit action
+            },
           ),
         ],
       ),

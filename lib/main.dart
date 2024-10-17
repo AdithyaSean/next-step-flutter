@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/notifications.dart';
 //import 'package:next_step/recommendation.dart';
 import 'package:next_step/profile.dart';
+//import 'package:next_step/education.dart';
 
 
 void main() {
