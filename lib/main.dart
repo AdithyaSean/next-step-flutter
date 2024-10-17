@@ -13,7 +13,8 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/two_factor_mobile.dart';
 //import 'package:next_step/two_factor_email.dart';
 //import 'package:next_step/notifications.dart';
-import 'package:next_step/recommendation.dart';
+//import 'package:next_step/recommendation.dart';
+import 'package:next_step/profile.dart';
 
 
 void main() {
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const RecommendationsScreen(), // Use the imported widget
+      home: const ProfileScreen(), // Use the imported widget
     );
   }
 }
