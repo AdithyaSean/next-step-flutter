@@ -69,6 +69,12 @@ flutter:
     - images/signup.png
     - images/profile.png
     - images/get_started.png
+    - images/uo_colombo.png
+    - images/uo_moratuwa.png
+    - images/open_uni.png
+    - images/nibm.png
+    - images/nsbm.png
+    - images/sllit.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
