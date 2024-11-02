@@ -135,12 +135,12 @@ class ExploreScreen extends StatelessWidget {
         _buildSection('Universities', []),
         _buildSection('Government', [
           _buildUniversityCard(
-            'University of Melbourne',
+            'University of Colombo',
             'images/uo_colombo.png',
             Colors.blue[50]!,
           ),
           _buildUniversityCard(
-            'University of Columbia',
+            'University of Moratuwa',
             'images/uo_moratuwa.png',
             Colors.red[50]!,
           ),
@@ -179,12 +179,12 @@ class ExploreScreen extends StatelessWidget {
         const SizedBox(height: 12),
         _buildHorizontalScroll([
           _buildUniversityCard(
-            'University of Melbourne',
+            'University of Colombo',
             'images/uo_colombo.png',
             Colors.blue[50]!,
           ),
           _buildUniversityCard(
-            'University of Columbia',
+            'University of Moratuwa',
             'images/uo_moratuwa.png',
             Colors.red[50]!,
           ),

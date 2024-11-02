@@ -16,7 +16,8 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/recommendation.dart';
 //import 'package:next_step/profile.dart';
 //import 'package:next_step/education.dart';
-import 'package:next_step/explore.dart';
+//import 'package:next_step/explore.dart';
+import 'package:next_step/goverment_uni.dart';
 
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ExploreScreen(), // Use the imported widget
+      home: const GovernmentUniversitiesScreen(), // Use the imported widget
     );
   }
 }
