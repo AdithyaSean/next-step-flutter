@@ -51,8 +51,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                 child: const Text(
                   'Next',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 21,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -67,7 +68,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     return Card(
       color: Colors.white.withOpacity(0.7),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
       ),
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: RadioListTile<String>(
