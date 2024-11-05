@@ -75,6 +75,9 @@ flutter:
     - images/nibm.png
     - images/nsbm.png
     - images/sllit.png
+    - images/AIEng.png
+    - images/dataSci.png
+    - images/se.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
