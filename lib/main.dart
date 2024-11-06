@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/addEducation.dart';
 //import 'package:next_step/interest.dart';
 //import 'package:next_step/lets_get_started.dart';
 //import 'package:next_step/change_password.dart';
@@ -21,7 +22,7 @@ import 'package:flutter/material.dart';
 //import 'package:next_step/private_uni.dart';
 //import 'package:next_step/courses.dart';
 //import 'package:next_step/recommendation_on_interest.dart';
-import 'package:next_step/home.dart';
+//import 'package:next_step/home.dart';
 
 
 void main() {
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(), // Use the imported widget
+      home: const AddEducation(), // Use the imported widget
     );
   }
 }
