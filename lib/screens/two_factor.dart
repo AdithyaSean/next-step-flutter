@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:next_step/nav_bar.dart';
-import 'package:next_step/two_factor_email.dart';
-import 'package:next_step/two_factor_mobile.dart';
+import 'package:next_step/widgets/nav_bar.dart';
+import 'package:next_step/screens/two_factor_email.dart';
+import 'package:next_step/screens/two_factor_mobile.dart';
 
 class TwoFactorAuthScreen extends StatefulWidget {
   const TwoFactorAuthScreen({Key? key}) : super(key: key);

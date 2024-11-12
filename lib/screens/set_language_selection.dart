@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:next_step/nav_bar.dart';
+import 'package:next_step/widgets/nav_bar.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({Key? key}) : super(key: key);
