@@ -1,0 +1,123 @@
+@startuml Career Guidance App Use Case Diagram
+
+skinparam actorStyle awesome
+left to right direction
+
+'Actors
+actor "Student" as student
+actor "University" as university
+
+'System boundary
+rectangle "Career Guidance App" {
+    'Authentication and Profile Management
+    usecase "Login" as login
+    usecase "Register" as register
+    usecase "Forgot Password" as forgotPassword
+    usecase "Change Password" as changePassword
+    usecase "Update Profile" as updateProfile
+    usecase "Change Language" as changeLanguage
+    usecase "Activate Two-Factor" as activateTwoFactor
+    usecase "Sign Out" as signOut
+
+    'Career Path and Interests
+    usecase "Choose Interests" as chooseInterests
+    usecase "Predict Career Path" as predictCareerPath
+    usecase "See the Top Career Paths" as seeTopCareerPaths
+    usecase "Select a Career Path" as selectCareerPath
+    usecase "See Recommended Career Paths" as seeRecommendedPaths
+    usecase "See Steps to Follow Path" as seeStepsToFollowPath
+    usecase "Search Careers" as searchCareers
+
+    'Notifications and University Exploration
+    usecase "See Notifications" as seeNotifications
+    usecase "Explore Universities" as exploreUniversities
+    usecase "See Their Courses" as seeCourses
+    usecase "University Updates" as universityUpdates
+
+    'Profile Management Details
+    usecase "Upload Profile Picture" as uploadProfilePicture
+    usecase "Update Profile Picture" as updateProfilePicture
+    usecase "Delete Profile Picture" as deleteProfilePicture
+    usecase "Add Education" as addEducation
+    usecase "Update Education" as updateEducation
+    usecase "Delete Education" as deleteEducation
+    usecase "Add Certifications" as addCertifications
+    usecase "Update Certification" as updateCertification
+    usecase "Delete Certification" as deleteCertification
+    usecase "Add Interests" as addInterests
+    usecase "Update Interests" as updateInterests
+    usecase "Delete Interests" as deleteInterests
+
+    'University Management
+    usecase "Manage University Profile" as manageUniProfile
+    usecase "Add University Details" as addUniDetails
+    usecase "Update University Information" as updateUniInfo
+    usecase "Upload/Update University Logo" as uploadUniLogo
+    usecase "Manage Contact Information" as manageContactInfo
+
+    'Course Management
+    usecase "Add New Courses" as addCourses
+    usecase "Update Existing Courses" as updateCourses
+    usecase "Remove Outdated Courses" as removeCourses
+    usecase "Set Course Requirements" as setCourseReq
+    usecase "Manage Course Capacity" as manageCourseCapacity
+
+    'Student relationships
+    student --> login
+    student --> register
+    student --> forgotPassword
+    student --> changePassword
+    student --> updateProfile
+    student --> changeLanguage
+    student --> activateTwoFactor
+    student --> signOut
+    student --> chooseInterests
+    student --> predictCareerPath
+    student --> seeTopCareerPaths
+    student --> selectCareerPath
+    student --> seeRecommendedPaths
+    student --> seeStepsToFollowPath
+    student --> searchCareers
+    student --> seeNotifications
+    student --> exploreUniversities
+    student --> seeCourses
+    student --> universityUpdates
+
+    'University relationships
+    university --> manageUniProfile
+    university --> addUniDetails
+    university --> updateUniInfo
+    university --> uploadUniLogo
+    university --> manageContactInfo
+    university --> addCourses
+    university --> updateCourses
+    university --> removeCourses
+    university --> setCourseReq
+    university --> manageCourseCapacity
+
+    'Relationships between use cases
+    login ..> validateUser : <<include>>
+    register ..> validateUser : <<include>>
+    forgotPassword ..> sendOtp : <<extend>>
+    changePassword ..> sendOtp : <<extend>>
+    updateProfile ..> uploadProfilePicture : <<include>>
+    updateProfile ..> updateProfilePicture : <<include>>
+    updateProfile ..> deleteProfilePicture : <<include>>
+    updateProfile ..> addEducation : <<include>>
+    updateProfile ..> updateEducation : <<include>>
+    updateProfile ..> deleteEducation : <<include>>
+    updateProfile ..> addCertifications : <<include>>
+    updateProfile ..> updateCertification : <<include>>
+    updateProfile ..> deleteCertification : <<include>>
+    updateProfile ..> addInterests : <<include>>
+    updateProfile ..> updateInterests : <<include>>
+    updateProfile ..> deleteInterests : <<include>>
+    manageUniProfile ..> addUniDetails : <<include>>
+    manageUniProfile ..> updateUniInfo : <<include>>
+    manageUniProfile ..> uploadUniLogo : <<include>>
+    manageUniProfile ..> manageContactInfo : <<include>>
+    addCourses ..> manageCourseCapacity : <<extend>>
+    updateCourses ..> setCourseReq : <<include>>
+}
+
+@enduml

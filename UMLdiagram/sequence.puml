@@ -1,0 +1,115 @@
+@startuml Authentication Flow
+actor Student
+participant "Career Guidance App" as App
+database Database
+
+' Registration
+Student -> App: Register
+App -> Database: Validate email
+Database --> App: Email status
+App -> Database: Create account
+Database --> App: Confirmation
+App --> Student: Registration success
+
+' Login
+Student -> App: Login
+App -> Database: Verify credentials
+Database --> App: Auth result
+alt Valid credentials
+    App --> Student: Login success
+else Invalid credentials
+    App --> Student: Login failed
+end
+
+' Forgot Password
+Student -> App: Forgot Password
+App -> Database: Verify email
+Database --> App: Email exists
+App -> Student: Send reset link
+Student -> App: Reset password
+App -> Database: Update password
+Database --> App: Confirmation
+App --> Student: Password updated
+@enduml
+
+@startuml Profile Management Flow
+actor Student
+participant "Career Guidance App" as App
+database Database
+
+' Update Profile
+Student -> App: Update Profile
+App -> Database: Save profile changes
+Database --> App: Confirmation
+App --> Student: Profile updated
+
+' Change Password
+Student -> App: Change Password
+App -> Database: Verify old password
+Database --> App: Password valid
+App -> Database: Update new password
+Database --> App: Confirmation
+App --> Student: Password changed
+
+' Change Language
+Student -> App: Change Language
+App -> Database: Save language preference
+Database --> App: Confirmation
+App --> Student: Language updated
+@enduml
+
+@startuml Career Path Flow
+actor Student
+participant "Career Guidance App" as App
+database Database
+
+' Choose Interests
+Student -> App: Select Interests
+App -> Database: Save interests
+Database --> App: Confirmation
+
+' Predict Career Path
+Student -> App: Request Career Prediction
+App -> Database: Fetch user interests
+Database --> App: User interests
+App -> App: Process prediction algorithm
+App --> Student: Show career recommendations
+
+' Search Careers
+Student -> App: Search Careers
+App -> Database: Query careers
+Database --> App: Career results
+App --> Student: Display results
+
+' Select Career Path
+Student -> App: Select Career Path
+App -> Database: Save selection
+Database --> App: Confirmation
+App -> App: Generate path steps
+App --> Student: Show career path details
+@enduml
+
+@startuml University Exploration Flow
+actor Student
+actor University
+participant "Career Guidance App" as App
+database Database
+
+' Explore Universities
+Student -> App: Browse Universities
+App -> Database: Fetch universities
+Database --> App: University list
+App --> Student: Display universities
+
+' View Courses
+Student -> App: View University Courses
+App -> Database: Fetch courses
+Database --> App: Course list
+App --> Student: Display courses
+
+' University Updates
+University -> App: Post Update
+App -> Database: Save update
+Database --> App: Confirmation
+App -> Student: Send notification
+@enduml
