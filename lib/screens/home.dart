@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/screens/notifications.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -28,7 +29,11 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              // Handle notification action
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const NotificationsScreen()));
+            },
           ),
         ],
       ),

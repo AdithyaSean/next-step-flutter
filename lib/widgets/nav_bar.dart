@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:next_step/screens/home.dart';
+import 'package:next_step/screens/recommendation.dart';
+import 'package:next_step/screens/explore.dart';
+import 'package:next_step/screens/settings_Ui.dart';
 
 class BottomNavContainer extends StatelessWidget {
   final int selectedIndex;
@@ -29,18 +33,42 @@ class BottomNavContainer extends StatelessWidget {
             GButton(
               icon: Icons.home,
               text: 'Home',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
+              },
             ),
             GButton(
               icon: Icons.workspace_premium,
               text: 'Recommend',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RecommendationsScreen()),
+                );
+              },
             ),
             GButton(
               icon: Icons.language,
               text: 'Explore',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ExploreScreen()),
+                );
+              },
             ),
             GButton(
               icon: Icons.settings,
               text: 'Settings',
+              onPressed: () {
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context) => const ResponsiveSettings()),
+                 );
+              },
             ),
           ],
         ),

@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AddEducation(), // Use the imported widget
+      home: const NextStepStart(), // Use the imported widget
     );
   }
 }

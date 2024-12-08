@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/screens/home.dart';
+import 'package:next_step/screens/sign_up.dart';
 
 class ResponsiveSignIn extends StatelessWidget {
   const ResponsiveSignIn({Key? key}) : super(key: key);
@@ -68,7 +70,11 @@ class ResponsiveSignIn extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Handle sign in action
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => const HomeScreen()));
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -110,7 +116,11 @@ class ResponsiveSignIn extends StatelessWidget {
                       children: [
                         const Text("Don't have an account?"),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            // Navigate to sign up screen
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => const ResponsiveSignUp()));
+                          },
                           child: const Text('Sign up', style: TextStyle(color: Colors.blue)),
                         ),
                       ],

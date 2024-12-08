@@ -32,7 +32,7 @@ class ExploreScreen extends StatelessWidget {
           }
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
+      bottomNavigationBar: const BottomNavContainer(selectedIndex: 2),
     );
   }
 

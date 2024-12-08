@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'interest.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -39,6 +40,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   // Handle button press
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>  InterestsPage()));
                   print('Selected Language: $_selectedLanguage');
                 },
                 style: ElevatedButton.styleFrom(

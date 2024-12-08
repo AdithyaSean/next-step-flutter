@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/screens/sign_in.dart';
+import 'home.dart';
 
 class InterestsPage extends StatefulWidget {
   @override
@@ -83,6 +85,10 @@ class _InterestsPageState extends State<InterestsPage> {
             Center(
             child: ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ResponsiveSignIn()));
+
                 // Handle the "Next" button press
                 print("Selected Interests: $selectedInterests");
               },
