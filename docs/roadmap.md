@@ -89,12 +89,12 @@
 - Phase: 2 (Mobile App Development)
 - Current Focus: Offline Support & Core Features
 - Completed:
-  1. Spring Boot backend with sync capabilities
-  2. ML model training with improved accuracy
-  3. Flutter app basic structure
-  4. Offline storage implementation
+  1. ML model training with improved accuracy
+  2. Flutter app basic structure
 - Next Steps: 
-  1. Complete background sync service
-  2. Implement conflict resolution
-  3. Add real-time notifications
-  4. Optimize sync performance
+  1. Spring Boot backend with sync capabilities
+  2. Offline storage implementation
+  3. Complete background sync service
+  4. Implement conflict resolution
+  5. Add real-time notifications
+  6. Optimize sync performance

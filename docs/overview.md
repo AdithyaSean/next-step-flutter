@@ -23,6 +23,7 @@ Key Technologies:
 ### 2. Backend Component (`/next-step-backend/`)
 
 The Spring Boot backend provides:
+- JPA/Hibernate ORM for data persistence
 - RESTful APIs for data synchronization
 - WebSocket support for real-time updates
 - JWT-based authentication
@@ -30,14 +31,15 @@ The Spring Boot backend provides:
 
 Key Technologies:
 - Spring Boot 3.x
+- Spring Data JPA
 - WebSocket
 - JWT Authentication
-- SQLite/PostgreSQL
+- SQLite for local development
 
 ### 3. Mobile App Component (`/next-step-flutter/`)
 
 The Flutter app provides:
-- Offline-first architecture with Hive
+- Offline-first architecture with SQLite
 - BLoC pattern for state management
 - Bi-directional sync with backend
 - Elegant Material Design 3 UI
@@ -45,7 +47,7 @@ The Flutter app provides:
 
 Key Technologies:
 - Flutter SDK
-- Hive for local storage
+- SQLite for local storage
 - BLoC for state management
 - ONNX Runtime Mobile
 - Material Design 3
@@ -53,9 +55,10 @@ Key Technologies:
 ## Data Flow
 
 1. **Data Collection & Sync**
-   - User inputs stored locally in Hive
+   - User inputs stored locally in SQLite
    - Background sync with backend
    - Conflict resolution for offline changes
+   - ORM-managed persistence
 
 2. **Processing**
    - Feature engineering
@@ -67,11 +70,13 @@ Key Technologies:
    - Stream recommendations with confidence scores
    - University field predictions
    - Alternative pathway suggestions
+   - JPA-based entity relationships
 
 4. **Results Presentation**
    - Interactive visualization of recommendations
    - Detailed factor analysis
    - Alternative pathways with probabilities
+   - Real-time updates through WebSocket
 
 ## Performance Metrics
 
@@ -106,16 +111,38 @@ Current model performance:
    flutter run
    ```
 
-## Deployment
+## Key Features
 
-The system supports:
-- Local model training
-- Mobile-first deployment
-- Offline-first capabilities
-- Real-time sync when online
-- Background processing
+1. **ORM Integration**
+   - JPA/Hibernate for object-relational mapping
+   - Type-safe entities and relationships
+   - Automatic schema generation
+   - Transaction management
+
+2. **Offline-First Architecture**
+   - Local storage with SQLite
+   - Background sync service
+   - Conflict resolution
+   - Delta updates
+
+3. **Real-Time Updates**
+   - WebSocket integration
+   - Push notifications
+   - Live data synchronization
+   - Event-driven updates
+
+4. **Security**
+   - JWT authentication
+   - Role-based access control
+   - Secure data storage
+   - API protection
+
+5. **Modularity**
+   - Clear separation of concerns
+   - Independent deployability
+   - Shared domain model
+   - Easy testing
 
 For more detailed information, see:
 - [Data Model](data-model.md)
-- [Education Schema](education-schema.md)
 - [Development Roadmap](roadmap.md)
