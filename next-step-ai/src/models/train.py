@@ -174,29 +174,60 @@ class ModelTrainer:
         # Prepare data
         X, y = self.prepare_stream_recommender_data(df)
         
+        # Calculate class weights
+        class_counts = np.bincount(y)
+        total_samples = len(y)
+        # Convert to string format for LightGBM
+        class_weights = ','.join([f'{i}={total_samples/(len(class_counts) * count)}' for i, count in enumerate(class_counts)])
+        
         # Split data
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=self.seed, stratify=y
         )
         
-        # Train model
+        # Train model with optimized parameters
         params = {
             'objective': 'multiclass',
-            'metric': 'multi_logloss',
+            'metric': ['multi_logloss', 'multi_error'],
             'num_class': len(np.unique(y)),
-            'learning_rate': 0.01,  # Reduced for better convergence
-            'num_leaves': 31,
-            'min_data_in_leaf': 20,
+            'learning_rate': 0.01,
+            'num_leaves': 63,
             'max_depth': 8,
+            'min_data_in_leaf': 30,
             'feature_fraction': 0.8,
             'bagging_fraction': 0.8,
             'bagging_freq': 5,
             'lambda_l1': 0.1,
             'lambda_l2': 0.1,
+            'is_unbalance': True,  # Handle unbalanced dataset
+            'boosting': 'dart',  # Use DART boosting for better generalization
+            'drop_rate': 0.1,
+            'max_drop': 50,
             'verbose': -1
         }
         
-        model, _ = self.train_model(X_train, X_test, y_train, y_test, params, X.columns.tolist(), model_type="stream")
+        model, feature_importance = self.train_model(
+            X_train, X_test, y_train, y_test, 
+            params, X.columns.tolist(), 
+            model_type="stream"
+        )
+        
+        # Print feature importance analysis
+        print("\nDetailed Feature Importance Analysis:")
+        total_importance = feature_importance['importance'].sum()
+        print("\nFeature Groups:")
+        
+        # Group features by type
+        subject_importance = feature_importance[feature_importance['feature'].isin(
+            ['mathematics', 'science', 'english', 'sinhala', 'religion', 'history']
+        )]['importance'].sum() / total_importance
+        
+        derived_importance = feature_importance[feature_importance['feature'].isin(
+            ['science_math_avg', 'language_avg', 'science_math_product']
+        )]['importance'].sum() / total_importance
+        
+        print(f"Core Subjects: {subject_importance:.1%}")
+        print(f"Derived Features: {derived_importance:.1%}")
         
         return model
 
@@ -205,32 +236,64 @@ class ModelTrainer:
         # Prepare features
         X, y = self.prepare_university_recommender_data(df)
         
+        # Calculate class weights
+        class_counts = np.bincount(y)
+        total_samples = len(y)
+        # Convert to string format for LightGBM
+        class_weights = ','.join([f'{i}={total_samples/(len(class_counts) * count)}' for i, count in enumerate(class_counts)])
+        
         # Split data with stratification
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=self.seed, stratify=y
         )
         
-        # Train model
+        # Train model with optimized parameters
         params = {
             'objective': 'multiclass',
-            'metric': 'multi_logloss',
+            'metric': ['multi_logloss', 'multi_error'],
             'num_class': len(np.unique(y)),
             'learning_rate': 0.01,
-            'num_leaves': 63,
-            'min_data_in_leaf': 30,
-            'max_depth': 10,
+            'num_leaves': 127,
+            'max_depth': 12,
+            'min_data_in_leaf': 20,
             'feature_fraction': 0.7,
             'bagging_fraction': 0.7,
             'bagging_freq': 5,
             'lambda_l1': 0.1,
             'lambda_l2': 0.1,
+            'is_unbalance': True,  # Handle unbalanced dataset
+            'boosting': 'dart',
+            'drop_rate': 0.1,
+            'max_drop': 50,
             'verbose': -1
         }
         
-        model, _ = self.train_model(X_train, X_test, y_train, y_test, params, X.columns.tolist(), model_type="university")
+        model, feature_importance = self.train_model(
+            X_train, X_test, y_train, y_test, 
+            params, X.columns.tolist(), 
+            model_type="university"
+        )
+        
+        # Print feature importance analysis
+        print("\nDetailed Feature Importance Analysis:")
+        total_importance = feature_importance['importance'].sum()
+        print("\nFeature Groups:")
+        
+        # Group features by type
+        ol_subjects = ['mathematics', 'science', 'english', 'sinhala', 'religion', 'history']
+        al_subjects = [col for col in X.columns if col.endswith('_grade')]
+        stream_features = [col for col in X.columns if col.startswith('stream_')]
+        
+        ol_importance = feature_importance[feature_importance['feature'].isin(ol_subjects)]['importance'].sum() / total_importance
+        al_importance = feature_importance[feature_importance['feature'].isin(al_subjects)]['importance'].sum() / total_importance
+        stream_importance = feature_importance[feature_importance['feature'].isin(stream_features)]['importance'].sum() / total_importance
+        
+        print(f"O/L Subjects: {ol_importance:.1%}")
+        print(f"A/L Subjects: {al_importance:.1%}")
+        print(f"Stream Features: {stream_importance:.1%}")
         
         return model
-    
+
     def export_model_to_onnx(
         self,
         model: lgb.Booster,

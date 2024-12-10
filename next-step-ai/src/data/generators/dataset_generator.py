@@ -69,36 +69,66 @@ class StudentDataGenerator:
         return subjects
     
     def _select_stream_based_on_grades(self, ol_results: Dict[str, str]) -> str:
-        """Select A/L stream based on O/L results."""
-        # Convert grades to numeric values
-        grade_values = {'A': 5, 'B': 4, 'C': 3, 'S': 2, 'F': 1}
+        """Select A/L stream based on O/L results with sophisticated weighting."""
+        # Convert grades to numeric values with more granular scoring
+        grade_values = {'A': 5.0, 'B': 4.0, 'C': 3.0, 'S': 2.0, 'F': 1.0}
         numeric_grades = {subject: grade_values[grade] for subject, grade in ol_results.items()}
         
-        # Calculate subject averages
-        science_math_avg = (numeric_grades['mathematics'] + numeric_grades['science']) / 2
-        language_avg = (numeric_grades['english'] + numeric_grades['sinhala']) / 2
+        # Calculate weighted subject averages
+        science_math_avg = (numeric_grades['mathematics'] * 1.2 + numeric_grades['science'] * 1.0) / 2.2
+        language_avg = (numeric_grades['english'] * 1.1 + numeric_grades['sinhala'] * 1.0) / 2.1
         
-        # Calculate stream scores
+        # Calculate stream scores with subject interactions
         stream_scores = {
-            'PHYSICAL_SCIENCE': science_math_avg * 2 + numeric_grades['science'],
-            'BIOLOGICAL_SCIENCE': science_math_avg + numeric_grades['science'] * 2,
-            'TECHNOLOGY': science_math_avg * 1.5 + numeric_grades['science'] + numeric_grades['mathematics'],
-            'COMMERCE': numeric_grades['mathematics'] + language_avg,
-            'ARTS': language_avg * 2 + numeric_grades['history']
+            'PHYSICAL_SCIENCE': (
+                science_math_avg * 2.5 +  # Higher weight for math/science
+                numeric_grades['science'] * 1.5 +
+                max(0, (numeric_grades['mathematics'] - 3)) * 0.8  # Bonus for high math scores
+            ),
+            'BIOLOGICAL_SCIENCE': (
+                science_math_avg * 1.5 +
+                numeric_grades['science'] * 2.0 +  # Higher weight for science
+                max(0, (numeric_grades['science'] - 3)) * 0.8  # Bonus for high science scores
+            ),
+            'TECHNOLOGY': (
+                science_math_avg * 2.0 +
+                numeric_grades['science'] * 1.2 +
+                numeric_grades['mathematics'] * 1.3 +
+                max(0, min(numeric_grades['science'], numeric_grades['mathematics']) - 3) * 0.5  # Bonus for balanced scores
+            ),
+            'COMMERCE': (
+                numeric_grades['mathematics'] * 1.5 +
+                language_avg * 1.2 +
+                numeric_grades['english'] * 0.8 +  # Extra weight for English
+                max(0, (numeric_grades['mathematics'] - 2)) * 0.5  # Smaller bonus for math
+            ),
+            'ARTS': (
+                language_avg * 2.0 +
+                numeric_grades['history'] * 1.5 +
+                numeric_grades['religion'] * 0.8 +
+                max(0, (language_avg - 3)) * 0.7  # Bonus for strong language skills
+            )
         }
         
-        # Add some randomness but maintain correlation with grades
+        # Add controlled randomness based on performance level
+        base_performance = sum(numeric_grades.values()) / len(numeric_grades)
+        randomness_scale = max(0.3, 1.0 - base_performance / 5.0)  # Less randomness for high performers
+        
         for stream in stream_scores:
-            stream_scores[stream] += np.random.normal(0, 0.5)  # Small random adjustment
+            stream_scores[stream] += np.random.normal(0, randomness_scale)
         
         # Select stream with highest score
         selected_stream = max(stream_scores.items(), key=lambda x: x[1])[0]
         
-        # Apply stream distribution as a soft constraint
-        if np.random.random() > 0.8:  # 20% chance to follow distribution instead of grades
+        # Apply stream distribution as a soft constraint with performance-based adjustment
+        if np.random.random() > 0.7 + (base_performance / 10):  # Higher performers more likely to follow aptitude
+            distribution_weights = list(config.STREAM_DISTRIBUTION.values())
+            # Adjust weights based on performance
+            if base_performance >= 4.0:  # High performers
+                distribution_weights = [w * 1.2 if i < 3 else w * 0.8 for i, w in enumerate(distribution_weights)]
             selected_stream = np.random.choice(
                 list(config.STREAM_DISTRIBUTION.keys()),
-                p=list(config.STREAM_DISTRIBUTION.values())
+                p=[w/sum(distribution_weights) for w in distribution_weights]
             )
         
         return selected_stream
