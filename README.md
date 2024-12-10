@@ -1,64 +1,60 @@
-# next_step
+# Next Step
 
-A new Flutter project that provides a cross-platform application with support for Mobile devices, Linux and Windows.
+A comprehensive educational pathway recommendation system combining AI-powered predictions with a modern Flutter mobile interface.
 
-## Features
+## Project Structure
 
-- Cross-platform support (Mobile devices,Linux and Windows)
-- Custom window management
+This project consists of two main components:
 
+1. **AI Model** (`/next-step-ai/`)
+   - Machine learning model for educational pathway recommendations
+   - Built with Python 3.12+
+   - Uses LightGBM, ONNX, and other ML libraries
 
-## Getting Started
+2. **Flutter App** (root directory)
+   - Cross-platform application
+   - Built with Flutter
+   - Provides user interface for the recommendation system
 
-This project is a starting point for a Flutter application.
+## Quick Start
 
 ### Prerequisites
 
-- Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
-- Dart SDK: Included with Flutter
+- Python 3.12 or higher
+- Flutter (latest stable version)
+- Git
 
-### Installation
+### Setup
 
 1. Clone the repository:
-    ```sh
-    git clone https://github.com/yourusername/next_step.git
-    cd next_step
-    ```
+   ```bash
+   git clone https://github.com/yourusername/Next-Step.git
+   cd Next-Step
+   ```
 
-2. Install dependencies:
-    ```sh
-    flutter pub get
-    ```
+2. Run the setup script:
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
+   ```
+   Choose which components you want to set up (AI Model, Mobile App, or both).
 
-3. Build the project:
-    - For Linux:
-        ```sh
-        flutter build linux
-        ```
-    - For Windows:
-        ```sh
-        flutter build windows
-        ```
+### Running Components Separately
 
-### Running the Application
+#### AI Model
+```bash
+cd next-step-ai
+source venv/bin/activate  # Activate Python virtual environment
+python -m src.models.train  # Train the model
+```
 
-- For Linux:
-    ```sh
-    flutter run -d linux
-    ```
-- For Windows:
-    ```sh
-    flutter run -d windows
-    ```
+#### Flutter App
+```bash
+flutter run  # Run the Flutter app
+```
 
-## Resources
+## Development
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+- AI Model development is contained within the `next-step-ai` directory
+- Flutter app development is in the root directory
+- Each component can be developed and tested independently
