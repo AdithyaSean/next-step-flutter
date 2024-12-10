@@ -19,8 +19,11 @@ class StudentDataGenerator:
             random.seed(seed)
     
     def _generate_grade(self) -> str:
-        """Generate a random grade."""
-        return np.random.choice(config.GRADES)
+        """Generate a random grade based on configured probabilities."""
+        return np.random.choice(
+            config.GRADES,
+            p=[config.GRADE_PROBABILITIES[grade] for grade in config.GRADES]
+        )
     
     def generate_ol_results(self) -> Dict[str, str]:
         """Generate O/L examination results."""
@@ -100,28 +103,53 @@ class StudentDataGenerator:
         
         return selected_stream
 
-    def generate_al_results(self):
+    def generate_al_results(self, ol_results: Dict[str, str]):
         """Generate A/L results based on O/L performance."""
-        stream = random.choices(
-            list(config.AL_STREAMS.keys()),
-            weights=[config.STREAM_DISTRIBUTION[s] for s in config.AL_STREAMS.keys()]
-        )[0]
+        # Select stream based on O/L performance
+        stream = self._select_stream_based_on_grades(ol_results)
         
         subjects = {}
         stream_config = config.AL_STREAMS[stream]
         
-        # Add compulsory subjects
+        # Convert O/L grades to numeric for correlation
+        grade_values = {'A': 5, 'B': 4, 'C': 3, 'S': 2, 'F': 1}
+        ol_numeric = {k: grade_values[v] for k, v in ol_results.items()}
+        
+        # Generate grades with correlation to relevant O/L subjects
+        if stream == 'PHYSICAL_SCIENCE':
+            base_score = (ol_numeric['mathematics'] + ol_numeric['science']) / 2
+        elif stream == 'BIOLOGICAL_SCIENCE':
+            base_score = (ol_numeric['science'] * 2 + ol_numeric['mathematics']) / 3
+        elif stream == 'TECHNOLOGY':
+            base_score = (ol_numeric['mathematics'] + ol_numeric['science']) / 2
+        elif stream == 'COMMERCE':
+            base_score = (ol_numeric['mathematics'] + ol_numeric['english']) / 2
+        else:  # ARTS
+            base_score = (ol_numeric['sinhala'] + ol_numeric['history']) / 2
+        
+        # Add compulsory subjects with correlation
         for subject in stream_config['compulsory']:
-            subjects[subject] = random.choice(['A', 'B', 'C', 'S', 'F'])
+            # Add some randomness while maintaining correlation
+            score = base_score + np.random.normal(0, 0.5)
+            # Convert back to letter grade
+            if score >= 4.5:
+                grade = 'A'
+            elif score >= 3.5:
+                grade = 'B'
+            elif score >= 2.5:
+                grade = 'C'
+            elif score >= 1.5:
+                grade = 'S'
+            else:
+                grade = 'F'
+            subjects[subject] = grade
         
         # Add optional subjects based on weights
-        optional_subjects = random.choices(
+        optional_subject = self._select_weighted_item(
             stream_config['optional'],
-            weights=[stream_config['weights'][s] for s in stream_config['optional']],
-            k=1
+            stream_config['weights']
         )
-        for subject in optional_subjects:
-            subjects[subject] = random.choice(['A', 'B', 'C', 'S', 'F'])
+        subjects[optional_subject] = self._generate_grade()
         
         return {
             'stream': stream,
@@ -146,9 +174,15 @@ class StudentDataGenerator:
     
     def generate_student(self):
         """Generate a single student's data."""
+        # Generate O/L results first
+        ol_results = self.generate_ol_results()
+        
+        # Generate A/L results based on O/L performance
+        al_results = self.generate_al_results(ol_results)
+        
         student_data = {
-            'ol_results': self.generate_ol_results(),
-            'al_results': self.generate_al_results(),  # Always generate A/L results
+            'ol_results': ol_results,
+            'al_results': al_results
         }
         
         # Add university field for some students

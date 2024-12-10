@@ -7,7 +7,7 @@ from typing import Dict, List, Any, Tuple
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, precision_recall_fscore_support, confusion_matrix
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 import onnxmltools
 from pathlib import Path
 from onnx import TensorProto
@@ -32,96 +32,64 @@ class ModelTrainer:
         self.seed = seed
         self.preprocessor = DataPreprocessor()
         self.generator = StudentDataGenerator(seed=seed)
+        self.stream_encoder = LabelEncoder()
+        self.field_encoder = LabelEncoder()
         
-    def prepare_stream_recommender_data(self, df):
+    def prepare_stream_recommender_data(self, df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
         """Prepare data for stream recommender model."""
-        # Select students with stream information
-        mask = df['stream'].notna()
-        if not mask.any():
-            raise ValueError("No students with A/L results found in the dataset")
-        
-        # Select features and target
-        feature_cols = ['mathematics', 'science', 'english', 'sinhala', 'religion', 'history']
-        X = df[mask][feature_cols]
-        y = df[mask]['stream']
-        
         # Convert grades to numeric values
-        grade_map = {
-            'A': 4,
-            'B': 3,
-            'C': 2,
-            'S': 1,
-            'F': 0
-        }
+        grade_map = {'A': 5, 'B': 4, 'C': 3, 'S': 2, 'F': 1}
+        X = df[['mathematics', 'science', 'english', 'sinhala', 'religion', 'history']].copy()
         X = X.replace(grade_map)
         
-        # Encode stream labels
-        self.stream_encoder = LabelEncoder()
-        y = self.stream_encoder.fit_transform(y)
+        # Add derived features
+        X['science_math_avg'] = (X['mathematics'] + X['science']) / 2
+        X['language_avg'] = (X['english'] + X['sinhala']) / 2
+        X['science_math_product'] = X['mathematics'] * X['science']  # Interaction term
         
-        print("\nFeature Statistics:")
-        print(f"Number of features: {len(feature_cols)}")
-        print("\nFeature columns:", feature_cols)
-        print("\nNumber of samples:", len(X))
-        print("\nStream distribution:")
-        stream_dist = pd.Series(y).value_counts()
-        for label, count in stream_dist.items():
-            stream_name = self.stream_encoder.inverse_transform([label])[0]
-            percentage = (count/len(y)) * 100
-            print(f"{stream_name}: {count} samples ({percentage:.1f}%)")
+        # Scale features
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+        X = pd.DataFrame(X_scaled, columns=X.columns, index=X.index)
+        
+        # Encode stream labels
+        y = self.stream_encoder.fit_transform(df['stream'])
         
         return X, y
 
-    def prepare_university_recommender_data(self, df):
+    def prepare_university_recommender_data(self, df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
         """Prepare data for university field recommender model."""
-        # Select students with university field information
-        mask = df['university_field'].notna()
-        if not mask.any():
-            raise ValueError("No students with university field information found in the dataset")
+        # Select relevant features
+        feature_cols = ['mathematics', 'science', 'english', 'sinhala', 'religion', 'history', 'stream']
+        al_grade_cols = [col for col in df.columns if col.endswith('_grade')]
+        feature_cols.extend(al_grade_cols)
         
-        # Get all A/L subject columns (those ending with '_grade')
-        al_subject_cols = [col for col in df.columns if col.endswith('_grade')]
-        
-        # Combine O/L and A/L features
-        feature_cols = ['mathematics', 'science', 'english', 'sinhala', 'religion', 'history', 'stream'] + al_subject_cols
-        
-        X = df[mask][feature_cols]
-        y = df[mask]['university_field']
+        X = df[feature_cols].copy()
         
         # Convert grades to numeric values
-        grade_map = {
-            'A': 4,
-            'B': 3,
-            'C': 2,
-            'S': 1,
-            'F': 0
-        }
-        
-        # Convert all grade columns
+        grade_map = {'A': 5, 'B': 4, 'C': 3, 'S': 2, 'F': 1}
         for col in X.columns:
-            if col != 'stream':  # Don't convert the stream column
+            if col != 'stream':  # Don't convert stream column
                 X[col] = X[col].replace(grade_map)
         
-        # Encode categorical variables
-        self.stream_encoder = LabelEncoder()
-        X['stream'] = self.stream_encoder.fit_transform(X['stream'])
+        # Add derived features
+        X['science_math_avg'] = (X['mathematics'] + X['science']) / 2
+        X['language_avg'] = (X['english'] + X['sinhala']) / 2
         
-        self.field_encoder = LabelEncoder()
-        y = self.field_encoder.fit_transform(y)
+        # Add stream-specific features
+        stream_dummies = pd.get_dummies(X['stream'], prefix='stream')
+        X = pd.concat([X.drop('stream', axis=1), stream_dummies], axis=1)
         
-        print("\nFeature Statistics:")
-        print(f"Number of features: {len(feature_cols)}")
-        print("\nFeature columns:", feature_cols)
-        print("\nNumber of samples:", len(X))
-        print("\nUniversity field distribution:")
-        field_dist = pd.Series(y).value_counts()
-        for label, count in field_dist.items():
-            field_name = self.field_encoder.inverse_transform([label])[0]
-            percentage = (count/len(y)) * 100
-            print(f"{field_name}: {count} samples ({percentage:.1f}%)")
+        # Scale numerical features
+        numerical_cols = X.select_dtypes(include=['int64', 'float64']).columns
+        scaler = StandardScaler()
+        X[numerical_cols] = scaler.fit_transform(X[numerical_cols])
+        
+        # Encode university field labels
+        y = self.field_encoder.fit_transform(df['university_field'])
         
         return X, y
-    
+
     def generate_training_data(self, size: int = 10000) -> list:
         """Generate and preprocess training data."""
         # Generate synthetic data
@@ -206,10 +174,6 @@ class ModelTrainer:
         # Prepare data
         X, y = self.prepare_stream_recommender_data(df)
         
-        # Create composite features
-        X['science_math_avg'] = (X['mathematics'] + X['science']) / 2
-        X['language_avg'] = (X['english'] + X['sinhala']) / 2
-        
         # Split data
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=self.seed, stratify=y
@@ -240,19 +204,6 @@ class ModelTrainer:
         """Train model to recommend university field based on A/L results."""
         # Prepare features
         X, y = self.prepare_university_recommender_data(df)
-        
-        # Create composite features for science subjects
-        science_subjects = ['physics_grade', 'chemistry_grade', 'biology_grade']
-        math_subjects = ['combined_maths_grade', 'engineering_technology_grade']
-        commerce_subjects = ['economics_grade', 'business_studies_grade', 'accounting_grade']
-        
-        # Add composite features where available
-        if all(col in X.columns for col in science_subjects):
-            X['science_avg'] = X[science_subjects].mean(axis=1)
-        if all(col in X.columns for col in math_subjects):
-            X['math_avg'] = X[math_subjects].mean(axis=1)
-        if all(col in X.columns for col in commerce_subjects):
-            X['commerce_avg'] = X[commerce_subjects].mean(axis=1)
         
         # Split data with stratification
         X_train, X_test, y_train, y_test = train_test_split(
