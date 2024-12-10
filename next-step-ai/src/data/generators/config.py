@@ -32,71 +32,43 @@ OL_SUBJECTS = [
 AL_STREAMS = {
     'PHYSICAL_SCIENCE': {
         'compulsory': ['combined_maths', 'physics'],
-        'optional': ['chemistry', 'ict', 'agriculture'],
+        'optional': ['chemistry', 'ict'],
         'weights': {
-            'chemistry': 0.7,  # Most common
-            'ict': 0.2,
-            'agriculture': 0.1
+            'chemistry': 0.8,  # Most common
+            'ict': 0.2
         }
     },
     'BIOLOGICAL_SCIENCE': {
         'compulsory': ['biology', 'chemistry'],
-        'optional': ['physics', 'agriculture', 'ict'],
+        'optional': ['physics', 'agriculture'],
         'weights': {
-            'physics': 0.7,    # Most common
-            'agriculture': 0.2,
-            'ict': 0.1
+            'physics': 0.8,    # Most common
+            'agriculture': 0.2
         }
     },
     'TECHNOLOGY': {
         'compulsory': ['engineering_technology', 'science_for_technology'],
-        'optional': ['ict', 'agriculture', 'science_for_tech_optional'],
+        'optional': ['ict', 'science_for_tech_optional'],
         'weights': {
-            'ict': 0.6,        # Most common
-            'agriculture': 0.2,
+            'ict': 0.8,        # Most common
             'science_for_tech_optional': 0.2
         }
     },
     'COMMERCE': {
         'compulsory': ['business_studies', 'accounting'],
-        'optional': ['economics', 'business_statistics', 'ict'],
+        'optional': ['economics', 'business_statistics'],
         'weights': {
-            'economics': 0.6,   # Most common
-            'business_statistics': 0.3,
-            'ict': 0.1
+            'economics': 0.7,   # Most common
+            'business_statistics': 0.3
         }
     },
     'ARTS': {
-        'groups': {
-            'group1': {
-                'subjects': ['logic', 'economics', 'geography', 'civics', 'languages'],
-                'weights': {
-                    'logic': 0.3,
-                    'economics': 0.3,
-                    'geography': 0.2,
-                    'civics': 0.1,
-                    'languages': 0.1
-                }
-            },
-            'group2': {
-                'subjects': ['political_science', 'history', 'buddhism', 'media_studies'],
-                'weights': {
-                    'political_science': 0.3,
-                    'history': 0.3,
-                    'buddhism': 0.2,
-                    'media_studies': 0.2
-                }
-            },
-            'group3': {
-                'subjects': ['drama', 'art', 'music', 'languages', 'ict'],
-                'weights': {
-                    'drama': 0.2,
-                    'art': 0.2,
-                    'music': 0.2,
-                    'languages': 0.2,
-                    'ict': 0.2
-                }
-            }
+        'compulsory': ['logic', 'political_science'],
+        'optional': ['geography', 'history', 'media_studies'],
+        'weights': {
+            'geography': 0.4,
+            'history': 0.4,
+            'media_studies': 0.2
         }
     }
 }

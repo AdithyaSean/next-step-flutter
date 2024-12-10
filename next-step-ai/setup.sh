@@ -34,9 +34,9 @@ python3 -m pip install --upgrade -r requirements.txt
 
 # Create necessary directories
 echo "🗂️ Creating project directories..."
-mkdir -p data/{raw,processed,models}
+mkdir -p src/data/{raw,processed}
+mkdir -p src/models/output
 mkdir -p logs
-mkdir -p models/saved
 
 # Set up pre-commit hooks if git is initialized
 if [ -d ".git" ]; then
@@ -57,6 +57,12 @@ python3 -c "import numpy; print(f'NumPy: {numpy.__version__}')"
 python3 -c "import pandas; print(f'Pandas: {pandas.__version__}')"
 python3 -c "import sklearn; print(f'Scikit-learn: {sklearn.__version__}')"
 python3 -c "import lightgbm; print(f'LightGBM: {lightgbm.__version__}')"
+python3 -c "import onnx; print(f'ONNX: {onnx.__version__}')"
+python3 -c "import onnxruntime; print(f'ONNX Runtime: {onnxruntime.__version__}')"
+python3 -c "import onnxmltools; print(f'ONNX ML Tools: {onnxmltools.__version__}')"
 
-echo "✅ Setup complete! Activate the virtual environment with:"
+echo "✅ Setup complete! To get started:"
+echo "1. Activate the virtual environment:"
 echo "   source venv/bin/activate"
+echo "2. Train the models:"
+echo "   python3 src/models/train.py"
