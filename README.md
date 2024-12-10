@@ -1,64 +1,83 @@
-# next_step
+# Next Step 🎓
 
-A new Flutter project that provides a cross-platform application with support for Mobile devices, Linux and Windows.
+An AI-powered educational pathway recommendation system that helps students make informed decisions about their academic and career paths.
 
-## Features
+## 🌟 Features
 
-- Cross-platform support (Mobile devices,Linux and Windows)
-- Custom window management
+- **Stream Recommendation**: Get personalized recommendations for academic streams based on your interests and performance
+- **University Field Prediction**: Discover potential university fields that align with your goals
+- **Interactive Mobile App**: User-friendly Flutter interface for easy access to recommendations
+- **AI-Powered Insights**: Advanced machine learning models for accurate predictions
 
+## 🏗️ Project Structure
 
-## Getting Started
+The project is divided into two main components:
 
-This project is a starting point for a Flutter application.
+1. **AI Model** (`/next-step-ai/`)
+   - Machine learning models for educational pathway recommendations
+   - Data preprocessing and feature engineering
+   - Model training and evaluation pipeline
+
+2. **Mobile App** (root directory)
+   - Flutter-based mobile application
+   - User interface for input collection
+   - Results visualization and explanation
+
+## 🚀 Getting Started
 
 ### Prerequisites
+- Python 3.12+ (for AI model)
+- Flutter SDK (for mobile app)
+- Git
 
-- Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
-- Dart SDK: Included with Flutter
-
-### Installation
+### Setup
 
 1. Clone the repository:
-    ```sh
-    git clone https://github.com/yourusername/next_step.git
-    cd next_step
-    ```
+   ```bash
+   git clone https://github.com/yourusername/Next-Step.git
+   cd Next-Step
+   ```
 
-2. Install dependencies:
-    ```sh
-    flutter pub get
-    ```
+2. Run the setup script for the AI Model:
+   ```bash
+   cd next-step-ai
+   ./setup.sh  # For Linux/macOS
+   # OR
+   .\setup.ps1  # For Windows
+   ```
 
-3. Build the project:
-    - For Linux:
-        ```sh
-        flutter build linux
-        ```
-    - For Windows:
-        ```sh
-        flutter build windows
-        ```
+3. Set up the Flutter App:
+   ```bash
+   flutter pub get
+   ```
 
-### Running the Application
+### Running Components Separately
 
-- For Linux:
-    ```sh
-    flutter run -d linux
-    ```
-- For Windows:
-    ```sh
-    flutter run -d windows
-    ```
+#### AI Model
+```bash
+cd next-step-ai
+source venv/bin/activate  # Activate Python virtual environment
+python -m src.models.train  # Train the model
+```
 
-## Resources
+#### Flutter App
+```bash
+flutter run  # Run the Flutter app
+```
 
-A few resources to get you started if this is your first Flutter project:
+## 📊 Current Performance
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Stream Recommendation: 86.00% accuracy
+- University Field Recommendation: 21.05% accuracy (under improvement)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🤝 Contributing
 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+[Your License]
