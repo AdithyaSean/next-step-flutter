@@ -116,6 +116,10 @@ public class AcademicProfile {
     // University Results (if applicable)
     @Embedded
     private UniversityResults uniResults;
+    
+    // Sync metadata
+    @Embedded
+    private SyncMetadata syncMetadata;
 }
 
 @Embeddable
@@ -132,6 +136,10 @@ public class OLResults {
     public boolean isEligibleForALCommerce() {
         return coreSubjects.get("Mathematics").getValue() >= OLGrade.S.getValue();
     }
+    
+    // Sync metadata
+    @Embedded
+    private SyncMetadata syncMetadata;
 }
 
 @Embeddable
@@ -149,6 +157,10 @@ public class ALResults {
             // ... other streams
         }
     }
+    
+    // Sync metadata
+    @Embedded
+    private SyncMetadata syncMetadata;
 }
 
 @Embeddable
@@ -157,6 +169,18 @@ public class UniversityResults {
     private double gpa;
     private int year;
     private String specialization;
+    
+    // Sync metadata
+    @Embedded
+    private SyncMetadata syncMetadata;
+}
+
+@Embeddable
+public class SyncMetadata {
+    private int version;
+    private long lastModified;
+    private String syncStatus;
+    private String deviceId;
 }
 ```
 
@@ -281,5 +305,39 @@ public class CareerPathwayAnalyzer {
         
         return paths;
     }
+}
+```
+
+## Sync System
+
+### 1. Sync Metadata
+```json
+{
+    "id": "UUID",
+    "entity_id": "UUID",
+    "entity_type": "ACADEMIC|UNIVERSITY|MODEL",
+    "version": "integer",
+    "last_modified": "timestamp",
+    "sync_status": "SYNCED|PENDING|CONFLICT",
+    "device_id": "string",
+    "conflict_resolution": {
+        "strategy": "SERVER_WINS|CLIENT_WINS|MANUAL",
+        "resolved_at": "timestamp",
+        "resolved_by": "string"
+    }
+}
+```
+
+### 2. Sync Queue
+```json
+{
+    "id": "UUID",
+    "entity_id": "UUID",
+    "operation": "CREATE|UPDATE|DELETE",
+    "status": "PENDING|IN_PROGRESS|COMPLETED|FAILED",
+    "retry_count": "integer",
+    "last_attempt": "timestamp",
+    "error": "string",
+    "payload": "json"
 }
 ```
