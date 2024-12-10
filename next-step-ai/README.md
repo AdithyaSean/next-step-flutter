@@ -39,41 +39,37 @@ This exploratory project will proceed as follows:
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip (Python package installer)
-- Git
-- Bash (Git Bash on Windows)
+- Python 3.12 or higher
+- Virtual environment (recommended)
 
-### Quick Setup
+### Setup
+1. Create and activate a virtual environment:
+   ```bash
+   # On Linux/macOS
+   python -m venv venv
+   source venv/bin/activate
+
+   # On Windows
+   python -m venv venv
+   .\venv\Scripts\Activate.ps1
+   ```
+
+2. Run the setup script:
+   ```bash
+   # On Linux/macOS
+   ./setup.sh
+
+   # On Windows
+   .\setup.ps1
+   ```
+
+### Training the Model
 ```bash
-# One-shot setup command (creates venv and installs dependencies)
-./setup.sh
+# Make sure your virtual environment is activated
+python -m src.models.train
 ```
 
-### Development Setup
-- Always activate the virtual environment before working on the project
-- Use `pip freeze > requirements.txt` to update dependencies
-- Keep the virtual environment in `.gitignore`
-
-### Usage
-1. Preprocess the dataset:
-   ```bash
-   python preprocess_data.py
-   ```
-2. Train a model:
-   ```bash
-   python train_model.py --model [model_name]
-   ```
-3. Evaluate the model:
-   ```bash
-   python evaluate_model.py --model [model_name]
-   ```
-4. Generate predictions:
-   ```bash
-   python predict.py --input [input_file.json]
-   ```
-
-## Directory Structure
+## 📁 Directory Structure
 ```
 career-guidance-ai-model/
 ├── data/                 # Contains datasets and preprocessing scripts
@@ -81,32 +77,21 @@ career-guidance-ai-model/
 ├── notebooks/            # Jupyter notebooks for experiments
 ├── src/                  # Core source code for training and evaluation
 ├── tests/                # Unit tests for the project
+├── logs/                 # Training logs
 ├── requirements.txt      # Python dependencies
 └── README.md             # Project documentation
 ```
 
-## Roadmap
-- **Phase 1:** Explore available datasets and preprocess them.
-- **Phase 2:** Experiment with baseline models.
-- **Phase 3:** Fine-tune the best-performing model.
-- **Phase 4:** Prepare the model for integration into the Flutter application.
-
 ## ⚡ Performance
+Current model performance metrics:
+- Stream Recommendation: 86.00% accuracy
+- University Field Recommendation: 21.05% accuracy (under improvement)
 
-
-
-## 🛠️ Development
-
-
-
-## 📖 Documentation
-
-Comprehensive documentation is available in the `/docs` directory:
-
-- [Architecture Guide](docs/architecture.md)
-- [Mobile Deployment](docs/mobile.md)
-- [Performance Optimization](docs/optimization.md)
-- [API Reference](docs/api.md)
+## 🔧 Development
+- Keep the virtual environment in `.gitignore`
+- Run tests: `pytest`
+- Format code: `black .`
+- Lint code: `flake8`
 
 ## 🤝 Contributing
 

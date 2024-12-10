@@ -1,27 +1,33 @@
-# Next Step
+# Next Step 🎓
 
-A comprehensive educational pathway recommendation system combining AI-powered predictions with a modern Flutter mobile interface.
+An AI-powered educational pathway recommendation system that helps students make informed decisions about their academic and career paths.
 
-## Project Structure
+## 🌟 Features
 
-This project consists of two main components:
+- **Stream Recommendation**: Get personalized recommendations for academic streams based on your interests and performance
+- **University Field Prediction**: Discover potential university fields that align with your goals
+- **Interactive Mobile App**: User-friendly Flutter interface for easy access to recommendations
+- **AI-Powered Insights**: Advanced machine learning models for accurate predictions
+
+## 🏗️ Project Structure
+
+The project is divided into two main components:
 
 1. **AI Model** (`/next-step-ai/`)
-   - Machine learning model for educational pathway recommendations
-   - Built with Python 3.12+
-   - Uses LightGBM, ONNX, and other ML libraries
+   - Machine learning models for educational pathway recommendations
+   - Data preprocessing and feature engineering
+   - Model training and evaluation pipeline
 
-2. **Flutter App** (root directory)
-   - Cross-platform application
-   - Built with Flutter
-   - Provides user interface for the recommendation system
+2. **Mobile App** (root directory)
+   - Flutter-based mobile application
+   - User interface for input collection
+   - Results visualization and explanation
 
-## Quick Start
+## 🚀 Getting Started
 
 ### Prerequisites
-
-- Python 3.12 or higher
-- Flutter (latest stable version)
+- Python 3.12+ (for AI model)
+- Flutter SDK (for mobile app)
 - Git
 
 ### Setup
@@ -32,12 +38,18 @@ This project consists of two main components:
    cd Next-Step
    ```
 
-2. Run the setup script:
+2. Run the setup script for the AI Model:
    ```bash
-   chmod +x setup.sh
-   ./setup.sh
+   cd next-step-ai
+   ./setup.sh  # For Linux/macOS
+   # OR
+   .\setup.ps1  # For Windows
    ```
-   Choose which components you want to set up (AI Model, Mobile App, or both).
+
+3. Set up the Flutter App:
+   ```bash
+   flutter pub get
+   ```
 
 ### Running Components Separately
 
@@ -53,8 +65,19 @@ python -m src.models.train  # Train the model
 flutter run  # Run the Flutter app
 ```
 
-## Development
+## 📊 Current Performance
 
-- AI Model development is contained within the `next-step-ai` directory
-- Flutter app development is in the root directory
-- Each component can be developed and tested independently
+- Stream Recommendation: 86.00% accuracy
+- University Field Recommendation: 21.05% accuracy (under improvement)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+[Your License]
