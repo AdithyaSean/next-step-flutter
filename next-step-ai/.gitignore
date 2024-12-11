@@ -37,12 +37,7 @@ ENV/
 *.sublime-project
 
 # Project specific
-data/raw/*
-data/processed/*
-data/models/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
-!data/models/.gitkeep
+data/
 
 # Logs and temp files
 logs/
@@ -55,15 +50,7 @@ temp/
 *.tmp
 
 # Model files and artifacts
-models/saved/*
-!models/saved/.gitkeep
-*.pkl
-*.joblib
-*.h5
-*.pt
-*.pth
-*.onnx
-*.tflite
+models/
 
 # Coverage reports
 .coverage
@@ -120,16 +107,6 @@ service-account.json
 *.sqlite3
 *.db
 *.rdb
-
-# Model files
-*.h5
-*.pkl
-*.joblib
-*.pt
-*.pth
-*.onnx
-*.tflite
-model_weights/
 
 # Generated documentation
 docs/_build/

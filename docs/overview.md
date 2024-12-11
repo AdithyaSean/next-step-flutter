@@ -9,21 +9,20 @@ Next Step uses a modular monolith architecture with three main components:
 The AI component is responsible for:
 - Processing student data and generating features
 - Training recommendation models using advanced algorithms
-- Exporting models in ONNX format for mobile deployment
+- Exporting models in Joblib format for mobile deployment
 - Performance monitoring and model evaluation
 - Generating realistic training data
 
 Key Technologies:
 - Python 3.12+
 - LightGBM for model training
-- ONNX for model export
+- Joblib for model export
 - Scikit-learn for preprocessing
 - Custom data generators for synthetic data
 
 ### 2. Backend Component (`/next-step-backend/`)
 
 The Spring Boot backend provides:
-- JPA/Hibernate ORM for data persistence
 - RESTful APIs for data synchronization
 - WebSocket support for real-time updates
 - JWT-based authentication
@@ -32,61 +31,82 @@ The Spring Boot backend provides:
 Key Technologies:
 - Spring Boot 3.x
 - Spring Data JPA
-- WebSocket
+- SQLite for local storage
 - JWT Authentication
-- SQLite for local development
+- SQLite
+- WebSocket for real-time updates
+
+Core Entities:
+- Student (academic records, interests)
+- Stream (requirements, possible courses)
+- Course (requirements, institutions)
+- Career (title, external links)
+- Institution (basic info, website)
+- Prediction (unified pathways)
 
 ### 3. Mobile App Component (`/next-step-flutter/`)
 
 The Flutter app provides:
-- Offline-first architecture with SQLite
-- BLoC pattern for state management
-- Bi-directional sync with backend
-- Elegant Material Design 3 UI
-- Background sync capabilities
+- Educational pathway exploration
+- External resource browser
+- Profile management
+- Offline predictions
+- Real-time updates
 
 Key Technologies:
 - Flutter SDK
 - SQLite for local storage
-- BLoC for state management
-- ONNX Runtime Mobile
+- BLoC pattern
 - Material Design 3
+- External link handling
 
-## Data Flow
+## System Features
 
-1. **Data Collection & Sync**
-   - User inputs stored locally in SQLite
-   - Background sync with backend
-   - Conflict resolution for offline changes
-   - ORM-managed persistence
+### 1. Prediction System
+- Multi-label career path predictions
+- Education level-aware predictions
+- Feature engineering pipeline
+- Binary career path encoding
+- Confidence scoring
 
-2. **Processing**
+### 2. Educational Exploration
+- Stream requirements and prospects
+- Course details and prerequisites
+- Institution links
+- Career pathway suggestions
+
+### 3. Career Guidance
+- Multiple career path suggestions
+- Educational requirements
+- Institution websites
+- Additional resource links
+
+### 4. Data Management
+- Offline-first architecture
+- Real-time synchronization
+- Data validation
+- Link management
+
+## Architecture Benefits
+
+1. **Comprehensive Predictions**
+   - Multiple career paths
+   - Education level awareness
    - Feature engineering
-   - Data normalization
-   - Model inference
-   - Real-time updates via WebSocket
+   - Binary encoding
+   - Confidence scoring
 
-3. **Recommendation Generation**
-   - Stream recommendations with confidence scores
-   - University field predictions
-   - Alternative pathway suggestions
-   - JPA-based entity relationships
+2. **Efficient Processing**
+   - Random Forest efficiency
+   - Binary classification
+   - Fast predictions
+   - Lightweight model
 
-4. **Results Presentation**
-   - Interactive visualization of recommendations
-   - Detailed factor analysis
-   - Alternative pathways with probabilities
-   - Real-time updates through WebSocket
-
-## Performance Metrics
-
-Current model performance:
-- Stream Recommendation: 92.00% accuracy
-- Physical Science: 89.50% accuracy
-- Commerce: 88.75% accuracy
-- Biological Science: 87.20% accuracy
-- Technology: 86.90% accuracy
-- Arts: 85.30% accuracy
+3. **Robust Integration**
+   - REST API access
+   - Spring Boot integration
+   - Flutter compatibility
+   - Real-time updates
 
 ## Development Workflow
 

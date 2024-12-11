@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "next_step_ai"
+version = "0.1.0"
+description = "Next Step AI - Career Path Prediction Model"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "lightgbm",
+    "pre-commit",
+    "joblib",
+    "setuptools",
+    "wheel"
+]

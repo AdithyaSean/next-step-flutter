@@ -1,40 +1,39 @@
 # NEXT STEP: Career Guidance AI Model
 
 ## Overview
-This repository is dedicated to exploring and identifying the best AI model and datasets for building a career guidance application. The final product will be a multiplatform application developed using Flutter for our Innovation and Entrepreneurship module and NIBM HND in Software Engineering's capstone project. The app aims to assist Sri Lankan students in making informed educational and career decisions.
-
-## Objective
-The primary goal of this project is to experiment with various AI models and datasets to determine the most effective solution for:
-
-1. Predicting suitable academic and career paths based on a student's exam performance, academic progress, and interests.
-2. Providing multiple recommendations tailored to a student's current academic level.
-3. Ensuring the model can self-evolve by incorporating user-provided data.
+This repository contains the AI model component for the Next Step career guidance application. The model uses a LightGBM for multi-label classification to predict suitable career paths based on student academic performance and interests.
 
 ## Features
-- **Prediction Models:** Suggest educational streams or career paths for OL, AL, and campus-level students.
-- **Dynamic Recommendations:** Generate personalized advice based on user input.
-- **Dataset Exploration:** Leverage datasets that include academic performance, career outcomes, and interests.
-- **AI Model Comparison:** Evaluate the effectiveness of different machine learning models (e.g., Decision Trees, Neural Networks, Gradient Boosted Models).
+- **Multi-label Career Path Prediction:** Predicts multiple suitable career paths simultaneously
+- **Comprehensive Feature Engineering:** Handles various academic inputs (O/L results, A/L results, interests)
+- **Education Level Awareness:** Adapts predictions based on student's current education level
+- **Binary Career Path Encoding:** Efficient encoding of career paths for multi-label classification
+- **Robust Data Preprocessing:** Handles missing values and categorical variables appropriately
 
-## Dataset Requirements
-We aim to use datasets that include:
-- Academic marks and progress across OLs, ALs, and Universities.
-- Career outcomes (e.g., graduation status, job acquisition).
-- Initial career paths and long-term trajectories.
-- User interests and extracurricular achievements.
+## Technical Stack
+- **Python 3.12+**
+- **scikit-learn:** LightGBM for multi-label classification
+- **pandas & numpy:** Data processing and numerical operations
+- **joblib:** Model serialization
 
-### Sources
-- Publicly available datasets on education and employment.
-- Synthetic datasets created for simulating Sri Lankan students' academic and career journeys.
+## Model Architecture
+- **Type:** LightGBM Classifier with MultiOutputClassifier
+- **Features:** 49 input features including:
+  - O/L results (mathematics, science, english, etc.)
+  - A/L results (if applicable)
+  - Stream information
+  - Z-score (if applicable)
+  - Interests (encoded as binary features)
+  - Other academic indicators
+- **Output:** 5 binary indicators for different career paths
 
-## Development Plan
-This exploratory project will proceed as follows:
+## Current Performance
+Based on synthetic data:
+- Average Accuracy: >99% across all career paths
+- Precision & Recall: >0.94 for all classes
+- F1-Score: >0.94 for all classes
 
-1. **Dataset Collection:** Identify and preprocess datasets that match our requirements.
-2. **Model Training:** Train various machine learning models to predict educational and career paths.
-3. **Evaluation Metrics:** Use metrics like accuracy, precision, recall, and F1-score to evaluate model performance.
-4. **Iteration:** Fine-tune models and preprocess data to improve performance.
-5. **Integration Preparation:** Ensure the chosen model is ready for integration with the Flutter frontend.
+Note: These metrics are based on synthetic data and may not reflect real-world performance.
 
 ## 🚀 Getting Started
 
@@ -45,67 +44,97 @@ This exploratory project will proceed as follows:
 ### Setup
 1. Create and activate a virtual environment:
    ```bash
-   # On Linux/macOS
    python -m venv venv
-   source venv/bin/activate
-
-   # On Windows
-   python -m venv venv
-   .\venv\Scripts\Activate.ps1
+   source venv/bin/activate  # On Linux/macOS
    ```
 
-2. Run the setup script:
+2. Install dependencies:
    ```bash
-   # On Linux/macOS
-   ./setup.sh
-
-   # On Windows
-   .\setup.ps1
+   pip install -r requirements.txt
    ```
 
 ### Training the Model
 ```bash
-# Make sure your virtual environment is activated
+# Navigate to the AI model directory
+cd next-step-ai
+
+# One time setup
+./setup.sh # for Linux/macOS
+.\setup.ps1 # for Windows
+
+# Activate the virtual environment
+source venv/bin/activate  # On Linux/macOS
+venv\Scripts\activate # On Windows
+
+# Generate synthetic dataset
+python -m src.data.generators
+
+# Preprocess the data
+python -m src.data.preprocess
+
+# Train the model
 python -m src.models.train
 ```
 
-## 📁 Directory Structure
+## 📁 Project Structure
 ```
-career-guidance-ai-model/
-├── data/                 # Contains datasets and preprocessing scripts
-├── models/               # Trained models and configuration files
-├── notebooks/            # Jupyter notebooks for experiments
-├── src/                  # Core source code for training and evaluation
-├── tests/                # Unit tests for the project
-├── logs/                 # Training logs
-├── requirements.txt      # Python dependencies
-└── README.md             # Project documentation
+next-step-ai/
+├── data/
+│   ├── generators/     # Synthetic data generation
+│   ├── processed/      # Preprocessed datasets
+│   └── raw/           # Raw datasets
+├── models/
+│   ├── saved/         # Trained model files
+│   └── train.py       # Model training script
+└── src/
+    ├── data/          # Data processing modules
+    └── models/        # Model definition and training
 ```
 
-## ⚡ Performance
-Current model performance metrics:
-- Stream Recommendation: 86.00% accuracy
-- University Field Recommendation: 21.05% accuracy (under improvement)
+## Integration with Spring Boot
+The trained model can be accessed from Spring Boot through:
+1. Loading the saved model using joblib
+2. Converting input data to match the model's feature format
+3. Making predictions using the loaded model
+
+Example Spring Boot integration:
+```java
+@Service
+public class PredictionService {
+    private Python python;
+    private PyObject model;
+
+    @PostConstruct
+    public void init() {
+        // Initialize Python interpreter
+        python = Python.getInstance();
+        // Load the saved model
+        model = python.getModule("joblib").load("path/to/model.joblib");
+    }
+
+    public List<String> predictCareerPaths(StudentData student) {
+        // Convert student data to feature array
+        // Make prediction using the model
+        // Convert prediction back to career path labels
+    }
+}
+```
 
 ## 🔧 Development
-- Keep the virtual environment in `.gitignore`
-- Run tests: `pytest`
 - Format code: `black .`
-- Lint code: `flake8`
+- Run tests: `pytest`
+- Generate new synthetic data: `python -m src.data.generators`
+
+## 📊 Future Improvements
+1. Collect real student data for training
+2. Implement cross-validation for better evaluation
+3. Experiment with different model architectures
+4. Add confidence scores for predictions
+5. Implement model versioning and monitoring
 
 ## 🤝 Contributing
-
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
 5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📬 Contact
-
-- GitHub: https://github.com/adithyasean
-- Email: adithyasean@gmail.com
