@@ -2,7 +2,7 @@
 
 ## Core Entities
 
-### 1. Student Entity
+### 1. Student
 ```java
 @Entity
 @Table(name = "students")
@@ -10,247 +10,231 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    // Basic Info
+    private String name;
+    private String email;
+    private String contact;
+    private String school;
+    private String district;
+
+    // O/L Results
+    @ElementCollection
+    private Map<String, String> olResults;  // subject -> grade
     
-    @Embedded
-    private BasicInfo basicInfo;
+    // A/L Information (if exists)
+    @ElementCollection
+    private Map<String, String> alResults;  // subject -> grade
+    private String stream;
+    private Double zScore;
     
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<AcademicRecord> academicRecords;
-    
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<SkillAssessment> skills;
-    
+    // Preferences & Skills
     @ElementCollection
     private List<String> interests;
-    
-    @Embedded
-    private SyncMetadata syncMetadata;
-}
-
-@Embeddable
-public class BasicInfo {
-    private String name;
-    private LocalDate dob;
-    private String contact;
-    private String district;
+    @ElementCollection
+    private List<String> skills;
+    @ElementCollection
+    private List<String> strengths;  // personality traits, soft skills
 }
 ```
 
-### 2. Academic Records
+### 2. Stream
 ```java
 @Entity
-@Table(name = "academic_records")
-public class AcademicRecord {
+@Table(name = "streams")
+public class Stream {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    
+    private String name;  // e.g., "Physical Science", "Biological Science"
+    private String description;
+    
+    @ElementCollection
+    private List<String> requiredOLSubjects;
+    @ElementCollection
+    private Map<String, String> minimumOLGrades;  // subject -> minimum grade
+    
+    @OneToMany(mappedBy = "stream")
+    private List<Course> possibleCourses;
+    
+    @ElementCollection
+    private List<String> relatedCareers;  // Links to Career.code
+    
+    private Double predictedProbability;
+}
+```
+
+### 3. Course
+```java
+@Entity
+@Table(name = "courses")
+public class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    
+    private String name;  // e.g., "Computer Science", "Medicine"
+    private String description;
+    private String duration;  // e.g., "4 years"
+    
+    @ManyToOne
+    private Stream stream;
+    
+    @ElementCollection
+    private Map<String, String> minimumALGrades;
+    private Double minimumZScore;
+    
+    @ManyToMany
+    private List<Institution> offeredBy;
+    
+    @ElementCollection
+    private List<String> relatedCareers;  // Links to Career.code
+    
+    @ElementCollection
+    private List<String> skillsGained;    // Skills obtained from this course
+    
+    private Double predictedProbability;
+}
+```
+
+### 4. Institution
+```java
+@Entity
+@Table(name = "institutions")
+public class Institution {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    
+    private String name;
+    private String type;  // UNIVERSITY, PRIVATE_UNIVERSITY, INSTITUTE
+    private String website;
+    private String location;
+    private String contact;
+    
+    @ElementCollection
+    private Map<String, String> socialLinks;
+    
+    @ManyToMany(mappedBy = "offeredBy")
+    private List<Course> availableCourses;
+    
+    private String admissionProcess;
+    private String facilities;
+    
+    @ElementCollection
+    private List<String> industryPartners;  // Companies for internships/placements
+}
+```
+
+### 5. Career
+```java
+@Entity
+@Table(name = "careers")
+public class Career {
+    @Id
+    private String code;  // Unique career code
+    
+    private String title;
+    private String description;
+    private String industry;
+    private String outlook;  // Job market outlook
+    
+    @ElementCollection
+    private List<String> requiredSkills;
+    @ElementCollection
+    private List<String> recommendedPersonalityTraits;
+    
+    @ElementCollection
+    private List<String> relatedCourses;  // Links to Course names
+    
+    @ElementCollection
+    private Map<String, String> salaryRanges;  // experience_level -> range
+    
+    @ElementCollection
+    private List<String> certifications;  // Recommended certifications
+    
+    private Double predictedProbability;
+}
+```
+
+### 6. Prediction
+```java
+@Entity
+@Table(name = "predictions")
+public class Prediction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
     @ManyToOne
-    @JoinColumn(name = "student_id")
     private Student student;
-    
-    @Enumerated(EnumType.STRING)
-    private AcademicLevel level;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    private OLResults olResults;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    private ALResults alResults;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    private UniversityResults universityResults;
-    
-    @Embedded
-    private SyncMetadata syncMetadata;
-}
-
-@Entity
-public class OLResults {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private LocalDateTime predictedAt;
     
     @ElementCollection
-    @MapKeyEnumerated(EnumType.STRING)
-    private Map<CoreSubject, Grade> coreSubjects;
+    private List<PathPrediction> predictedPaths;
     
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<OptionalSubject> optionalSubjects;
-    
-    private Double aggregateScore;
-}
-
-@Entity
-public class ALResults {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    
-    @Enumerated(EnumType.STRING)
-    private Stream stream;
-    
-    private Integer attempt;
-    
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<ALSubject> subjects;
-    
-    private Grade generalEnglish;
-    private Grade generalIT;
-    
-    private Double zScore;
-    private Integer districtRank;
-    private Integer islandRank;
-}
-```
-
-### 3. University Program
-```java
-@Entity
-@Table(name = "university_programs")
-public class UniversityProgram {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    
-    private String name;
-    private String code;
-    private String faculty;
-    
-    @Enumerated(EnumType.STRING)
-    private Stream stream;
-    
-    private Integer duration;
-    
-    @Embedded
-    private CutoffScores cutoffScores;
-    
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Prerequisite> prerequisites;
-    
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<CareerPath> careerPaths;
-    
-    @Embedded
-    private SyncMetadata syncMetadata;
-}
-```
-
-### 4. ML Model Metadata
-```java
-@Entity
-@Table(name = "ml_models")
-public class MLModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    
-    @Enumerated(EnumType.STRING)
-    private ModelType modelType;
-    
-    private String version;
-    
-    @Embedded
-    private Accuracy accuracy;
-    
-    private LocalDateTime lastTraining;
-    
-    @ElementCollection
-    private List<FeatureImportance> featureImportance;
-    
-    private String onnxPath;
-    private Long sizeBytes;
-    
-    @Embedded
-    private SyncMetadata syncMetadata;
-}
-```
-
-## Sync System
-
-### 1. Sync Metadata
-```java
-@Embeddable
-public class SyncMetadata {
-    private Integer version;
-    private LocalDateTime lastModified;
-    
-    @Enumerated(EnumType.STRING)
-    private SyncStatus status;
-    
-    private String deviceId;
-    
-    @Embedded
-    private ConflictResolution conflictResolution;
-}
-
-@Embeddable
-public class ConflictResolution {
-    @Enumerated(EnumType.STRING)
-    private ResolutionStrategy strategy;
-    
-    private LocalDateTime resolvedAt;
-    private String resolvedBy;
-}
-```
-
-### 2. Sync Queue
-```java
-@Entity
-@Table(name = "sync_queue")
-public class SyncQueueItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    
-    private UUID entityId;
-    
-    @Enumerated(EnumType.STRING)
-    private SyncOperation operation;
-    
-    @Enumerated(EnumType.STRING)
-    private SyncStatus status;
-    
-    private Integer retryCount;
-    private LocalDateTime lastAttempt;
-    private String error;
-    
-    @Column(columnDefinition = "TEXT")
-    private String payload;
+    @Embeddable
+    public static class PathPrediction {
+        @ManyToOne
+        private Stream stream;
+        private Double streamProbability;
+        
+        @ManyToOne
+        private Course course;
+        private Double courseProbability;
+        
+        private String careerCode;  // References Career.code
+        private Double careerProbability;
+        
+        private String reasoning;
+        @ElementCollection
+        private List<Institution> recommendedInstitutions;
+    }
 }
 ```
 
 ## Key Features
 
-1. **SQLite Integration**
-   - Lightweight, serverless database
-   - Zero-configuration required
-   - Full ACID compliance
-   - Cross-platform compatibility
+1. **Integrated Predictions**
+   - Stream predictions based on O/L results
+   - Course predictions based on stream and A/L results
+   - Career predictions based on academic performance, skills, and interests
+   - Institution recommendations for each educational path
 
-2. **Bidirectional Relationships**
-   - Proper mapping of parent-child relationships
-   - Cascade operations for related entities
-   - Efficient querying with indexes
+2. **Career Integration**
+   - Careers linked to both streams and courses
+   - Skill mapping between courses and careers
+   - Personality trait matching
+   - Industry and salary information
 
-3. **Embedded Components**
-   - Common patterns extracted into embeddable classes
-   - Reduces duplication and improves maintainability
-   - Optimized storage in SQLite
+3. **Comprehensive Student Profile**
+   - Academic performance
+   - Skills and interests
+   - Personality traits
+   - Career preferences
 
-4. **Sync Support**
-   - Every entity includes sync metadata
-   - Built-in conflict resolution
-   - Queue-based sync operations
-   - Efficient delta updates
+4. **Educational Pathways**
+   - Clear progression from stream → course → career
+   - Multiple pathway possibilities
+   - Institution options for each path
 
-5. **Enum Usage**
-   - Strong typing for status, grades, and operations
-   - Stored as TEXT in SQLite
-   - Ensures data consistency
+5. **Rich Career Information**
+   - Job market outlook
+   - Salary ranges
+   - Required skills
+   - Recommended certifications
+   - Industry connections
 
-6. **Local Storage**
-   - Fast local access with SQLite
-   - Minimal memory footprint
-   - Automatic backup support
-   - Efficient binary storage
+6. **Simple Yet Powerful**
+   - Lightweight entities
+   - Clear relationships
+   - Easy to maintain
+   - Scalable structure
+
+## User Flow
+1. Student enters O/L results → Get stream predictions
+2. Click on stream → See possible courses and related careers
+3. Click on course → View institutions and career opportunities
+4. Click on career → View requirements, outlook, and salary ranges
+5. Click on institution → Get admission details and industry partners
