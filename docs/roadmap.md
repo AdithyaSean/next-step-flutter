@@ -1,100 +1,126 @@
 # Next Step Development Roadmap
 
-## Phase 1: Core Backend Development 
-1. **Spring Boot Setup** 
-   - Project structure with Spring Boot 3.x
-   - SQLite configuration for local development
-   - Basic API structure with SyncController
-   - Error handling framework
-   - WebSocket integration
+## Phase 1: Core AI Development
+1. **Enhanced ML Pipeline**
+   - Multi-path prediction models
+   - Stream-course-career prediction
+   - Confidence score calculation
 
-2. **Data Models** 
-   - Sri Lankan education system entities
-     - O/L results (A-F grades)
-     - A/L results (A-F grades + Z-score)
-     - University records (GPA)
-   - Student profile models
-   - Career recommendation models
-   - Sync metadata models
+2. **Data Generation**
+   - Student profile generation
+   - Academic performance data
+   - Basic career and course data
+   - Educational institution data
 
-3. **ML Integration** 
-   - Advanced model training pipeline
-   - Synthetic data generation
-   - Model versioning system
-   - Performance monitoring
-   - ONNX export optimization
+3. **Feature Engineering**
+   - Academic performance analysis
+   - Skills and interests processing
+   - Basic compatibility scoring
+   - Simple matching features
 
-## Phase 2: Mobile App Development 
-1. **Flutter Setup** 
-   - Project structure
-   - Hive integration for offline storage
-   - Offline-first architecture
-   - Clean architecture with BLoC pattern
+## Phase 2: Backend Development
+1. **Core Entities**
+   - Student profiles
+   - Educational streams
+   - Course definitions
+   - Basic career info
+   - Institution links
+   - Prediction records
 
-2. **Core Features** 
-   - Student profile management 
-     - Academic record entry
-     - Skills assessment
-     - Interest tracking
-   - Results validation 
-   - Recommendation display
-   - Progress tracking
-   - Real-time sync notifications
-
-3. **Offline Support** 
-   - Hive database setup 
-   - Background sync service
-   - Conflict resolution strategies
+2. **Data Layer**
+   - SQLite integration
+   - JPA repositories
+   - Efficient indexing
+   - Query optimization
    - Data validation
-   - Delta sync optimization
 
-## Phase 3: Testing & Optimization
-1. **Testing**
-   - Unit tests (JUnit, Flutter test)
-   - Integration tests
-   - ML model accuracy validation
-   - Sync conflict tests
-   - User acceptance testing
+3. **Service Layer**
+   - Prediction service
+   - Student management
+   - Course exploration
+   - External link handling
+   - Institution directory
 
-2. **Performance**
-   - Response time optimization
-   - Storage optimization
-   - ML inference optimization
-   - Battery usage optimization
-   - Sync payload optimization
+4. **API Layer**
+   - RESTful endpoints
+   - WebSocket integration
+   - Authentication
+   - Rate limiting
+   - Error handling
 
-3. **Security**
-   - JWT implementation
-   - Data encryption
-   - Secure storage
-   - API security
-   - Privacy compliance
+## Phase 3: Mobile Development
+1. **Local Storage**
+   - SQLite integration
+   - Entity models
+   - Sync management
+   - Offline predictions
 
-## Phase 4: Deployment & Monitoring
+2. **UI Components**
+   - Stream prediction view
+   - Course explorer
+   - Career links interface
+   - Institution directory
+   - Profile management
+
+3. **User Experience**
+   - Material Design 3
+   - Link handling
+   - Loading states
+   - Error handling
+   - External browser integration
+
+## Phase 4: Integration & Testing
+1. **System Integration**
+   - End-to-end testing
+   - Link validation
+   - Error handling
+   - Edge cases
+   - Load testing
+
+2. **User Testing**
+   - Beta testing
+   - Feedback collection
+   - UI/UX improvements
+   - Performance tuning
+
+3. **Documentation**
+   - API documentation
+   - User guides
+   - External resource guide
+   - Maintenance docs
+
+## Phase 5: Deployment & Monitoring
 1. **Deployment**
-   - Backend deployment
-   - Mobile app release
-   - Documentation update
-   - User guide creation
-   - CI/CD pipeline setup
+   - CI/CD setup
+   - Environment configuration
+   - Security hardening
+   - Backup strategy
 
 2. **Monitoring**
+   - Performance metrics
    - Error tracking
    - Usage analytics
-   - ML model performance
-   - System health metrics
-   - Sync performance metrics
+   - Link monitoring
 
-## Current Status
-- Phase: 2 (Mobile App Development)
-- Current Focus: Offline Support & Core Features
-- Completed:
-  1. ML model training with improved accuracy
-  2. Flutter app basic structure
-- Next Steps: 
-  1. Spring Boot backend with sync capabilities
-  2. Offline storage implementation
-  3. Complete background sync service
-  4. Implement conflict resolution
-  5. Add real-time notifications
-  6. Optimize sync performance
+3. **Maintenance**
+   - Bug fixes
+   - Link updates
+   - Feature updates
+   - Security patches
+
+## Success Metrics
+
+1. **Prediction Accuracy**
+   - Stream prediction: >90%
+   - Course prediction: >85%
+   - Career suggestion relevance: >80%
+
+2. **Performance**
+   - API response: <200ms
+   - Sync time: <1s
+   - App load time: <2s
+
+3. **User Experience**
+   - App rating: >4.5
+   - Link reliability: >95%
+   - Task completion: >90%
