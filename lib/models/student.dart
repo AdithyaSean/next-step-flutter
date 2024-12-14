@@ -5,6 +5,7 @@ class Student {
   final String contact;
   final String school;
   final String district;
+  final String password;
   final Map<String, String> olResults;
   final Map<String, String> alResults;
   final String stream;
@@ -20,6 +21,7 @@ class Student {
     required this.contact,
     required this.school,
     required this.district,
+    required this.password,
     required this.olResults,
     required this.alResults,
     required this.stream,
@@ -37,6 +39,7 @@ class Student {
       contact: json['contact'],
       school: json['school'],
       district: json['district'],
+      password: json['password'],
       olResults: Map<String, String>.from(json['olResults']),
       alResults: Map<String, String>.from(json['alResults']),
       stream: json['stream'],
