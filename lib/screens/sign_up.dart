@@ -1,7 +1,41 @@
 import 'package:flutter/material.dart';
 
-class ResponsiveSignUp extends StatelessWidget {
+class ResponsiveSignUp extends StatefulWidget {
   const ResponsiveSignUp({Key? key}) : super(key: key);
+
+  @override
+  _ResponsiveSignUpState createState() => _ResponsiveSignUpState();
+}
+
+class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
+  final List<String> districts = [
+    'Ampara',
+    'Anuradhapura',
+    'Badulla',
+    'Batticaloa',
+    'Colombo',
+    'Galle',
+    'Gampaha',
+    'Hambantota',
+    'Jaffna',
+    'Kalutara',
+    'Kandy',
+    'Kegalle',
+    'Kilinochchi',
+    'Kurunegala',
+    'Mannar',
+    'Matale',
+    'Matara',
+    'Monaragala',
+    'Mullaitivu',
+    'Nuwara Eliya',
+    'Polonnaruwa',
+    'Puttalam',
+    'Ratnapura',
+    'Trincomalee',
+    'Vavuniya'
+  ];
+  String? selectedDistrict;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +114,36 @@ class ResponsiveSignUp extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'School',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: 'District',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      value: selectedDistrict,
+                      items: districts.map((String district) {
+                        return DropdownMenuItem<String>(
+                          value: district,
+                          child: Text(district),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedDistrict = newValue;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -108,7 +172,8 @@ class ResponsiveSignUp extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: const Text('Sign Up', style: TextStyle(color: Colors.white)),
+                      child: const Text('Sign Up',
+                          style: TextStyle(color: Colors.white)),
                     ),
                     const SizedBox(height: 24),
                     const Row(
@@ -127,12 +192,14 @@ class ResponsiveSignUp extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Image.asset('images/google.png', width: 30, height: 30),
+                          icon: Image.asset('images/google.png',
+                              width: 30, height: 30),
                         ),
                         const SizedBox(width: 16),
                         IconButton(
                           onPressed: () {},
-                          icon: Image.asset('images/facebook.png', width: 35, height: 35),
+                          icon: Image.asset('images/facebook.png',
+                              width: 35, height: 35),
                         ),
                       ],
                     ),
@@ -142,8 +209,12 @@ class ResponsiveSignUp extends StatelessWidget {
                       children: [
                         const Text("Already have an account?"),
                         TextButton(
-                          onPressed: () {},
-                          child: const Text('Sign In', style: TextStyle(color: Colors.blue)),
+                          onPressed: () {
+                            // Navigate to sign in screen
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Sign In',
+                              style: TextStyle(color: Colors.blue)),
                         ),
                       ],
                     ),
