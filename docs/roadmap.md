@@ -54,20 +54,14 @@
    - Error handling
    - Retry mechanisms
 
-2. **Local Storage**
-   - SQLite integration
-   - Entity models
-   - Sync management
-   - Offline predictions
-
-3. **UI Components**
+2. **UI Components**
    - Stream prediction view
    - Course explorer
    - Career links interface
    - Institution directory
    - Profile management
 
-4. **User Experience**
+3. **User Experience**
    - Material Design 3
    - Link handling
    - Loading states

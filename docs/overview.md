@@ -15,8 +15,7 @@ Key Technologies:
 - Python 3.12+
 - PostgreSQL 14+
 - LightGBM model
-- Spring Boot 3.x
-- Spring Data JPA
+- Object Relational Mapping
 - WebSocket
 
 ### 2. AI Component (`/next-step-ai/`)
@@ -77,7 +76,6 @@ Lightweight client application:
 
 3. **Robust Integration**
    - REST API access
-   - Spring Boot integration
    - Flutter compatibility
    - Real-time updates
 
