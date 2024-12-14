@@ -15,34 +15,17 @@ The AI component is responsible for:
 
 Key Technologies:
 - Python 3.12+
-- LightGBM for model training
-- Joblib for model export
-- Scikit-learn for preprocessing
-- Custom data generators for synthetic data
+- PostgreSQL 14+
+- LightGBM model
+- Dart ORM
+- WebSocket
 
-### 2. Backend Component (`/next-step-backend/`)
-
-The Spring Boot backend provides:
-- RESTful APIs for data synchronization
-- WebSocket support for real-time updates
-- JWT-based authentication
-- Conflict resolution for offline-first sync
-
-Key Technologies:
-- Spring Boot 3.x
-- Spring Data JPA
-- SQLite for local storage
-- JWT Authentication
-- SQLite
-- WebSocket for real-time updates
-
-Core Entities:
-- Student (academic records, interests)
-- Stream (requirements, possible courses)
-- Course (requirements, institutions)
-- Career (title, external links)
-- Institution (basic info, website)
-- Prediction (unified pathways)
+### 2. AI Component (`/next-step-ai/`)
+Integrated within the central server:
+- Monitors database changes for prediction triggers
+- Updates predictions in real-time
+- Stores results back to PostgreSQL
+- Performance monitoring
 
 ### 3. Mobile App Component (`/next-step-flutter/`)
 

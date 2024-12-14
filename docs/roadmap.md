@@ -28,9 +28,9 @@
    - Prediction records
 
 2. **Data Layer**
-   - SQLite integration
-   - JPA repositories
-   - Efficient indexing
+   - PostgreSQL integration
+   - Dart ORM
+   - Connection pooling
    - Query optimization
    - Data validation
 
