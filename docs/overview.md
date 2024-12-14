@@ -54,7 +54,6 @@ Lightweight client application:
 - Additional resource links
 
 ### 4. Data Management
-- Offline-first architecture
 - Real-time synchronization
 - Data validation
 - Link management
@@ -103,25 +102,19 @@ Lightweight client application:
    - Automatic sync with client
    - WebSocket updates
 
-2. **Offline-First Architecture**
-   - Local storage with SQLite
-   - Background sync service
-   - Conflict resolution
-   - Delta updates
-
-3. **Real-Time Updates**
+2. **Real-Time Updates**
    - WebSocket integration
    - Push notifications
    - Live data synchronization
    - Event-driven updates
 
-4. **Security**
+3. **Security**
    - JWT authentication
    - Role-based access control
    - Secure data storage
    - API protection
 
-5. **Modularity**
+4. **Modularity**
    - Clear separation of concerns
    - Independent deployability
    - Shared domain model
