@@ -206,32 +206,28 @@ public class Institution {
 
 ## Database Design
 
-1. **Efficient Storage**
-   - UUID-based primary keys
-   - Map-based storage for grades
-   - List-based storage for collections
-   - Embedded objects for complex types
+1. **PostgreSQL Optimization**
+   - B-tree indexes for UUID lookups
+   - JSONB for flexible storage
+   - Materialized views for predictions
+   - Trigger-based model updates
+   - Connection pooling
 
-2. **Relationships**
-   - One-to-many: Stream → Courses
-   - Many-to-many: Course ↔ Institution
-   - Soft links: Career references
+2. **Real-time Updates**
+   - Database triggers for model notifications
+   - WebSocket notifications for clients
+   - Optimistic locking
+   - Transaction management
 
 3. **Performance**
-   - Indexed lookups
-   - Denormalized data where needed
-   - Efficient queries
-   - SQLite optimization
-
-4. **Data Integrity**
-   - Foreign key constraints
-   - Not-null constraints
-   - Unique constraints
-   - Check constraints
+   - Prepared statements
+   - Query planning
+   - Index optimization
+   - Connection pooling
+   - Statement caching
 
 ## User Flow
-1. Student enters O/L results → Get stream predictions
-2. Click on stream → See possible courses and related careers
-3. Click on course → View institutions and career opportunities
-4. Click on career → Links to respective information sources
-5. Click on institution → Links to respective information sources
+1. Student enters O/L results → Server stores data and triggers model
+2. Model updates predictions → Database updated
+3. WebSocket notifies client → UI updates automatically
+4. User browses recommendations with real-time updates

@@ -20,19 +20,17 @@
 
 ## Phase 2: Backend Development
 1. **Core Entities**
-   - Student profiles
-   - Educational streams
-   - Course definitions
-   - Basic career info
-   - Institution links
-   - Prediction records
+   - PostgreSQL schema design
+   - Database optimization
+   - Index planning
+   - Performance tuning
 
 2. **Data Layer**
-   - SQLite integration
+   - PostgreSQL integration
    - JPA repositories
-   - Efficient indexing
+   - Connection pooling
    - Query optimization
-   - Data validation
+   - Real-time sync
 
 3. **Service Layer**
    - Prediction service
@@ -49,20 +47,27 @@
    - Error handling
 
 ## Phase 3: Mobile Development
-1. **Local Storage**
+1. **Network Layer**
+   - REST client implementation
+   - WebSocket connection
+   - Real-time updates
+   - Error handling
+   - Retry mechanisms
+
+2. **Local Storage**
    - SQLite integration
    - Entity models
    - Sync management
    - Offline predictions
 
-2. **UI Components**
+3. **UI Components**
    - Stream prediction view
    - Course explorer
    - Career links interface
    - Institution directory
    - Profile management
 
-3. **User Experience**
+4. **User Experience**
    - Material Design 3
    - Link handling
    - Loading states
@@ -90,11 +95,12 @@
    - Maintenance docs
 
 ## Phase 5: Deployment & Monitoring
-1. **Deployment**
-   - CI/CD setup
-   - Environment configuration
-   - Security hardening
+1. **Server Deployment**
+   - PostgreSQL setup
+   - Model deployment
+   - Load balancing
    - Backup strategy
+   - Monitoring setup
 
 2. **Monitoring**
    - Performance metrics
