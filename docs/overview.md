@@ -2,16 +2,14 @@
 
 ## System Architecture
 
-Next Step uses a modular monolith architecture with three main components:
+Next Step uses a client-server architecture with three main components:
 
-### 1. AI Model Component (`/next-step-ai/`)
-
-The AI component is responsible for:
-- Processing student data and generating features
-- Training recommendation models using advanced algorithms
-- Exporting models in Joblib format for mobile deployment
-- Performance monitoring and model evaluation
-- Generating realistic training data
+### 1. Central Server (`/next-step-server/`)
+Houses both the AI model and database:
+- PostgreSQL database for all application data
+- LightGBM model for real-time predictions
+- RESTful APIs for Flutter client
+- WebSocket for real-time updates
 
 Key Technologies:
 - Python 3.12+
@@ -28,19 +26,10 @@ Integrated within the central server:
 - Performance monitoring
 
 ### 3. Mobile App Component (`/next-step-flutter/`)
-
-The Flutter app provides:
-- Educational pathway exploration
-- External resource browser
-- Profile management
-- Offline predictions
-- Real-time updates
-
-Key Technologies:
-- Flutter SDK
-- SQLite for local storage
-- BLoC pattern
-- Material Design 3
+Lightweight client application:
+- Direct connection to central server
+- Real-time data sync via WebSocket
+- Material Design 3 UI
 - External link handling
 
 ## System Features
@@ -93,21 +82,14 @@ Key Technologies:
 
 ## Development Workflow
 
-1. **AI Model Development**
+1. **Server Setup**
    ```bash
-   cd next-step-ai
-   ./setup.sh  # or setup.ps1 on Windows
-   python -m src.models.train
-   python -m src.data.generators.dataset_generator  # for synthetic data
-   ```
-
-2. **Backend Development**
-   ```bash
-   cd next-step-backend
+   cd next-step-server
+   ./setup.sh  # Sets up PostgreSQL and AI model
    ./gradlew bootRun
    ```
 
-3. **Mobile App Development**
+2. **Mobile App Development**
    ```bash
    cd next-step-flutter
    flutter pub get
@@ -116,11 +98,11 @@ Key Technologies:
 
 ## Key Features
 
-1. **ORM Integration**
-   - JPA/Hibernate for object-relational mapping
-   - Type-safe entities and relationships
-   - Automatic schema generation
-   - Transaction management
+1. **Centralized Data Management**
+   - PostgreSQL for robust data storage
+   - Real-time model predictions
+   - Automatic sync with client
+   - WebSocket updates
 
 2. **Offline-First Architecture**
    - Local storage with SQLite
