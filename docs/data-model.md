@@ -168,8 +168,8 @@ public class Institution {
    - Contact information
 
 4. **Easy Integration**
-   - Spring Data JPA ready
-   - SQLite compatible
+   - Object Relational Mapping
+   - Postgresql compatible
    - Flutter serializable
    - REST API friendly
 
