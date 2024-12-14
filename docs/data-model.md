@@ -235,3 +235,5 @@ public class Institution {
 3. Click on course → View institutions and career opportunities
 4. Click on career → Links to respective information sources
 5. Click on institution → Links to respective information sources
+
+1

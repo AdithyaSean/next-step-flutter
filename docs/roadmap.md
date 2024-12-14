@@ -124,3 +124,5 @@
    - App rating: >4.5
    - Link reliability: >95%
    - Task completion: >90%
+
+   2
