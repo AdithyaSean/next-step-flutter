@@ -27,7 +27,6 @@
 
 2. **Data Layer**
    - PostgreSQL integration
-   - JPA repositories
    - Connection pooling
    - Query optimization
    - Real-time sync
