@@ -323,6 +323,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_dotenv:
+    dependency: "direct main"
+    description:
+      name: flutter_dotenv
+      sha256: b7c7be5cd9f6ef7a78429cabd2774d3c4af50e79cb2b7593e3d5d763ef95c61b
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -397,6 +405,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.1"
+  idb_shim:
+    dependency: transitive
+    description:
+      name: idb_shim
+      sha256: "9e7ec816139bfafb69ae4b3668ad29dbd43c53428d6eb31f9332d42bd4fa7205"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.1+7"
+  idb_sqflite:
+    dependency: "direct main"
+    description:
+      name: idb_sqflite
+      sha256: "0ce0109e4b5a71b657c21d21a1ee8b8187dd37c181d82f16e5451eea7aa983f3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.3+6"
   io:
     dependency: transitive
     description:
@@ -613,6 +637,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  sembast:
+    dependency: transitive
+    description:
+      name: sembast
+      sha256: f45edc5e34ed53d6e3d70df664b182e9abcf9c784f48184e5be4c079d2b865d6
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.0+1"
   shelf:
     dependency: transitive
     description:
