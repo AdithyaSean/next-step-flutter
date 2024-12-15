@@ -21,7 +21,7 @@ class NextStepStart extends StatelessWidget {
             }
 
             return Center(
-              child: Container(
+              child: SizedBox(
                 width: contentWidth,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,

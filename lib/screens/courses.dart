@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class CoursesScreen extends StatelessWidget {
-  CoursesScreen({Key? key}) : super(key: key);
+  CoursesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

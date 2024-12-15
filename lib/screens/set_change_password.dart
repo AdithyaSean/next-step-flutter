@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class SetChangePasswordScreen extends StatelessWidget {
-  const SetChangePasswordScreen({Key? key}) : super(key: key);
+  const SetChangePasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

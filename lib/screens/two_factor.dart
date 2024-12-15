@@ -4,7 +4,7 @@ import 'package:next_step/screens/two_factor_email.dart';
 import 'package:next_step/screens/two_factor_mobile.dart';
 
 class TwoFactorAuthScreen extends StatefulWidget {
-  const TwoFactorAuthScreen({Key? key}) : super(key: key);
+  const TwoFactorAuthScreen({super.key});
 
   @override
   _TwoFactorAuthScreenState createState() => _TwoFactorAuthScreenState();

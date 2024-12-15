@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import '../data/models/student.dart' as model; // Import your Student model
-import '../data/repositories/student_repository.dart'; // Import your StudentRepository
-import '../data/database/database.dart'; // Import your database
-import '../../services/firebase_db_service.dart'; // Import your Firebase service
+import '../core/service_locator.dart';
+import '../controllers/auth_controller.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
-  const ResponsiveSignUp({Key? key}) : super(key: key);
+  const ResponsiveSignUp({super.key});
 
   @override
-  _ResponsiveSignUpState createState() => _ResponsiveSignUpState();
+  State<ResponsiveSignUp> createState() => _ResponsiveSignUpState();
 }
 
 class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
@@ -50,9 +48,21 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  // Initialize your database and repository
-  final StudentRepository studentRepository =
-      StudentRepository(AppDatabase.instance, FirebaseDBService());
+  late final AuthController _authController;
+  bool _isMounted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMounted = true;
+    _authController = locator<AuthController>();  // Only get the controller from service locator
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -252,35 +262,35 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
   }
 
   void _signUp() async {
-    if (passwordController.text == confirmPasswordController.text) {
-      // Create a new Student object
-      model.Student newStudent = model.Student(
-        id: usernameController.text, // Assuming username is used as ID
+    final context = this.context;
+
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Passwords do not match!')));
+      return;
+    }
+
+    try {
+      await _authController.signUp(
+        username: usernameController.text,
         name: nameController.text,
         email: emailController.text,
         contact: telephoneController.text,
         school: schoolController.text,
         district: selectedDistrict ?? '',
         password: passwordController.text,
-        olResults: {}, // Add appropriate data
-        alResults: {}, // Add appropriate data
-        stream: '', // Provide a default or user input for stream
-        zScore: 0.0, // Provide a default value or user input for zScore
-        interests: [], // Provide a default or user input for interests
-        skills: [], // Provide a default or user input for skills
-        strengths: [], // Provide a default or user input for strengths
-        predictions: [], // Provide a default or user input for predictions
       );
 
-      // Call the repository to create the student
-      await studentRepository.createStudent(newStudent);
-      // Show success message or navigate to another screen
+      if (!mounted) return; // Check if widget is still mounted
+
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Sign Up Successful!')));
-    } else {
-      // Show error message
+          .showSnackBar(const SnackBar(content: Text('Sign Up Successful!')));
+      // Navigate to next screen
+    } catch (e) {
+      if (!mounted) return; // Check if widget is still mounted
+
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Passwords do not match!')));
+          .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 }

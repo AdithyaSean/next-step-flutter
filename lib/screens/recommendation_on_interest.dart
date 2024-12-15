@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class RecommendationOnInterest extends StatelessWidget {
-  const RecommendationOnInterest({Key? key}) : super(key: key);
+  const RecommendationOnInterest({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +180,6 @@ class RecommendationOnInterest extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('More'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -188,6 +187,7 @@ class RecommendationOnInterest extends StatelessWidget {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
+                child: Text('More'),
               ),
             ),
           ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +196,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget buildEducationItem(String title, String grade) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Card(
         elevation: 0,
@@ -230,7 +230,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget buildCertificationItem(String title) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Card(
         elevation: 0,

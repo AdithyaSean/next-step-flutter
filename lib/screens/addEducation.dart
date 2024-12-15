@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class AddEducation extends StatelessWidget {
-  const AddEducation({Key? key}) : super(key: key);
+  const AddEducation({super.key});
 
   @override
   Widget build(BuildContext context) {
