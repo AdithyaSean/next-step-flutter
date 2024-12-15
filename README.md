@@ -39,6 +39,71 @@ Advanced machine learning models for accurate predictions
    flutter pub get
    ```
 
+### Firebase Setup
+
+Here's a step-by-step guide to set up the Firebase Flutter project:
+
+#### Prerequisites
+1. Install Flutter SDK
+2. Install Firebase CLI:
+   ```bash
+   curl -sL https://firebase.tools | bash
+   ```
+
+#### One-time Setup Steps
+
+1. **Login to Firebase:**
+   ```bash
+   firebase login
+   ```
+
+2. **Install FlutterFire CLI:**
+   ```bash
+   dart pub global activate flutterfire_cli
+   ```
+
+3. **Configure Firebase:**
+   ```bash
+   flutterfire configure --project=next-step-0002
+   ```
+
+#### After Each Pull
+
+1. **Update Dependencies:**
+   ```bash
+   flutter pub get
+   ```
+
+2. **Run Build Runner:**
+   ```bash
+   flutter pub run build_runner build
+   ```
+
+3. **Clean and Run:**
+   ```bash
+   flutter clean
+   flutter run
+   ```
+
+#### Troubleshooting
+
+- If Firebase initialization fails:
+  ```bash
+  flutterfire configure
+  ```
+
+- If build fails:
+  ```bash
+  flutter clean
+  flutter pub get
+  flutter run
+  ```
+
+#### Important Notes
+- Don't commit Firebase configuration files
+- Keep `firebase_options.dart` in version control
+- Update `.gitignore` to exclude sensitive files
+
 ### Running Components Separately
 
 #### Flutter App
