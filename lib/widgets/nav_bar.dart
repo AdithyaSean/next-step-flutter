@@ -7,7 +7,7 @@ import 'package:next_step/screens/settings_Ui.dart';
 
 class BottomNavContainer extends StatelessWidget {
   final int selectedIndex;
-  const BottomNavContainer({Key? key, this.selectedIndex = 0}) : super(key: key);
+  const BottomNavContainer({super.key, this.selectedIndex = 0});
 
   @override
   Widget build(BuildContext context) {

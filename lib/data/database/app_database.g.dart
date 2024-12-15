@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'database.dart';
+part of 'app_database.dart';
 
 // ignore_for_file: type=lint
 class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
@@ -95,11 +95,11 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
   static const VerificationMeta _predictionsMeta =
       const VerificationMeta('predictions');
   @override
-  late final GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>,
+  late final GeneratedColumnWithTypeConverter<Map<String, Map<String, dynamic>>,
       String> predictions = GeneratedColumn<String>(
           'predictions', aliasedName, false,
           type: DriftSqlType.string, requiredDuringInsert: true)
-      .withConverter<List<Map<String, dynamic>>>(
+      .withConverter<Map<String, Map<String, dynamic>>>(
           $StudentsTable.$converterpredictions);
   @override
   List<GeneratedColumn> get $columns => [
@@ -243,8 +243,9 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
       const ListConverter<String>();
   static TypeConverter<List<String>, String> $converterstrengths =
       const ListConverter<String>();
-  static TypeConverter<List<Map<String, dynamic>>, String>
-      $converterpredictions = const ListConverter<Map<String, dynamic>>();
+  static TypeConverter<Map<String, Map<String, dynamic>>, String>
+      $converterpredictions =
+      const MapConverter<String, Map<String, dynamic>>();
 }
 
 class Student extends DataClass implements Insertable<Student> {
@@ -262,7 +263,7 @@ class Student extends DataClass implements Insertable<Student> {
   final List<String> interests;
   final List<String> skills;
   final List<String> strengths;
-  final List<Map<String, dynamic>> predictions;
+  final Map<String, Map<String, dynamic>> predictions;
   const Student(
       {required this.id,
       required this.name,
@@ -369,8 +370,8 @@ class Student extends DataClass implements Insertable<Student> {
       interests: serializer.fromJson<List<String>>(json['interests']),
       skills: serializer.fromJson<List<String>>(json['skills']),
       strengths: serializer.fromJson<List<String>>(json['strengths']),
-      predictions:
-          serializer.fromJson<List<Map<String, dynamic>>>(json['predictions']),
+      predictions: serializer
+          .fromJson<Map<String, Map<String, dynamic>>>(json['predictions']),
     );
   }
   @override
@@ -391,7 +392,8 @@ class Student extends DataClass implements Insertable<Student> {
       'interests': serializer.toJson<List<String>>(interests),
       'skills': serializer.toJson<List<String>>(skills),
       'strengths': serializer.toJson<List<String>>(strengths),
-      'predictions': serializer.toJson<List<Map<String, dynamic>>>(predictions),
+      'predictions':
+          serializer.toJson<Map<String, Map<String, dynamic>>>(predictions),
     };
   }
 
@@ -410,7 +412,7 @@ class Student extends DataClass implements Insertable<Student> {
           List<String>? interests,
           List<String>? skills,
           List<String>? strengths,
-          List<Map<String, dynamic>>? predictions}) =>
+          Map<String, Map<String, dynamic>>? predictions}) =>
       Student(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -524,7 +526,7 @@ class StudentsCompanion extends UpdateCompanion<Student> {
   final Value<List<String>> interests;
   final Value<List<String>> skills;
   final Value<List<String>> strengths;
-  final Value<List<Map<String, dynamic>>> predictions;
+  final Value<Map<String, Map<String, dynamic>>> predictions;
   final Value<int> rowid;
   const StudentsCompanion({
     this.id = const Value.absent(),
@@ -559,7 +561,7 @@ class StudentsCompanion extends UpdateCompanion<Student> {
     required List<String> interests,
     required List<String> skills,
     required List<String> strengths,
-    required List<Map<String, dynamic>> predictions,
+    required Map<String, Map<String, dynamic>> predictions,
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         name = Value(name),
@@ -625,7 +627,7 @@ class StudentsCompanion extends UpdateCompanion<Student> {
       Value<List<String>>? interests,
       Value<List<String>>? skills,
       Value<List<String>>? strengths,
-      Value<List<Map<String, dynamic>>>? predictions,
+      Value<Map<String, Map<String, dynamic>>>? predictions,
       Value<int>? rowid}) {
     return StudentsCompanion(
       id: id ?? this.id,
@@ -731,12 +733,11 @@ class StudentsCompanion extends UpdateCompanion<Student> {
   }
 }
 
-class $StudyStreamsTable extends StudyStreams
-    with TableInfo<$StudyStreamsTable, StudyStream> {
+class $StreamsTable extends Streams with TableInfo<$StreamsTable, StreamData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $StudyStreamsTable(this.attachedDatabase, [this._alias]);
+  $StreamsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -761,7 +762,7 @@ class $StudyStreamsTable extends StudyStreams
               'required_o_l_subjects', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<List<String>>(
-              $StudyStreamsTable.$converterrequiredOLSubjects);
+              $StreamsTable.$converterrequiredOLSubjects);
   static const VerificationMeta _minimumOLGradesMeta =
       const VerificationMeta('minimumOLGrades');
   @override
@@ -770,16 +771,16 @@ class $StudyStreamsTable extends StudyStreams
               'minimum_o_l_grades', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<Map<String, String>>(
-              $StudyStreamsTable.$converterminimumOLGrades);
+              $StreamsTable.$converterminimumOLGrades);
   static const VerificationMeta _possibleCoursesMeta =
       const VerificationMeta('possibleCourses');
   @override
-  late final GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>,
-      String> possibleCourses = GeneratedColumn<String>(
-          'possible_courses', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true)
-      .withConverter<List<Map<String, dynamic>>>(
-          $StudyStreamsTable.$converterpossibleCourses);
+  late final GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      possibleCourses = GeneratedColumn<String>(
+              'possible_courses', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<Map<String, String>>(
+              $StreamsTable.$converterpossibleCourses);
   static const VerificationMeta _relatedCareersMeta =
       const VerificationMeta('relatedCareers');
   @override
@@ -787,8 +788,7 @@ class $StudyStreamsTable extends StudyStreams
       relatedCareers = GeneratedColumn<String>(
               'related_careers', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<List<String>>(
-              $StudyStreamsTable.$converterrelatedCareers);
+          .withConverter<List<String>>($StreamsTable.$converterrelatedCareers);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -803,9 +803,9 @@ class $StudyStreamsTable extends StudyStreams
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'study_streams';
+  static const String $name = 'streams';
   @override
-  VerificationContext validateIntegrity(Insertable<StudyStream> instance,
+  VerificationContext validateIntegrity(Insertable<StreamData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -838,54 +838,54 @@ class $StudyStreamsTable extends StudyStreams
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  StudyStream map(Map<String, dynamic> data, {String? tablePrefix}) {
+  StreamData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return StudyStream(
+    return StreamData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      requiredOLSubjects: $StudyStreamsTable.$converterrequiredOLSubjects
-          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.string,
+      requiredOLSubjects: $StreamsTable.$converterrequiredOLSubjects.fromSql(
+          attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}required_o_l_subjects'])!),
-      minimumOLGrades: $StudyStreamsTable.$converterminimumOLGrades.fromSql(
+      minimumOLGrades: $StreamsTable.$converterminimumOLGrades.fromSql(
           attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}minimum_o_l_grades'])!),
-      possibleCourses: $StudyStreamsTable.$converterpossibleCourses.fromSql(
+      possibleCourses: $StreamsTable.$converterpossibleCourses.fromSql(
           attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}possible_courses'])!),
-      relatedCareers: $StudyStreamsTable.$converterrelatedCareers.fromSql(
+      relatedCareers: $StreamsTable.$converterrelatedCareers.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.string, data['${effectivePrefix}related_careers'])!),
     );
   }
 
   @override
-  $StudyStreamsTable createAlias(String alias) {
-    return $StudyStreamsTable(attachedDatabase, alias);
+  $StreamsTable createAlias(String alias) {
+    return $StreamsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<String>, String> $converterrequiredOLSubjects =
       const ListConverter<String>();
   static TypeConverter<Map<String, String>, String> $converterminimumOLGrades =
       const MapConverter<String, String>();
-  static TypeConverter<List<Map<String, dynamic>>, String>
-      $converterpossibleCourses = const ListConverter<Map<String, dynamic>>();
+  static TypeConverter<Map<String, String>, String> $converterpossibleCourses =
+      const MapConverter<String, String>();
   static TypeConverter<List<String>, String> $converterrelatedCareers =
       const ListConverter<String>();
 }
 
-class StudyStream extends DataClass implements Insertable<StudyStream> {
+class StreamData extends DataClass implements Insertable<StreamData> {
   final String id;
   final String name;
   final String description;
   final List<String> requiredOLSubjects;
   final Map<String, String> minimumOLGrades;
-  final List<Map<String, dynamic>> possibleCourses;
+  final Map<String, String> possibleCourses;
   final List<String> relatedCareers;
-  const StudyStream(
+  const StreamData(
       {required this.id,
       required this.name,
       required this.description,
@@ -900,27 +900,26 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
     map['name'] = Variable<String>(name);
     map['description'] = Variable<String>(description);
     {
-      map['required_o_l_subjects'] = Variable<String>($StudyStreamsTable
-          .$converterrequiredOLSubjects
-          .toSql(requiredOLSubjects));
+      map['required_o_l_subjects'] = Variable<String>(
+          $StreamsTable.$converterrequiredOLSubjects.toSql(requiredOLSubjects));
     }
     {
       map['minimum_o_l_grades'] = Variable<String>(
-          $StudyStreamsTable.$converterminimumOLGrades.toSql(minimumOLGrades));
+          $StreamsTable.$converterminimumOLGrades.toSql(minimumOLGrades));
     }
     {
       map['possible_courses'] = Variable<String>(
-          $StudyStreamsTable.$converterpossibleCourses.toSql(possibleCourses));
+          $StreamsTable.$converterpossibleCourses.toSql(possibleCourses));
     }
     {
       map['related_careers'] = Variable<String>(
-          $StudyStreamsTable.$converterrelatedCareers.toSql(relatedCareers));
+          $StreamsTable.$converterrelatedCareers.toSql(relatedCareers));
     }
     return map;
   }
 
-  StudyStreamsCompanion toCompanion(bool nullToAbsent) {
-    return StudyStreamsCompanion(
+  StreamsCompanion toCompanion(bool nullToAbsent) {
+    return StreamsCompanion(
       id: Value(id),
       name: Value(name),
       description: Value(description),
@@ -931,10 +930,10 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
     );
   }
 
-  factory StudyStream.fromJson(Map<String, dynamic> json,
+  factory StreamData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return StudyStream(
+    return StreamData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String>(json['description']),
@@ -942,8 +941,8 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
           serializer.fromJson<List<String>>(json['requiredOLSubjects']),
       minimumOLGrades:
           serializer.fromJson<Map<String, String>>(json['minimumOLGrades']),
-      possibleCourses: serializer
-          .fromJson<List<Map<String, dynamic>>>(json['possibleCourses']),
+      possibleCourses:
+          serializer.fromJson<Map<String, String>>(json['possibleCourses']),
       relatedCareers: serializer.fromJson<List<String>>(json['relatedCareers']),
     );
   }
@@ -958,20 +957,20 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
       'minimumOLGrades':
           serializer.toJson<Map<String, String>>(minimumOLGrades),
       'possibleCourses':
-          serializer.toJson<List<Map<String, dynamic>>>(possibleCourses),
+          serializer.toJson<Map<String, String>>(possibleCourses),
       'relatedCareers': serializer.toJson<List<String>>(relatedCareers),
     };
   }
 
-  StudyStream copyWith(
+  StreamData copyWith(
           {String? id,
           String? name,
           String? description,
           List<String>? requiredOLSubjects,
           Map<String, String>? minimumOLGrades,
-          List<Map<String, dynamic>>? possibleCourses,
+          Map<String, String>? possibleCourses,
           List<String>? relatedCareers}) =>
-      StudyStream(
+      StreamData(
         id: id ?? this.id,
         name: name ?? this.name,
         description: description ?? this.description,
@@ -980,8 +979,8 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
         possibleCourses: possibleCourses ?? this.possibleCourses,
         relatedCareers: relatedCareers ?? this.relatedCareers,
       );
-  StudyStream copyWithCompanion(StudyStreamsCompanion data) {
-    return StudyStream(
+  StreamData copyWithCompanion(StreamsCompanion data) {
+    return StreamData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       description:
@@ -1003,7 +1002,7 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
 
   @override
   String toString() {
-    return (StringBuffer('StudyStream(')
+    return (StringBuffer('StreamData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -1021,7 +1020,7 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is StudyStream &&
+      (other is StreamData &&
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
@@ -1031,16 +1030,16 @@ class StudyStream extends DataClass implements Insertable<StudyStream> {
           other.relatedCareers == this.relatedCareers);
 }
 
-class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
+class StreamsCompanion extends UpdateCompanion<StreamData> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> description;
   final Value<List<String>> requiredOLSubjects;
   final Value<Map<String, String>> minimumOLGrades;
-  final Value<List<Map<String, dynamic>>> possibleCourses;
+  final Value<Map<String, String>> possibleCourses;
   final Value<List<String>> relatedCareers;
   final Value<int> rowid;
-  const StudyStreamsCompanion({
+  const StreamsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
@@ -1050,13 +1049,13 @@ class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
     this.relatedCareers = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  StudyStreamsCompanion.insert({
+  StreamsCompanion.insert({
     required String id,
     required String name,
     required String description,
     required List<String> requiredOLSubjects,
     required Map<String, String> minimumOLGrades,
-    required List<Map<String, dynamic>> possibleCourses,
+    required Map<String, String> possibleCourses,
     required List<String> relatedCareers,
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -1066,7 +1065,7 @@ class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
         minimumOLGrades = Value(minimumOLGrades),
         possibleCourses = Value(possibleCourses),
         relatedCareers = Value(relatedCareers);
-  static Insertable<StudyStream> custom({
+  static Insertable<StreamData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -1089,16 +1088,16 @@ class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
     });
   }
 
-  StudyStreamsCompanion copyWith(
+  StreamsCompanion copyWith(
       {Value<String>? id,
       Value<String>? name,
       Value<String>? description,
       Value<List<String>>? requiredOLSubjects,
       Value<Map<String, String>>? minimumOLGrades,
-      Value<List<Map<String, dynamic>>>? possibleCourses,
+      Value<Map<String, String>>? possibleCourses,
       Value<List<String>>? relatedCareers,
       Value<int>? rowid}) {
-    return StudyStreamsCompanion(
+    return StreamsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -1123,24 +1122,21 @@ class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
       map['description'] = Variable<String>(description.value);
     }
     if (requiredOLSubjects.present) {
-      map['required_o_l_subjects'] = Variable<String>($StudyStreamsTable
+      map['required_o_l_subjects'] = Variable<String>($StreamsTable
           .$converterrequiredOLSubjects
           .toSql(requiredOLSubjects.value));
     }
     if (minimumOLGrades.present) {
-      map['minimum_o_l_grades'] = Variable<String>($StudyStreamsTable
-          .$converterminimumOLGrades
-          .toSql(minimumOLGrades.value));
+      map['minimum_o_l_grades'] = Variable<String>(
+          $StreamsTable.$converterminimumOLGrades.toSql(minimumOLGrades.value));
     }
     if (possibleCourses.present) {
-      map['possible_courses'] = Variable<String>($StudyStreamsTable
-          .$converterpossibleCourses
-          .toSql(possibleCourses.value));
+      map['possible_courses'] = Variable<String>(
+          $StreamsTable.$converterpossibleCourses.toSql(possibleCourses.value));
     }
     if (relatedCareers.present) {
-      map['related_careers'] = Variable<String>($StudyStreamsTable
-          .$converterrelatedCareers
-          .toSql(relatedCareers.value));
+      map['related_careers'] = Variable<String>(
+          $StreamsTable.$converterrelatedCareers.toSql(relatedCareers.value));
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1150,7 +1146,7 @@ class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
 
   @override
   String toString() {
-    return (StringBuffer('StudyStreamsCompanion(')
+    return (StringBuffer('StreamsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -1164,7 +1160,7 @@ class StudyStreamsCompanion extends UpdateCompanion<StudyStream> {
   }
 }
 
-class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
+class $CoursesTable extends Courses with TableInfo<$CoursesTable, CourseData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1196,7 +1192,10 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
   @override
   late final GeneratedColumn<String> streamId = GeneratedColumn<String>(
       'stream_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES streams (id)'));
   static const VerificationMeta _minimumALGradesMeta =
       const VerificationMeta('minimumALGrades');
   @override
@@ -1247,7 +1246,7 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
   String get actualTableName => $name;
   static const String $name = 'courses';
   @override
-  VerificationContext validateIntegrity(Insertable<Course> instance,
+  VerificationContext validateIntegrity(Insertable<CourseData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -1300,9 +1299,9 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Course map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CourseData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Course(
+    return CourseData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -1340,7 +1339,7 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
       const ListConverter<String>();
 }
 
-class Course extends DataClass implements Insertable<Course> {
+class CourseData extends DataClass implements Insertable<CourseData> {
   final String id;
   final String name;
   final String description;
@@ -1350,7 +1349,7 @@ class Course extends DataClass implements Insertable<Course> {
   final double minimumZScore;
   final List<String> offeredByInstitutions;
   final List<String> relatedCareers;
-  const Course(
+  const CourseData(
       {required this.id,
       required this.name,
       required this.description,
@@ -1399,10 +1398,10 @@ class Course extends DataClass implements Insertable<Course> {
     );
   }
 
-  factory Course.fromJson(Map<String, dynamic> json,
+  factory CourseData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Course(
+    return CourseData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String>(json['description']),
@@ -1434,7 +1433,7 @@ class Course extends DataClass implements Insertable<Course> {
     };
   }
 
-  Course copyWith(
+  CourseData copyWith(
           {String? id,
           String? name,
           String? description,
@@ -1444,7 +1443,7 @@ class Course extends DataClass implements Insertable<Course> {
           double? minimumZScore,
           List<String>? offeredByInstitutions,
           List<String>? relatedCareers}) =>
-      Course(
+      CourseData(
         id: id ?? this.id,
         name: name ?? this.name,
         description: description ?? this.description,
@@ -1456,8 +1455,8 @@ class Course extends DataClass implements Insertable<Course> {
             offeredByInstitutions ?? this.offeredByInstitutions,
         relatedCareers: relatedCareers ?? this.relatedCareers,
       );
-  Course copyWithCompanion(CoursesCompanion data) {
-    return Course(
+  CourseData copyWithCompanion(CoursesCompanion data) {
+    return CourseData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       description:
@@ -1481,7 +1480,7 @@ class Course extends DataClass implements Insertable<Course> {
 
   @override
   String toString() {
-    return (StringBuffer('Course(')
+    return (StringBuffer('CourseData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -1501,7 +1500,7 @@ class Course extends DataClass implements Insertable<Course> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Course &&
+      (other is CourseData &&
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
@@ -1513,7 +1512,7 @@ class Course extends DataClass implements Insertable<Course> {
           other.relatedCareers == this.relatedCareers);
 }
 
-class CoursesCompanion extends UpdateCompanion<Course> {
+class CoursesCompanion extends UpdateCompanion<CourseData> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> description;
@@ -1556,7 +1555,7 @@ class CoursesCompanion extends UpdateCompanion<Course> {
         minimumZScore = Value(minimumZScore),
         offeredByInstitutions = Value(offeredByInstitutions),
         relatedCareers = Value(relatedCareers);
-  static Insertable<Course> custom({
+  static Insertable<CourseData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -1667,18 +1666,826 @@ class CoursesCompanion extends UpdateCompanion<Course> {
   }
 }
 
+class $CareersTable extends Careers with TableInfo<$CareersTable, CareerData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CareersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _codeMeta = const VerificationMeta('code');
+  @override
+  late final GeneratedColumn<String> code = GeneratedColumn<String>(
+      'code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _categoryMeta =
+      const VerificationMeta('category');
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+      'category', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _requiredSkillsMeta =
+      const VerificationMeta('requiredSkills');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String>
+      requiredSkills = GeneratedColumn<String>(
+              'required_skills', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($CareersTable.$converterrequiredSkills);
+  static const VerificationMeta _relatedCoursesMeta =
+      const VerificationMeta('relatedCourses');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String>
+      relatedCourses = GeneratedColumn<String>(
+              'related_courses', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($CareersTable.$converterrelatedCourses);
+  static const VerificationMeta _externalLinksMeta =
+      const VerificationMeta('externalLinks');
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      externalLinks = GeneratedColumn<String>(
+              'external_links', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<Map<String, String>>(
+              $CareersTable.$converterexternalLinks);
+  @override
+  List<GeneratedColumn> get $columns => [
+        code,
+        title,
+        description,
+        category,
+        requiredSkills,
+        relatedCourses,
+        externalLinks
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'careers';
+  @override
+  VerificationContext validateIntegrity(Insertable<CareerData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('code')) {
+      context.handle(
+          _codeMeta, code.isAcceptableOrUnknown(data['code']!, _codeMeta));
+    } else if (isInserting) {
+      context.missing(_codeMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('category')) {
+      context.handle(_categoryMeta,
+          category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
+    } else if (isInserting) {
+      context.missing(_categoryMeta);
+    }
+    context.handle(_requiredSkillsMeta, const VerificationResult.success());
+    context.handle(_relatedCoursesMeta, const VerificationResult.success());
+    context.handle(_externalLinksMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {code};
+  @override
+  CareerData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CareerData(
+      code: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}code'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      category: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}category'])!,
+      requiredSkills: $CareersTable.$converterrequiredSkills.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}required_skills'])!),
+      relatedCourses: $CareersTable.$converterrelatedCourses.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}related_courses'])!),
+      externalLinks: $CareersTable.$converterexternalLinks.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}external_links'])!),
+    );
+  }
+
+  @override
+  $CareersTable createAlias(String alias) {
+    return $CareersTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<String>, String> $converterrequiredSkills =
+      const ListConverter<String>();
+  static TypeConverter<List<String>, String> $converterrelatedCourses =
+      const ListConverter<String>();
+  static TypeConverter<Map<String, String>, String> $converterexternalLinks =
+      const MapConverter<String, String>();
+}
+
+class CareerData extends DataClass implements Insertable<CareerData> {
+  final String code;
+  final String title;
+  final String description;
+  final String category;
+  final List<String> requiredSkills;
+  final List<String> relatedCourses;
+  final Map<String, String> externalLinks;
+  const CareerData(
+      {required this.code,
+      required this.title,
+      required this.description,
+      required this.category,
+      required this.requiredSkills,
+      required this.relatedCourses,
+      required this.externalLinks});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['code'] = Variable<String>(code);
+    map['title'] = Variable<String>(title);
+    map['description'] = Variable<String>(description);
+    map['category'] = Variable<String>(category);
+    {
+      map['required_skills'] = Variable<String>(
+          $CareersTable.$converterrequiredSkills.toSql(requiredSkills));
+    }
+    {
+      map['related_courses'] = Variable<String>(
+          $CareersTable.$converterrelatedCourses.toSql(relatedCourses));
+    }
+    {
+      map['external_links'] = Variable<String>(
+          $CareersTable.$converterexternalLinks.toSql(externalLinks));
+    }
+    return map;
+  }
+
+  CareersCompanion toCompanion(bool nullToAbsent) {
+    return CareersCompanion(
+      code: Value(code),
+      title: Value(title),
+      description: Value(description),
+      category: Value(category),
+      requiredSkills: Value(requiredSkills),
+      relatedCourses: Value(relatedCourses),
+      externalLinks: Value(externalLinks),
+    );
+  }
+
+  factory CareerData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CareerData(
+      code: serializer.fromJson<String>(json['code']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+      category: serializer.fromJson<String>(json['category']),
+      requiredSkills: serializer.fromJson<List<String>>(json['requiredSkills']),
+      relatedCourses: serializer.fromJson<List<String>>(json['relatedCourses']),
+      externalLinks:
+          serializer.fromJson<Map<String, String>>(json['externalLinks']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'code': serializer.toJson<String>(code),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+      'category': serializer.toJson<String>(category),
+      'requiredSkills': serializer.toJson<List<String>>(requiredSkills),
+      'relatedCourses': serializer.toJson<List<String>>(relatedCourses),
+      'externalLinks': serializer.toJson<Map<String, String>>(externalLinks),
+    };
+  }
+
+  CareerData copyWith(
+          {String? code,
+          String? title,
+          String? description,
+          String? category,
+          List<String>? requiredSkills,
+          List<String>? relatedCourses,
+          Map<String, String>? externalLinks}) =>
+      CareerData(
+        code: code ?? this.code,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        requiredSkills: requiredSkills ?? this.requiredSkills,
+        relatedCourses: relatedCourses ?? this.relatedCourses,
+        externalLinks: externalLinks ?? this.externalLinks,
+      );
+  CareerData copyWithCompanion(CareersCompanion data) {
+    return CareerData(
+      code: data.code.present ? data.code.value : this.code,
+      title: data.title.present ? data.title.value : this.title,
+      description:
+          data.description.present ? data.description.value : this.description,
+      category: data.category.present ? data.category.value : this.category,
+      requiredSkills: data.requiredSkills.present
+          ? data.requiredSkills.value
+          : this.requiredSkills,
+      relatedCourses: data.relatedCourses.present
+          ? data.relatedCourses.value
+          : this.relatedCourses,
+      externalLinks: data.externalLinks.present
+          ? data.externalLinks.value
+          : this.externalLinks,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CareerData(')
+          ..write('code: $code, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('category: $category, ')
+          ..write('requiredSkills: $requiredSkills, ')
+          ..write('relatedCourses: $relatedCourses, ')
+          ..write('externalLinks: $externalLinks')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(code, title, description, category,
+      requiredSkills, relatedCourses, externalLinks);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CareerData &&
+          other.code == this.code &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.category == this.category &&
+          other.requiredSkills == this.requiredSkills &&
+          other.relatedCourses == this.relatedCourses &&
+          other.externalLinks == this.externalLinks);
+}
+
+class CareersCompanion extends UpdateCompanion<CareerData> {
+  final Value<String> code;
+  final Value<String> title;
+  final Value<String> description;
+  final Value<String> category;
+  final Value<List<String>> requiredSkills;
+  final Value<List<String>> relatedCourses;
+  final Value<Map<String, String>> externalLinks;
+  final Value<int> rowid;
+  const CareersCompanion({
+    this.code = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.category = const Value.absent(),
+    this.requiredSkills = const Value.absent(),
+    this.relatedCourses = const Value.absent(),
+    this.externalLinks = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CareersCompanion.insert({
+    required String code,
+    required String title,
+    required String description,
+    required String category,
+    required List<String> requiredSkills,
+    required List<String> relatedCourses,
+    required Map<String, String> externalLinks,
+    this.rowid = const Value.absent(),
+  })  : code = Value(code),
+        title = Value(title),
+        description = Value(description),
+        category = Value(category),
+        requiredSkills = Value(requiredSkills),
+        relatedCourses = Value(relatedCourses),
+        externalLinks = Value(externalLinks);
+  static Insertable<CareerData> custom({
+    Expression<String>? code,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<String>? category,
+    Expression<String>? requiredSkills,
+    Expression<String>? relatedCourses,
+    Expression<String>? externalLinks,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (code != null) 'code': code,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (category != null) 'category': category,
+      if (requiredSkills != null) 'required_skills': requiredSkills,
+      if (relatedCourses != null) 'related_courses': relatedCourses,
+      if (externalLinks != null) 'external_links': externalLinks,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CareersCompanion copyWith(
+      {Value<String>? code,
+      Value<String>? title,
+      Value<String>? description,
+      Value<String>? category,
+      Value<List<String>>? requiredSkills,
+      Value<List<String>>? relatedCourses,
+      Value<Map<String, String>>? externalLinks,
+      Value<int>? rowid}) {
+    return CareersCompanion(
+      code: code ?? this.code,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      requiredSkills: requiredSkills ?? this.requiredSkills,
+      relatedCourses: relatedCourses ?? this.relatedCourses,
+      externalLinks: externalLinks ?? this.externalLinks,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (code.present) {
+      map['code'] = Variable<String>(code.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (requiredSkills.present) {
+      map['required_skills'] = Variable<String>(
+          $CareersTable.$converterrequiredSkills.toSql(requiredSkills.value));
+    }
+    if (relatedCourses.present) {
+      map['related_courses'] = Variable<String>(
+          $CareersTable.$converterrelatedCourses.toSql(relatedCourses.value));
+    }
+    if (externalLinks.present) {
+      map['external_links'] = Variable<String>(
+          $CareersTable.$converterexternalLinks.toSql(externalLinks.value));
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CareersCompanion(')
+          ..write('code: $code, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('category: $category, ')
+          ..write('requiredSkills: $requiredSkills, ')
+          ..write('relatedCourses: $relatedCourses, ')
+          ..write('externalLinks: $externalLinks, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InstitutionsTable extends Institutions
+    with TableInfo<$InstitutionsTable, InstitutionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstitutionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _websiteMeta =
+      const VerificationMeta('website');
+  @override
+  late final GeneratedColumn<String> website = GeneratedColumn<String>(
+      'website', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _locationMeta =
+      const VerificationMeta('location');
+  @override
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+      'location', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _contactInfoMeta =
+      const VerificationMeta('contactInfo');
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      contactInfo = GeneratedColumn<String>('contact_info', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<Map<String, String>>(
+              $InstitutionsTable.$convertercontactInfo);
+  static const VerificationMeta _coursesMeta =
+      const VerificationMeta('courses');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String> courses =
+      GeneratedColumn<String>('courses', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($InstitutionsTable.$convertercourses);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, type, website, location, contactInfo, courses];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'institutions';
+  @override
+  VerificationContext validateIntegrity(Insertable<InstitutionData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('website')) {
+      context.handle(_websiteMeta,
+          website.isAcceptableOrUnknown(data['website']!, _websiteMeta));
+    } else if (isInserting) {
+      context.missing(_websiteMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+    } else if (isInserting) {
+      context.missing(_locationMeta);
+    }
+    context.handle(_contactInfoMeta, const VerificationResult.success());
+    context.handle(_coursesMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InstitutionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstitutionData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      website: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}website'])!,
+      location: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location'])!,
+      contactInfo: $InstitutionsTable.$convertercontactInfo.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}contact_info'])!),
+      courses: $InstitutionsTable.$convertercourses.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}courses'])!),
+    );
+  }
+
+  @override
+  $InstitutionsTable createAlias(String alias) {
+    return $InstitutionsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Map<String, String>, String> $convertercontactInfo =
+      const MapConverter<String, String>();
+  static TypeConverter<List<String>, String> $convertercourses =
+      const ListConverter<String>();
+}
+
+class InstitutionData extends DataClass implements Insertable<InstitutionData> {
+  final String id;
+  final String name;
+  final String type;
+  final String website;
+  final String location;
+  final Map<String, String> contactInfo;
+  final List<String> courses;
+  const InstitutionData(
+      {required this.id,
+      required this.name,
+      required this.type,
+      required this.website,
+      required this.location,
+      required this.contactInfo,
+      required this.courses});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['type'] = Variable<String>(type);
+    map['website'] = Variable<String>(website);
+    map['location'] = Variable<String>(location);
+    {
+      map['contact_info'] = Variable<String>(
+          $InstitutionsTable.$convertercontactInfo.toSql(contactInfo));
+    }
+    {
+      map['courses'] =
+          Variable<String>($InstitutionsTable.$convertercourses.toSql(courses));
+    }
+    return map;
+  }
+
+  InstitutionsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionsCompanion(
+      id: Value(id),
+      name: Value(name),
+      type: Value(type),
+      website: Value(website),
+      location: Value(location),
+      contactInfo: Value(contactInfo),
+      courses: Value(courses),
+    );
+  }
+
+  factory InstitutionData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstitutionData(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<String>(json['type']),
+      website: serializer.fromJson<String>(json['website']),
+      location: serializer.fromJson<String>(json['location']),
+      contactInfo:
+          serializer.fromJson<Map<String, String>>(json['contactInfo']),
+      courses: serializer.fromJson<List<String>>(json['courses']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<String>(type),
+      'website': serializer.toJson<String>(website),
+      'location': serializer.toJson<String>(location),
+      'contactInfo': serializer.toJson<Map<String, String>>(contactInfo),
+      'courses': serializer.toJson<List<String>>(courses),
+    };
+  }
+
+  InstitutionData copyWith(
+          {String? id,
+          String? name,
+          String? type,
+          String? website,
+          String? location,
+          Map<String, String>? contactInfo,
+          List<String>? courses}) =>
+      InstitutionData(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        website: website ?? this.website,
+        location: location ?? this.location,
+        contactInfo: contactInfo ?? this.contactInfo,
+        courses: courses ?? this.courses,
+      );
+  InstitutionData copyWithCompanion(InstitutionsCompanion data) {
+    return InstitutionData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      website: data.website.present ? data.website.value : this.website,
+      location: data.location.present ? data.location.value : this.location,
+      contactInfo:
+          data.contactInfo.present ? data.contactInfo.value : this.contactInfo,
+      courses: data.courses.present ? data.courses.value : this.courses,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('website: $website, ')
+          ..write('location: $location, ')
+          ..write('contactInfo: $contactInfo, ')
+          ..write('courses: $courses')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, type, website, location, contactInfo, courses);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstitutionData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.website == this.website &&
+          other.location == this.location &&
+          other.contactInfo == this.contactInfo &&
+          other.courses == this.courses);
+}
+
+class InstitutionsCompanion extends UpdateCompanion<InstitutionData> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> type;
+  final Value<String> website;
+  final Value<String> location;
+  final Value<Map<String, String>> contactInfo;
+  final Value<List<String>> courses;
+  final Value<int> rowid;
+  const InstitutionsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.website = const Value.absent(),
+    this.location = const Value.absent(),
+    this.contactInfo = const Value.absent(),
+    this.courses = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InstitutionsCompanion.insert({
+    required String id,
+    required String name,
+    required String type,
+    required String website,
+    required String location,
+    required Map<String, String> contactInfo,
+    required List<String> courses,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        type = Value(type),
+        website = Value(website),
+        location = Value(location),
+        contactInfo = Value(contactInfo),
+        courses = Value(courses);
+  static Insertable<InstitutionData> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? website,
+    Expression<String>? location,
+    Expression<String>? contactInfo,
+    Expression<String>? courses,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (website != null) 'website': website,
+      if (location != null) 'location': location,
+      if (contactInfo != null) 'contact_info': contactInfo,
+      if (courses != null) 'courses': courses,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InstitutionsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? type,
+      Value<String>? website,
+      Value<String>? location,
+      Value<Map<String, String>>? contactInfo,
+      Value<List<String>>? courses,
+      Value<int>? rowid}) {
+    return InstitutionsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      website: website ?? this.website,
+      location: location ?? this.location,
+      contactInfo: contactInfo ?? this.contactInfo,
+      courses: courses ?? this.courses,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (website.present) {
+      map['website'] = Variable<String>(website.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String>(location.value);
+    }
+    if (contactInfo.present) {
+      map['contact_info'] = Variable<String>(
+          $InstitutionsTable.$convertercontactInfo.toSql(contactInfo.value));
+    }
+    if (courses.present) {
+      map['courses'] = Variable<String>(
+          $InstitutionsTable.$convertercourses.toSql(courses.value));
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstitutionsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('website: $website, ')
+          ..write('location: $location, ')
+          ..write('contactInfo: $contactInfo, ')
+          ..write('courses: $courses, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $StudentsTable students = $StudentsTable(this);
-  late final $StudyStreamsTable studyStreams = $StudyStreamsTable(this);
+  late final $StreamsTable streams = $StreamsTable(this);
   late final $CoursesTable courses = $CoursesTable(this);
+  late final $CareersTable careers = $CareersTable(this);
+  late final $InstitutionsTable institutions = $InstitutionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [students, studyStreams, courses];
+      [students, streams, courses, careers, institutions];
 }
 
 typedef $$StudentsTableCreateCompanionBuilder = StudentsCompanion Function({
@@ -1696,7 +2503,7 @@ typedef $$StudentsTableCreateCompanionBuilder = StudentsCompanion Function({
   required List<String> interests,
   required List<String> skills,
   required List<String> strengths,
-  required List<Map<String, dynamic>> predictions,
+  required Map<String, Map<String, dynamic>> predictions,
   Value<int> rowid,
 });
 typedef $$StudentsTableUpdateCompanionBuilder = StudentsCompanion Function({
@@ -1714,7 +2521,7 @@ typedef $$StudentsTableUpdateCompanionBuilder = StudentsCompanion Function({
   Value<List<String>> interests,
   Value<List<String>> skills,
   Value<List<String>> strengths,
-  Value<List<Map<String, dynamic>>> predictions,
+  Value<Map<String, Map<String, dynamic>>> predictions,
   Value<int> rowid,
 });
 
@@ -1781,8 +2588,8 @@ class $$StudentsTableFilterComposer
           column: $table.strengths,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnWithTypeConverterFilters<List<Map<String, dynamic>>,
-          List<Map<String, dynamic>>, String>
+  ColumnWithTypeConverterFilters<Map<String, Map<String, dynamic>>,
+          Map<String, Map<String, dynamic>>, String>
       get predictions => $composableBuilder(
           column: $table.predictions,
           builder: (column) => ColumnWithTypeConverterFilters(column));
@@ -1894,7 +2701,7 @@ class $$StudentsTableAnnotationComposer
   GeneratedColumnWithTypeConverter<List<String>, String> get strengths =>
       $composableBuilder(column: $table.strengths, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>, String>
+  GeneratedColumnWithTypeConverter<Map<String, Map<String, dynamic>>, String>
       get predictions => $composableBuilder(
           column: $table.predictions, builder: (column) => column);
 }
@@ -1936,7 +2743,7 @@ class $$StudentsTableTableManager extends RootTableManager<
             Value<List<String>> interests = const Value.absent(),
             Value<List<String>> skills = const Value.absent(),
             Value<List<String>> strengths = const Value.absent(),
-            Value<List<Map<String, dynamic>>> predictions =
+            Value<Map<String, Map<String, dynamic>>> predictions =
                 const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -1973,7 +2780,7 @@ class $$StudentsTableTableManager extends RootTableManager<
             required List<String> interests,
             required List<String> skills,
             required List<String> strengths,
-            required List<Map<String, dynamic>> predictions,
+            required Map<String, Map<String, dynamic>> predictions,
             Value<int> rowid = const Value.absent(),
           }) =>
               StudentsCompanion.insert(
@@ -2013,32 +2820,49 @@ typedef $$StudentsTableProcessedTableManager = ProcessedTableManager<
     (Student, BaseReferences<_$AppDatabase, $StudentsTable, Student>),
     Student,
     PrefetchHooks Function()>;
-typedef $$StudyStreamsTableCreateCompanionBuilder = StudyStreamsCompanion
-    Function({
+typedef $$StreamsTableCreateCompanionBuilder = StreamsCompanion Function({
   required String id,
   required String name,
   required String description,
   required List<String> requiredOLSubjects,
   required Map<String, String> minimumOLGrades,
-  required List<Map<String, dynamic>> possibleCourses,
+  required Map<String, String> possibleCourses,
   required List<String> relatedCareers,
   Value<int> rowid,
 });
-typedef $$StudyStreamsTableUpdateCompanionBuilder = StudyStreamsCompanion
-    Function({
+typedef $$StreamsTableUpdateCompanionBuilder = StreamsCompanion Function({
   Value<String> id,
   Value<String> name,
   Value<String> description,
   Value<List<String>> requiredOLSubjects,
   Value<Map<String, String>> minimumOLGrades,
-  Value<List<Map<String, dynamic>>> possibleCourses,
+  Value<Map<String, String>> possibleCourses,
   Value<List<String>> relatedCareers,
   Value<int> rowid,
 });
 
-class $$StudyStreamsTableFilterComposer
-    extends Composer<_$AppDatabase, $StudyStreamsTable> {
-  $$StudyStreamsTableFilterComposer({
+final class $$StreamsTableReferences
+    extends BaseReferences<_$AppDatabase, $StreamsTable, StreamData> {
+  $$StreamsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$CoursesTable, List<CourseData>> _coursesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.courses,
+          aliasName: $_aliasNameGenerator(db.streams.id, db.courses.streamId));
+
+  $$CoursesTableProcessedTableManager get coursesRefs {
+    final manager = $$CoursesTableTableManager($_db, $_db.courses)
+        .filter((f) => f.streamId.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_coursesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$StreamsTableFilterComposer
+    extends Composer<_$AppDatabase, $StreamsTable> {
+  $$StreamsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2065,8 +2889,8 @@ class $$StudyStreamsTableFilterComposer
           column: $table.minimumOLGrades,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnWithTypeConverterFilters<List<Map<String, dynamic>>,
-          List<Map<String, dynamic>>, String>
+  ColumnWithTypeConverterFilters<Map<String, String>, Map<String, String>,
+          String>
       get possibleCourses => $composableBuilder(
           column: $table.possibleCourses,
           builder: (column) => ColumnWithTypeConverterFilters(column));
@@ -2075,11 +2899,32 @@ class $$StudyStreamsTableFilterComposer
       get relatedCareers => $composableBuilder(
           column: $table.relatedCareers,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  Expression<bool> coursesRefs(
+      Expression<bool> Function($$CoursesTableFilterComposer f) f) {
+    final $$CoursesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.courses,
+        getReferencedColumn: (t) => t.streamId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CoursesTableFilterComposer(
+              $db: $db,
+              $table: $db.courses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
-class $$StudyStreamsTableOrderingComposer
-    extends Composer<_$AppDatabase, $StudyStreamsTable> {
-  $$StudyStreamsTableOrderingComposer({
+class $$StreamsTableOrderingComposer
+    extends Composer<_$AppDatabase, $StreamsTable> {
+  $$StreamsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2112,9 +2957,9 @@ class $$StudyStreamsTableOrderingComposer
       builder: (column) => ColumnOrderings(column));
 }
 
-class $$StudyStreamsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $StudyStreamsTable> {
-  $$StudyStreamsTableAnnotationComposer({
+class $$StreamsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $StreamsTable> {
+  $$StreamsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2138,52 +2983,69 @@ class $$StudyStreamsTableAnnotationComposer
       get minimumOLGrades => $composableBuilder(
           column: $table.minimumOLGrades, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>, String>
+  GeneratedColumnWithTypeConverter<Map<String, String>, String>
       get possibleCourses => $composableBuilder(
           column: $table.possibleCourses, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<List<String>, String> get relatedCareers =>
       $composableBuilder(
           column: $table.relatedCareers, builder: (column) => column);
+
+  Expression<T> coursesRefs<T extends Object>(
+      Expression<T> Function($$CoursesTableAnnotationComposer a) f) {
+    final $$CoursesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.courses,
+        getReferencedColumn: (t) => t.streamId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CoursesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.courses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
-class $$StudyStreamsTableTableManager extends RootTableManager<
+class $$StreamsTableTableManager extends RootTableManager<
     _$AppDatabase,
-    $StudyStreamsTable,
-    StudyStream,
-    $$StudyStreamsTableFilterComposer,
-    $$StudyStreamsTableOrderingComposer,
-    $$StudyStreamsTableAnnotationComposer,
-    $$StudyStreamsTableCreateCompanionBuilder,
-    $$StudyStreamsTableUpdateCompanionBuilder,
-    (
-      StudyStream,
-      BaseReferences<_$AppDatabase, $StudyStreamsTable, StudyStream>
-    ),
-    StudyStream,
-    PrefetchHooks Function()> {
-  $$StudyStreamsTableTableManager(_$AppDatabase db, $StudyStreamsTable table)
+    $StreamsTable,
+    StreamData,
+    $$StreamsTableFilterComposer,
+    $$StreamsTableOrderingComposer,
+    $$StreamsTableAnnotationComposer,
+    $$StreamsTableCreateCompanionBuilder,
+    $$StreamsTableUpdateCompanionBuilder,
+    (StreamData, $$StreamsTableReferences),
+    StreamData,
+    PrefetchHooks Function({bool coursesRefs})> {
+  $$StreamsTableTableManager(_$AppDatabase db, $StreamsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$StudyStreamsTableFilterComposer($db: db, $table: table),
+              $$StreamsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$StudyStreamsTableOrderingComposer($db: db, $table: table),
+              $$StreamsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$StudyStreamsTableAnnotationComposer($db: db, $table: table),
+              $$StreamsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String> description = const Value.absent(),
             Value<List<String>> requiredOLSubjects = const Value.absent(),
             Value<Map<String, String>> minimumOLGrades = const Value.absent(),
-            Value<List<Map<String, dynamic>>> possibleCourses =
-                const Value.absent(),
+            Value<Map<String, String>> possibleCourses = const Value.absent(),
             Value<List<String>> relatedCareers = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              StudyStreamsCompanion(
+              StreamsCompanion(
             id: id,
             name: name,
             description: description,
@@ -2199,11 +3061,11 @@ class $$StudyStreamsTableTableManager extends RootTableManager<
             required String description,
             required List<String> requiredOLSubjects,
             required Map<String, String> minimumOLGrades,
-            required List<Map<String, dynamic>> possibleCourses,
+            required Map<String, String> possibleCourses,
             required List<String> relatedCareers,
             Value<int> rowid = const Value.absent(),
           }) =>
-              StudyStreamsCompanion.insert(
+              StreamsCompanion.insert(
             id: id,
             name: name,
             description: description,
@@ -2214,27 +3076,46 @@ class $$StudyStreamsTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) =>
+                  (e.readTable(table), $$StreamsTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({coursesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (coursesRefs) db.courses],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (coursesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$StreamsTableReferences._coursesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$StreamsTableReferences(db, table, p0).coursesRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.streamId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
-typedef $$StudyStreamsTableProcessedTableManager = ProcessedTableManager<
+typedef $$StreamsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    $StudyStreamsTable,
-    StudyStream,
-    $$StudyStreamsTableFilterComposer,
-    $$StudyStreamsTableOrderingComposer,
-    $$StudyStreamsTableAnnotationComposer,
-    $$StudyStreamsTableCreateCompanionBuilder,
-    $$StudyStreamsTableUpdateCompanionBuilder,
-    (
-      StudyStream,
-      BaseReferences<_$AppDatabase, $StudyStreamsTable, StudyStream>
-    ),
-    StudyStream,
-    PrefetchHooks Function()>;
+    $StreamsTable,
+    StreamData,
+    $$StreamsTableFilterComposer,
+    $$StreamsTableOrderingComposer,
+    $$StreamsTableAnnotationComposer,
+    $$StreamsTableCreateCompanionBuilder,
+    $$StreamsTableUpdateCompanionBuilder,
+    (StreamData, $$StreamsTableReferences),
+    StreamData,
+    PrefetchHooks Function({bool coursesRefs})>;
 typedef $$CoursesTableCreateCompanionBuilder = CoursesCompanion Function({
   required String id,
   required String name,
@@ -2260,6 +3141,23 @@ typedef $$CoursesTableUpdateCompanionBuilder = CoursesCompanion Function({
   Value<int> rowid,
 });
 
+final class $$CoursesTableReferences
+    extends BaseReferences<_$AppDatabase, $CoursesTable, CourseData> {
+  $$CoursesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $StreamsTable _streamIdTable(_$AppDatabase db) => db.streams
+      .createAlias($_aliasNameGenerator(db.courses.streamId, db.streams.id));
+
+  $$StreamsTableProcessedTableManager get streamId {
+    final manager = $$StreamsTableTableManager($_db, $_db.streams)
+        .filter((f) => f.id($_item.streamId!));
+    final item = $_typedResult.readTableOrNull(_streamIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
 class $$CoursesTableFilterComposer
     extends Composer<_$AppDatabase, $CoursesTable> {
   $$CoursesTableFilterComposer({
@@ -2281,9 +3179,6 @@ class $$CoursesTableFilterComposer
   ColumnFilters<String> get duration => $composableBuilder(
       column: $table.duration, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get streamId => $composableBuilder(
-      column: $table.streamId, builder: (column) => ColumnFilters(column));
-
   ColumnWithTypeConverterFilters<Map<String, String>, Map<String, String>,
           String>
       get minimumALGrades => $composableBuilder(
@@ -2302,6 +3197,26 @@ class $$CoursesTableFilterComposer
       get relatedCareers => $composableBuilder(
           column: $table.relatedCareers,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$StreamsTableFilterComposer get streamId {
+    final $$StreamsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.streamId,
+        referencedTable: $db.streams,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StreamsTableFilterComposer(
+              $db: $db,
+              $table: $db.streams,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$CoursesTableOrderingComposer
@@ -2325,9 +3240,6 @@ class $$CoursesTableOrderingComposer
   ColumnOrderings<String> get duration => $composableBuilder(
       column: $table.duration, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get streamId => $composableBuilder(
-      column: $table.streamId, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<String> get minimumALGrades => $composableBuilder(
       column: $table.minimumALGrades,
       builder: (column) => ColumnOrderings(column));
@@ -2343,6 +3255,26 @@ class $$CoursesTableOrderingComposer
   ColumnOrderings<String> get relatedCareers => $composableBuilder(
       column: $table.relatedCareers,
       builder: (column) => ColumnOrderings(column));
+
+  $$StreamsTableOrderingComposer get streamId {
+    final $$StreamsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.streamId,
+        referencedTable: $db.streams,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StreamsTableOrderingComposer(
+              $db: $db,
+              $table: $db.streams,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$CoursesTableAnnotationComposer
@@ -2366,9 +3298,6 @@ class $$CoursesTableAnnotationComposer
   GeneratedColumn<String> get duration =>
       $composableBuilder(column: $table.duration, builder: (column) => column);
 
-  GeneratedColumn<String> get streamId =>
-      $composableBuilder(column: $table.streamId, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<Map<String, String>, String>
       get minimumALGrades => $composableBuilder(
           column: $table.minimumALGrades, builder: (column) => column);
@@ -2383,20 +3312,40 @@ class $$CoursesTableAnnotationComposer
   GeneratedColumnWithTypeConverter<List<String>, String> get relatedCareers =>
       $composableBuilder(
           column: $table.relatedCareers, builder: (column) => column);
+
+  $$StreamsTableAnnotationComposer get streamId {
+    final $$StreamsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.streamId,
+        referencedTable: $db.streams,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StreamsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.streams,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$CoursesTableTableManager extends RootTableManager<
     _$AppDatabase,
     $CoursesTable,
-    Course,
+    CourseData,
     $$CoursesTableFilterComposer,
     $$CoursesTableOrderingComposer,
     $$CoursesTableAnnotationComposer,
     $$CoursesTableCreateCompanionBuilder,
     $$CoursesTableUpdateCompanionBuilder,
-    (Course, BaseReferences<_$AppDatabase, $CoursesTable, Course>),
-    Course,
-    PrefetchHooks Function()> {
+    (CourseData, $$CoursesTableReferences),
+    CourseData,
+    PrefetchHooks Function({bool streamId})> {
   $$CoursesTableTableManager(_$AppDatabase db, $CoursesTable table)
       : super(TableManagerState(
           db: db,
@@ -2456,23 +3405,475 @@ class $$CoursesTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) =>
+                  (e.readTable(table), $$CoursesTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({streamId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (streamId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.streamId,
+                    referencedTable:
+                        $$CoursesTableReferences._streamIdTable(db),
+                    referencedColumn:
+                        $$CoursesTableReferences._streamIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
 typedef $$CoursesTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $CoursesTable,
-    Course,
+    CourseData,
     $$CoursesTableFilterComposer,
     $$CoursesTableOrderingComposer,
     $$CoursesTableAnnotationComposer,
     $$CoursesTableCreateCompanionBuilder,
     $$CoursesTableUpdateCompanionBuilder,
-    (Course, BaseReferences<_$AppDatabase, $CoursesTable, Course>),
-    Course,
+    (CourseData, $$CoursesTableReferences),
+    CourseData,
+    PrefetchHooks Function({bool streamId})>;
+typedef $$CareersTableCreateCompanionBuilder = CareersCompanion Function({
+  required String code,
+  required String title,
+  required String description,
+  required String category,
+  required List<String> requiredSkills,
+  required List<String> relatedCourses,
+  required Map<String, String> externalLinks,
+  Value<int> rowid,
+});
+typedef $$CareersTableUpdateCompanionBuilder = CareersCompanion Function({
+  Value<String> code,
+  Value<String> title,
+  Value<String> description,
+  Value<String> category,
+  Value<List<String>> requiredSkills,
+  Value<List<String>> relatedCourses,
+  Value<Map<String, String>> externalLinks,
+  Value<int> rowid,
+});
+
+class $$CareersTableFilterComposer
+    extends Composer<_$AppDatabase, $CareersTable> {
+  $$CareersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get code => $composableBuilder(
+      column: $table.code, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get category => $composableBuilder(
+      column: $table.category, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get requiredSkills => $composableBuilder(
+          column: $table.requiredSkills,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get relatedCourses => $composableBuilder(
+          column: $table.relatedCourses,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<Map<String, String>, Map<String, String>,
+          String>
+      get externalLinks => $composableBuilder(
+          column: $table.externalLinks,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+}
+
+class $$CareersTableOrderingComposer
+    extends Composer<_$AppDatabase, $CareersTable> {
+  $$CareersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get code => $composableBuilder(
+      column: $table.code, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get category => $composableBuilder(
+      column: $table.category, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get requiredSkills => $composableBuilder(
+      column: $table.requiredSkills,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get relatedCourses => $composableBuilder(
+      column: $table.relatedCourses,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get externalLinks => $composableBuilder(
+      column: $table.externalLinks,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$CareersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CareersTable> {
+  $$CareersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get code =>
+      $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get requiredSkills =>
+      $composableBuilder(
+          column: $table.requiredSkills, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get relatedCourses =>
+      $composableBuilder(
+          column: $table.relatedCourses, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      get externalLinks => $composableBuilder(
+          column: $table.externalLinks, builder: (column) => column);
+}
+
+class $$CareersTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CareersTable,
+    CareerData,
+    $$CareersTableFilterComposer,
+    $$CareersTableOrderingComposer,
+    $$CareersTableAnnotationComposer,
+    $$CareersTableCreateCompanionBuilder,
+    $$CareersTableUpdateCompanionBuilder,
+    (CareerData, BaseReferences<_$AppDatabase, $CareersTable, CareerData>),
+    CareerData,
+    PrefetchHooks Function()> {
+  $$CareersTableTableManager(_$AppDatabase db, $CareersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CareersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CareersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CareersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> code = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<String> category = const Value.absent(),
+            Value<List<String>> requiredSkills = const Value.absent(),
+            Value<List<String>> relatedCourses = const Value.absent(),
+            Value<Map<String, String>> externalLinks = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CareersCompanion(
+            code: code,
+            title: title,
+            description: description,
+            category: category,
+            requiredSkills: requiredSkills,
+            relatedCourses: relatedCourses,
+            externalLinks: externalLinks,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String code,
+            required String title,
+            required String description,
+            required String category,
+            required List<String> requiredSkills,
+            required List<String> relatedCourses,
+            required Map<String, String> externalLinks,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CareersCompanion.insert(
+            code: code,
+            title: title,
+            description: description,
+            category: category,
+            requiredSkills: requiredSkills,
+            relatedCourses: relatedCourses,
+            externalLinks: externalLinks,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$CareersTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CareersTable,
+    CareerData,
+    $$CareersTableFilterComposer,
+    $$CareersTableOrderingComposer,
+    $$CareersTableAnnotationComposer,
+    $$CareersTableCreateCompanionBuilder,
+    $$CareersTableUpdateCompanionBuilder,
+    (CareerData, BaseReferences<_$AppDatabase, $CareersTable, CareerData>),
+    CareerData,
+    PrefetchHooks Function()>;
+typedef $$InstitutionsTableCreateCompanionBuilder = InstitutionsCompanion
+    Function({
+  required String id,
+  required String name,
+  required String type,
+  required String website,
+  required String location,
+  required Map<String, String> contactInfo,
+  required List<String> courses,
+  Value<int> rowid,
+});
+typedef $$InstitutionsTableUpdateCompanionBuilder = InstitutionsCompanion
+    Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> type,
+  Value<String> website,
+  Value<String> location,
+  Value<Map<String, String>> contactInfo,
+  Value<List<String>> courses,
+  Value<int> rowid,
+});
+
+class $$InstitutionsTableFilterComposer
+    extends Composer<_$AppDatabase, $InstitutionsTable> {
+  $$InstitutionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get website => $composableBuilder(
+      column: $table.website, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get location => $composableBuilder(
+      column: $table.location, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<Map<String, String>, Map<String, String>,
+          String>
+      get contactInfo => $composableBuilder(
+          column: $table.contactInfo,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get courses => $composableBuilder(
+          column: $table.courses,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+}
+
+class $$InstitutionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $InstitutionsTable> {
+  $$InstitutionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get website => $composableBuilder(
+      column: $table.website, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get location => $composableBuilder(
+      column: $table.location, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get contactInfo => $composableBuilder(
+      column: $table.contactInfo, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get courses => $composableBuilder(
+      column: $table.courses, builder: (column) => ColumnOrderings(column));
+}
+
+class $$InstitutionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InstitutionsTable> {
+  $$InstitutionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get website =>
+      $composableBuilder(column: $table.website, builder: (column) => column);
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      get contactInfo => $composableBuilder(
+          column: $table.contactInfo, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get courses =>
+      $composableBuilder(column: $table.courses, builder: (column) => column);
+}
+
+class $$InstitutionsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $InstitutionsTable,
+    InstitutionData,
+    $$InstitutionsTableFilterComposer,
+    $$InstitutionsTableOrderingComposer,
+    $$InstitutionsTableAnnotationComposer,
+    $$InstitutionsTableCreateCompanionBuilder,
+    $$InstitutionsTableUpdateCompanionBuilder,
+    (
+      InstitutionData,
+      BaseReferences<_$AppDatabase, $InstitutionsTable, InstitutionData>
+    ),
+    InstitutionData,
+    PrefetchHooks Function()> {
+  $$InstitutionsTableTableManager(_$AppDatabase db, $InstitutionsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InstitutionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InstitutionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InstitutionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> type = const Value.absent(),
+            Value<String> website = const Value.absent(),
+            Value<String> location = const Value.absent(),
+            Value<Map<String, String>> contactInfo = const Value.absent(),
+            Value<List<String>> courses = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              InstitutionsCompanion(
+            id: id,
+            name: name,
+            type: type,
+            website: website,
+            location: location,
+            contactInfo: contactInfo,
+            courses: courses,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String name,
+            required String type,
+            required String website,
+            required String location,
+            required Map<String, String> contactInfo,
+            required List<String> courses,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              InstitutionsCompanion.insert(
+            id: id,
+            name: name,
+            type: type,
+            website: website,
+            location: location,
+            contactInfo: contactInfo,
+            courses: courses,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$InstitutionsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $InstitutionsTable,
+    InstitutionData,
+    $$InstitutionsTableFilterComposer,
+    $$InstitutionsTableOrderingComposer,
+    $$InstitutionsTableAnnotationComposer,
+    $$InstitutionsTableCreateCompanionBuilder,
+    $$InstitutionsTableUpdateCompanionBuilder,
+    (
+      InstitutionData,
+      BaseReferences<_$AppDatabase, $InstitutionsTable, InstitutionData>
+    ),
+    InstitutionData,
     PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
@@ -2480,8 +3881,12 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$StudentsTableTableManager get students =>
       $$StudentsTableTableManager(_db, _db.students);
-  $$StudyStreamsTableTableManager get studyStreams =>
-      $$StudyStreamsTableTableManager(_db, _db.studyStreams);
+  $$StreamsTableTableManager get streams =>
+      $$StreamsTableTableManager(_db, _db.streams);
   $$CoursesTableTableManager get courses =>
       $$CoursesTableTableManager(_db, _db.courses);
+  $$CareersTableTableManager get careers =>
+      $$CareersTableTableManager(_db, _db.careers);
+  $$InstitutionsTableTableManager get institutions =>
+      $$InstitutionsTableTableManager(_db, _db.institutions);
 }

@@ -3,7 +3,7 @@ import 'package:next_step/screens/notifications.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -146,8 +146,8 @@ class InterestCard extends StatelessWidget {
   const InterestCard({
     required this.title,
     required this.imagePath,
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -180,8 +180,8 @@ class CareerPathProgress extends StatelessWidget {
   const CareerPathProgress({
     required this.title,
     required this.percentage,
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {

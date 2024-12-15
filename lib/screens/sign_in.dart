@@ -3,7 +3,7 @@ import 'package:next_step/screens/home.dart';
 import 'package:next_step/screens/sign_up.dart';
 
 class ResponsiveSignIn extends StatelessWidget {
-  const ResponsiveSignIn({Key? key}) : super(key: key);
+  const ResponsiveSignIn({super.key});
 
   @override
   Widget build(BuildContext context) {

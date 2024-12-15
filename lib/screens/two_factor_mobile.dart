@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class TwoFactorAuthScreenMobile extends StatefulWidget {
-  const TwoFactorAuthScreenMobile({Key? key}) : super(key: key);
+  const TwoFactorAuthScreenMobile({super.key});
 
   @override
   _TwoFactorAuthScreenState createState() => _TwoFactorAuthScreenState();
@@ -72,7 +72,6 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreenMobile> {
                           _otpSent = !_otpSent;
                         });
                       },
-                      child: Text(_otpSent ? 'Verify OTP' : 'Send OTP'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
@@ -81,6 +80,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreenMobile> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                      child: Text(_otpSent ? 'Verify OTP' : 'Send OTP'),
                     ),
                   ],
                 ),

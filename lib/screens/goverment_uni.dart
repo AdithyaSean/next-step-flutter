@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class GovernmentUniversitiesScreen extends StatelessWidget {
-  const GovernmentUniversitiesScreen({Key? key}) : super(key: key);
+  const GovernmentUniversitiesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

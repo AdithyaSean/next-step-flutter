@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class EmailTwoFactorAuthScreen extends StatefulWidget {
-  const EmailTwoFactorAuthScreen({Key? key}) : super(key: key);
+  const EmailTwoFactorAuthScreen({super.key});
 
   @override
   _EmailTwoFactorAuthScreenState createState() => _EmailTwoFactorAuthScreenState();
@@ -73,7 +73,6 @@ class _EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
                         });
                         // Here you would typically implement the logic to send OTP or verify it
                       },
-                      child: Text(_otpSent ? 'Verify OTP' : 'Send OTP'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
@@ -82,6 +81,7 @@ class _EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                      child: Text(_otpSent ? 'Verify OTP' : 'Send OTP'),
                     ),
                   ],
                 ),

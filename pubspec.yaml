@@ -46,8 +46,12 @@ dependencies:
   firebase_core: ^3.8.1
   firebase_database: ^11.2.0
   path: ^1.8.3
-  idb_sqflite: ^1.1.0  # Web-compatible SQLite alternative
+  drift_sqflite: ^2.0.1
   flutter_dotenv: ^5.0.2
+  sqlite3_flutter_libs: ^0.5.27
+  cloud_firestore: ^5.5.1
+  firebase_auth: ^5.3.4
+  get_it: ^7.6.0
 
 dev_dependencies:
   flutter_test:

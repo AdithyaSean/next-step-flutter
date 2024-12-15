@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/screens/sign_in.dart';
-import 'home.dart';
 
 class InterestsPage extends StatefulWidget {
+  const InterestsPage({super.key});
+
   @override
   _InterestsPageState createState() => _InterestsPageState();
 }
@@ -92,12 +93,12 @@ class _InterestsPageState extends State<InterestsPage> {
                 // Handle the "Next" button press
                 print("Selected Interests: $selectedInterests");
               },
-              child: Text('Next'),
               style: ElevatedButton.styleFrom(
                 textStyle: TextStyle(fontSize: 18 , color: Colors.black , fontWeight: FontWeight.bold),
                 backgroundColor: Colors.blue,
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
               ),
+              child: Text('Next'),
             ),
           ),
           ],

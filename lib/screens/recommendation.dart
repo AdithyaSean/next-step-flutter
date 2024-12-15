@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class RecommendationsScreen extends StatelessWidget {
-  const RecommendationsScreen({Key? key}) : super(key: key);
+  const RecommendationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
