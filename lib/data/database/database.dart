@@ -85,6 +85,13 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  // Singleton instance
+  static final AppDatabase _instance = AppDatabase._internal();
+
+  AppDatabase._internal() : super(_openConnection());
+
+  static AppDatabase get instance => _instance;
+
   // Student operations
   Future<Student?> getStudent(String id) => 
       (select(students)..where((t) => t.id.equals(id))).getSingleOrNull();
