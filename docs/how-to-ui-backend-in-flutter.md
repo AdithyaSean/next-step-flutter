@@ -1,93 +1,29 @@
+# Next Step - Flutter Database Implementation Guide
+
+This guide covers the implementation of local and cloud database solutions for the Next Step application, supporting Phase 2 and 3 of the development roadmap.
+
+## Local Database Implementation
+
+### Setup Dependencies
 ### Easier Methods for Database Management in Flutter
 
-1. **Using `moor` (now `drift`):**
-   `moor` (renamed to `drift`) is a powerful library for using SQLite in Flutter. It provides a more ORM-like experience with type safety and reactive streams.
+1. **Using drift:**
+   `drift` is a powerful library for using SQLite in Flutter. It provides a more ORM-like experience with type safety and reactive streams.
 
    **Add Dependencies:**
-   ```yaml
    dependencies:
-     drift: ^1.0.0
-     drift_flutter: ^1.0.0
-     path_provider: ^2.0.0
-     sqflite: ^2.0.0+4
+     drift
+     drift_flutter
+     path_provider
+     sqflite
 
    dev_dependencies:
-     drift_dev: ^1.0.0
-     build_runner: ^2.1.7
-   ```
+     drift_dev
+     build_runner
 
    **Define the Data Model:**
-   ```dart
-   import 'package:drift/drift.dart';
-
-   class Students extends Table {
-     TextColumn get id => text().customConstraint('UNIQUE')();
-     TextColumn get name => text()();
-     TextColumn get email => text()();
-     TextColumn get contact => text()();
-     TextColumn get school => text()();
-     TextColumn get district => text()();
-     TextColumn get password => text()();
-     TextColumn get olResults => text().map(const StringMapConverter())();
-     TextColumn get alResults => text().map(const StringMapConverter())();
-     TextColumn get stream => text()();
-     RealColumn get zScore => real()();
-     TextColumn get interests => text().map(const StringListConverter())();
-     TextColumn get skills => text().map(const StringListConverter())();
-     TextColumn get predictions => text().map(const CareerPredictionListConverter())();
-   }
-
-   class CareerPredictions extends Table {
-     TextColumn get careerPath => text()();
-     RealColumn get probability => real()();
-     DateTimeColumn get predictedAt => dateTime()();
-   }
-
-   class StringMapConverter extends TypeConverter<Map<String, String>, String> {
-     const StringMapConverter();
-
-     @override
-     Map<String, String> fromSql(String fromDb) {
-       return Map<String, String>.from(json.decode(fromDb));
-     }
-
-     @override
-     String toSql(Map<String, String> value) {
-       return json.encode(value);
-     }
-   }
-
-   class StringListConverter extends TypeConverter<List<String>, String> {
-     const StringListConverter();
-
-     @override
-     List<String> fromSql(String fromDb) {
-       return List<String>.from(json.decode(fromDb));
-     }
-
-     @override
-     String toSql(List<String> value) {
-       return json.encode(value);
-     }
-   }
-
-   class CareerPredictionListConverter extends TypeConverter<List<CareerPrediction>, String> {
-     const CareerPredictionListConverter();
-
-     @override
-     List<CareerPrediction> fromSql(String fromDb) {
-       return (json.decode(fromDb) as List)
-           .map((e) => CareerPrediction.fromJson(e))
-           .toList();
-     }
-
-     @override
-     String toSql(List<CareerPrediction> value) {
-       return json.encode(value.map((e) => e.toJson()).toList());
-     }
-   }
-   ```
-
+   [data-model](data-model-flutter.md)
+   
    **Set Up the Database:**
    ```dart
    import 'package:drift/drift.dart';
@@ -173,7 +109,132 @@
    }
    ```
 
-### Summary
+## Cloud Database Integration with Firebase
+
+1. **Setup Firebase:**
+   First, initialize Firebase in your project:
+   ```bash
+   flutter pub add firebase_core firebase_database
+   flutterfire configure
+   ```
+
+2. **Initialize Firebase:**
+   ```dart
+   void main() async {
+     WidgetsFlutterBinding.ensureInitialized();
+     await Firebase.initializeApp();
+     runApp(MyApp());
+   }
+   ```
+
+3. **Create Firebase Database Service:**
+   ```dart
+   class FirebaseDBService {
+     final DatabaseReference _database = FirebaseDatabase.instance.ref();
+
+     Future<void> addStudent(Student student) async {
+       await _database.child('students').child(student.id).set(student.toJson());
+     }
+
+     Future<List<Student>> getAllStudents() async {
+       final snapshot = await _database.child('students').get();
+       if (snapshot.exists) {
+         return (snapshot.value as Map)
+             .values
+             .map((e) => Student.fromJson(Map<String, dynamic>.from(e)))
+             .toList();
+       }
+       return [];
+     }
+
+     Stream<List<Student>> streamStudents() {
+       return _database.child('students').onValue.map((event) {
+         if (event.snapshot.value == null) return [];
+         final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+         return data.values
+             .map((e) => Student.fromJson(Map<String, dynamic>.from(e)))
+             .toList();
+       });
+     }
+
+     Future<void> updateStudent(String id, Map<String, dynamic> updates) async {
+       await _database.child('students').child(id).update(updates);
+     }
+
+     Future<void> deleteStudent(String id) async {
+       await _database.child('students').child(id).remove();
+     }
+   }
+   ```
+
+4. **Update Widget to Use Firebase:**
+   ```dart
+   class StudentList extends StatefulWidget {
+     @override
+     _StudentListState createState() => _StudentListState();
+   }
+
+   class _StudentListState extends State<StudentList> {
+     final FirebaseDBService _dbService = FirebaseDBService();
+
+     @override
+     Widget build(BuildContext context) {
+       return StreamBuilder<List<Student>>(
+         stream: _dbService.streamStudents(),
+         builder: (context, snapshot) {
+           if (snapshot.connectionState == ConnectionState.waiting) {
+             return const Center(child: CircularProgressIndicator());
+           }
+           if (snapshot.hasError) {
+             return Center(child: Text('Error: ${snapshot.error}'));
+           }
+           final students = snapshot.data ?? [];
+           return ListView.builder(
+             itemCount: students.length,
+             itemBuilder: (context, index) {
+               final student = students[index];
+               return ListTile(
+                 title: Text(student.name),
+                 subtitle: Text(student.email),
+                 trailing: IconButton(
+                   icon: const Icon(Icons.delete),
+                   onPressed: () => _dbService.deleteStudent(student.id),
+                 ),
+               );
+             },
+           );
+         },
+       );
+     }
+   }
+   ```
+
+5. **Security Rules:**
+   In Firebase Console, set up your Realtime Database rules:
+   ```json
+   {
+     "rules": {
+       "students": {
+         ".read": "auth != null",
+         ".write": "auth != null"
+       }
+     }
+   }
+   ```
+
+## Hybrid Approach
+For optimal performance and offline capability, consider using both local and cloud databases:
+1. Store data locally using drift
+2. Sync with Firebase when online
+3. Use Firebase Authentication for secure access
+
+Remember to:
+- Handle offline/online states
+- Implement proper error handling
+- Set up appropriate Firebase security rules
+- Consider implementing data pagination for large datasets
+
+## Summary
 1. **Add Dependencies:** Add `drift`, `drift_flutter`, `path_provider`, and `sqflite` to your 
 
 pubspec.yaml

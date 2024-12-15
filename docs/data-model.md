@@ -17,6 +17,7 @@ public class Student {
     private String contact;
     private String school;
     private String district;
+    private String password;
 
     // O/L Results
     @ElementCollection
