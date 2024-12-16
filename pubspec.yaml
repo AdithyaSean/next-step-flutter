@@ -35,23 +35,24 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  google_nav_bar: ^5.0.6
-  http: ^1.2.2
-  web_socket_channel: ^3.0.1
-  drift: ^2.19.1+1
-  drift_flutter: ^0.2.0
-  path_provider: ^2.1.5
-  sqflite: ^2.2.8+4
-  firebase_core: ^3.8.1
-  firebase_database: ^11.2.0
-  path: ^1.8.3
-  drift_sqflite: ^2.0.1
-  flutter_dotenv: ^5.0.2
-  sqlite3_flutter_libs: ^0.5.27
-  cloud_firestore: ^5.5.1
-  firebase_auth: ^5.3.4
-  get_it: ^7.6.0
+  cupertino_icons:
+  google_nav_bar:
+  http:
+  web_socket_channel:
+  drift:
+  drift_flutter:
+  path_provider:
+  sqflite:
+  firebase_core:
+  firebase_database:
+  path:
+  drift_sqflite:
+  flutter_dotenv:
+  sqlite3_flutter_libs:
+  cloud_firestore:
+  firebase_auth:
+  get_it:
+  tflite_flutter:
 
 dev_dependencies:
   flutter_test:
@@ -62,9 +63,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
-  drift_dev: ^2.8.0
-  build_runner: ^2.4.5
+  flutter_lints:
+  drift_dev:
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -79,6 +80,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/model.tflite
+    - assets/labels.json
     - images/next_step.png
     - images/start.jpg
     - images/password_image.png
