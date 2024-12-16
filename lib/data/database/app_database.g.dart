@@ -3,7 +3,8 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
+class $StudentsTable extends Students
+    with TableInfo<$StudentsTable, StudentData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -125,7 +126,7 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
   String get actualTableName => $name;
   static const String $name = 'students';
   @override
-  VerificationContext validateIntegrity(Insertable<Student> instance,
+  VerificationContext validateIntegrity(Insertable<StudentData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -186,9 +187,9 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Student map(Map<String, dynamic> data, {String? tablePrefix}) {
+  StudentData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Student(
+    return StudentData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -248,7 +249,7 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
       const MapConverter<String, Map<String, dynamic>>();
 }
 
-class Student extends DataClass implements Insertable<Student> {
+class StudentData extends DataClass implements Insertable<StudentData> {
   final String id;
   final String name;
   final String email;
@@ -264,7 +265,7 @@ class Student extends DataClass implements Insertable<Student> {
   final List<String> skills;
   final List<String> strengths;
   final Map<String, Map<String, dynamic>> predictions;
-  const Student(
+  const StudentData(
       {required this.id,
       required this.name,
       required this.email,
@@ -352,10 +353,10 @@ class Student extends DataClass implements Insertable<Student> {
     );
   }
 
-  factory Student.fromJson(Map<String, dynamic> json,
+  factory StudentData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Student(
+    return StudentData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       email: serializer.fromJson<String>(json['email']),
@@ -397,7 +398,7 @@ class Student extends DataClass implements Insertable<Student> {
     };
   }
 
-  Student copyWith(
+  StudentData copyWith(
           {String? id,
           String? name,
           String? email,
@@ -413,7 +414,7 @@ class Student extends DataClass implements Insertable<Student> {
           List<String>? skills,
           List<String>? strengths,
           Map<String, Map<String, dynamic>>? predictions}) =>
-      Student(
+      StudentData(
         id: id ?? this.id,
         name: name ?? this.name,
         email: email ?? this.email,
@@ -430,8 +431,8 @@ class Student extends DataClass implements Insertable<Student> {
         strengths: strengths ?? this.strengths,
         predictions: predictions ?? this.predictions,
       );
-  Student copyWithCompanion(StudentsCompanion data) {
-    return Student(
+  StudentData copyWithCompanion(StudentsCompanion data) {
+    return StudentData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       email: data.email.present ? data.email.value : this.email,
@@ -453,7 +454,7 @@ class Student extends DataClass implements Insertable<Student> {
 
   @override
   String toString() {
-    return (StringBuffer('Student(')
+    return (StringBuffer('StudentData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('email: $email, ')
@@ -493,7 +494,7 @@ class Student extends DataClass implements Insertable<Student> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Student &&
+      (other is StudentData &&
           other.id == this.id &&
           other.name == this.name &&
           other.email == this.email &&
@@ -511,7 +512,7 @@ class Student extends DataClass implements Insertable<Student> {
           other.predictions == this.predictions);
 }
 
-class StudentsCompanion extends UpdateCompanion<Student> {
+class StudentsCompanion extends UpdateCompanion<StudentData> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> email;
@@ -574,7 +575,7 @@ class StudentsCompanion extends UpdateCompanion<Student> {
         skills = Value(skills),
         strengths = Value(strengths),
         predictions = Value(predictions);
-  static Insertable<Student> custom({
+  static Insertable<StudentData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? email,
@@ -2709,14 +2710,14 @@ class $$StudentsTableAnnotationComposer
 class $$StudentsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $StudentsTable,
-    Student,
+    StudentData,
     $$StudentsTableFilterComposer,
     $$StudentsTableOrderingComposer,
     $$StudentsTableAnnotationComposer,
     $$StudentsTableCreateCompanionBuilder,
     $$StudentsTableUpdateCompanionBuilder,
-    (Student, BaseReferences<_$AppDatabase, $StudentsTable, Student>),
-    Student,
+    (StudentData, BaseReferences<_$AppDatabase, $StudentsTable, StudentData>),
+    StudentData,
     PrefetchHooks Function()> {
   $$StudentsTableTableManager(_$AppDatabase db, $StudentsTable table)
       : super(TableManagerState(
@@ -2811,14 +2812,14 @@ class $$StudentsTableTableManager extends RootTableManager<
 typedef $$StudentsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $StudentsTable,
-    Student,
+    StudentData,
     $$StudentsTableFilterComposer,
     $$StudentsTableOrderingComposer,
     $$StudentsTableAnnotationComposer,
     $$StudentsTableCreateCompanionBuilder,
     $$StudentsTableUpdateCompanionBuilder,
-    (Student, BaseReferences<_$AppDatabase, $StudentsTable, Student>),
-    Student,
+    (StudentData, BaseReferences<_$AppDatabase, $StudentsTable, StudentData>),
+    StudentData,
     PrefetchHooks Function()>;
 typedef $$StreamsTableCreateCompanionBuilder = StreamsCompanion Function({
   required String id,

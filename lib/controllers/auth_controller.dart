@@ -1,5 +1,5 @@
 
-import '../repositories/student_repository.dart';
+import '../data/repositories/student_repository.dart';
 
 class AuthController {
   final StudentRepository _studentRepository;

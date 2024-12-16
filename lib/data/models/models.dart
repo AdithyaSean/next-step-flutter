@@ -20,7 +20,7 @@ class ListConverter<T> extends TypeConverter<List<T>, String> {
   String toSql(List<T> value) => json.encode(value);
 }
 
-// Table Definitions - Fix annotations and names
+@DataClassName("StudentData")
 class Students extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();

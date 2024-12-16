@@ -1,5 +1,5 @@
-import '../data/database/app_database.dart';
-import '../services/firebase_db_service.dart';
+import '../database/app_database.dart';
+import '../../services/firebase_db_service.dart';
 import 'package:drift/drift.dart';
 
 class StudentRepository {
