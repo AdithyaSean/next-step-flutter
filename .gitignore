@@ -44,8 +44,11 @@ app.*.map.json
 
 # Firebase
 firebase.json
+.firebaserc
 firebase_options.dart
 android/app/google-services.json
+firestore.rules
+firestore.indexes.json
 
 # Environment configuration
 .env

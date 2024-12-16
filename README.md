@@ -68,12 +68,57 @@ Here's a step-by-step guide to set up the Firebase Flutter project:
 2. **Install FlutterFire CLI:**
    ```bash
    dart pub global activate flutterfire_cli
-   ```
 
-3. **Configure Firebase:**
+3. **Initialize Firebase:**
+   ```bash
+   firebase init
+   ```
+   ##### choose "Firestore" option
+   ##### new project ex:next-step-0004
+   ##### accept default locations for rules/indexes 
+
+4. **Configure Firebase:**
    ```bash
    flutterfire configure
    ```
+   ##### choose your project
+   ##### select all platforms
+   ##### use default options
+
+5. **Verify Firebase Files:**
+   ##### Check android/app/google-services.json exists
+   ##### Check ios/Runner/GoogleService-Info.plist exists
+   ##### Check lib/firebase_options.dart exists
+   ##### Check firebase.json exists
+
+6. **Set Firestore Rules:**
+   ```plaintext
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /{document=**} {
+         allow read, write: if true;  // Test mode only
+       }
+     }
+   }
+   ```
+
+7. **Deploy Rules:**
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+
+8. **Verify Setup:**
+```dart
+// Check in main.dart that Firebase is initialized:
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
+}
+```
 
 #### After Each Pull
 
