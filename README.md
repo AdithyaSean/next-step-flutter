@@ -49,6 +49,14 @@ Here's a step-by-step guide to set up the Firebase Flutter project:
    ```bash
    curl -sL https://firebase.tools | bash
    ```
+3. Add firebase to path if not: (for windows)
+   ```cmd
+   setx PATH "%PATH%;%APPDATA%\npm"
+   ```
+4. Add flutterfire to path if not: (for windows)
+   ```cmd
+   setx /M PATH "%PATH%;%USERPROFILE%\AppData\Local\Pub\Cache\bin"
+   ```
 
 #### One-time Setup Steps
 
@@ -64,7 +72,7 @@ Here's a step-by-step guide to set up the Firebase Flutter project:
 
 3. **Configure Firebase:**
    ```bash
-   flutterfire configure --project=next-step-0002
+   flutterfire configure
    ```
 
 #### After Each Pull
@@ -76,7 +84,7 @@ Here's a step-by-step guide to set up the Firebase Flutter project:
 
 2. **Run Build Runner:**
    ```bash
-   flutter pub run build_runner build
+   flutter pub run build_runner build --delete-conflicting-outputs
    ```
 
 3. **Clean and Run:**
@@ -86,11 +94,6 @@ Here's a step-by-step guide to set up the Firebase Flutter project:
    ```
 
 #### Troubleshooting
-
-- If Firebase initialization fails:
-  ```bash
-  flutterfire configure
-  ```
 
 - If build fails:
   ```bash
