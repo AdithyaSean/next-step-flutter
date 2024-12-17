@@ -10,6 +10,38 @@ class TFLiteService {
   Interpreter? _interpreter;
   Map<String, dynamic>? _labels;
 
+  // Add this mapping from feature columns to user-friendly interest names
+  final Map<String, String> _featureToInterestMap = {
+    'ai': 'Artificial Intelligence',
+    'science': 'Science',
+    'math': 'Mathematics',
+    'cs': 'Computer Science',
+    // Add mappings for all feature columns
+  };
+
+  // Mapping from user-friendly interests to model feature names
+  final Map<String, String> _interestToFeatureMap = {
+    'Artificial Intelligence': 'ai_feature',
+    'Science': 'science_feature',
+    'Mathematics': 'math_feature',
+    'Computer Science': 'cs_feature',
+    'Biology': 'biology_feature',
+    'Physics': 'physics_feature',
+    'English': 'english_feature',
+    'Law': 'law_feature',
+    'Music': 'music_feature',
+    'Dancing': 'dancing_feature',
+    'History': 'history_feature',
+    'Languages': 'languages_feature',
+    'Robotics': 'robotics_feature',
+    'Drama': 'drama_feature',
+    'Computer Networks': 'networks_feature',
+    'Cybersecurity': 'cybersecurity_feature',
+    'Chemistry': 'chemistry_feature',
+    'Engineering': 'engineering_feature',
+    // Add mappings for all interests as needed
+  };
+
   Future<void> initialize() async {
     try {
       // Load model
@@ -44,13 +76,31 @@ class TFLiteService {
       
       for (var i = 0; i < _labels!['feature_columns'].length; i++) {
         final feature = _labels!['feature_columns'][i];
-        final value = studentData[feature];
-        
-        if (value != null) {
-          // Convert various input types to double
+
+        // Map user-selected interests to model features
+        if (_interestToFeatureMap.values.contains(feature)) {
+          // Find the interest corresponding to this feature
+          final interest = _interestToFeatureMap.entries
+              .firstWhere(
+                (entry) => entry.value == feature,
+                orElse: () => MapEntry('', ''),
+              )
+              .key;
+
+          if (interest.isNotEmpty &&
+              studentData['interests'] != null &&
+              studentData['interests'].contains(interest)) {
+            inputData[i] = 1.0; // User selected this interest
+          } else {
+            inputData[i] = 0.0; // User did not select this interest
+          }
+        } else {
+          // Handle other features
+          final value = studentData[feature];
           inputData[i] = _convertToDouble(value);
         }
-        developer.log('Feature $feature: ${inputData[i]}', 
+
+        developer.log('Feature $feature: ${inputData[i]}',
             name: 'TFLiteService');
       }
 
@@ -96,6 +146,14 @@ class TFLiteService {
     }
     if (value is bool) return value ? 1.0 : 0.0;
     return 0.0;
+  }
+
+  // Method to get the list of interest names
+  List<String> get interestNames {
+    // Get feature columns from labels
+    List<String> features = List<String>.from(_labels?['feature_columns'] ?? []);
+    // Map them to user-friendly interest names
+    return features.map((feature) => _featureToInterestMap[feature] ?? feature).toList();
   }
 
   void dispose() {

@@ -1,9 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/screens/home.dart';
 import 'package:next_step/screens/sign_up.dart';
+import '../core/service_locator.dart';
+import '../controllers/auth_controller.dart';
 
-class ResponsiveSignIn extends StatelessWidget {
+class ResponsiveSignIn extends StatefulWidget {
   const ResponsiveSignIn({super.key});
+
+  @override
+  State<ResponsiveSignIn> createState() => _ResponsiveSignInState();
+}
+
+class _ResponsiveSignInState extends State<ResponsiveSignIn> {
+  late final AuthController _authController;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _authController = locator<AuthController>();
+  }
+
+  Widget _buildGoogleSignInButton() {
+    return IconButton(
+      onPressed: _isLoading ? null : () async {
+        setState(() => _isLoading = true);
+        try {
+          await _authController.signInWithGoogle();
+          if (!mounted) return;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        } catch (e) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $e')),
+          );
+        } finally {
+          if (mounted) setState(() => _isLoading = false);
+        }
+      },
+      icon: _isLoading
+          ? const SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : Image.asset('images/google.png', width: 30, height: 30),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +145,7 @@ class ResponsiveSignIn extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset('images/google.png', width: 30, height: 30),
-                        ),
+                        _buildGoogleSignInButton(),
                         const SizedBox(width: 16),
                         IconButton(
                           onPressed: () {},

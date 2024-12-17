@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/service_locator.dart';
 import '../controllers/auth_controller.dart';
+import 'home.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
   const ResponsiveSignUp({super.key});
@@ -224,9 +225,18 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: () {}, // Add Google sign-up logic
-                          icon: Image.asset('images/google.png',
-                              width: 30, height: 30),
+                          onPressed: () {
+                            _authController.signInWithGoogle().then((_) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const HomeScreen()),
+                              );
+                            }).catchError((e) {
+                              ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text('Error: $e')));
+                            });
+                          },
+                          icon: Image.asset('images/google.png', width: 30, height: 30),
                         ),
                         const SizedBox(width: 16),
                         IconButton(

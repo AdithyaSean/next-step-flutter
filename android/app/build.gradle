@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "com.nextstep.next_step"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -45,3 +45,13 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-base' // Add this line
+    implementation 'com.google.firebase:firebase-auth' // Ensure Firebase Auth is added
+    implementation 'com.google.firebase:firebase-firestore' // Ensure Firebase Firestore is added
+    // ...existing dependencies...
+}
+
+// Apply the Google Services plugin at the bottom
+apply plugin: 'com.google.gms.google-services'
