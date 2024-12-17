@@ -23,21 +23,46 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final _tfliteService = GetIt.instance<TFLiteService>();
   bool _isLoading = false;
 
-  // Use the actual Student model
-  late StudentData _student;
+  // Initialize with empty student data
+  late StudentData _student = StudentData(
+    id: widget.studentId,
+    name: '',
+    email: '',
+    district: '',
+    password: '',
+    olResults: {},
+    alResults: {},
+    interests: [],
+    skills: [],
+    strengths: [],
+    predictions: {},
+  );
 
   @override
   void initState() {
     super.initState();
-    _initializeStudent();
+    _loadStudentData();
   }
 
-  Future<void> _initializeStudent() async {
-    final data = await _repository.getStudent(widget.studentId);
-    if (data != null) {
-      setState(() {
-        _student = StudentData.fromJson(data);  // Use generated fromJson
-      });
+  Future<void> _loadStudentData() async {
+    setState(() => _isLoading = true);
+    try {
+      final data = await _repository.getStudent(widget.studentId);
+      if (data != null) {
+        setState(() {
+          _student = StudentData.fromJson(data);
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading profile: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -74,37 +99,39 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       appBar: AppBar(
         title: const Text('Complete Your Profile'),
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildBasicInfo(),
-              const SizedBox(height: 20),
-              _buildOLResults(),
-              const SizedBox(height: 20),
-              _buildStreamSelector(),
-              if (_student.stream != null) ...[
-                const SizedBox(height: 20),
-                _buildALResults(),
-                const SizedBox(height: 20),
-                _buildZScore(),
-              ],
-              const SizedBox(height: 20),
-              _buildInterests(),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _handleSubmit,
-                child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Save and Get Predictions'),
+      body: _isLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildBasicInfo(),
+                  const SizedBox(height: 20),
+                  _buildOLResults(),
+                  const SizedBox(height: 20),
+                  _buildStreamSelector(),
+                  if (_student.stream != null) ...[
+                    const SizedBox(height: 20),
+                    _buildALResults(),
+                    const SizedBox(height: 20),
+                    _buildZScore(),
+                  ],
+                  const SizedBox(height: 20),
+                  _buildInterests(),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : _handleSubmit,
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('Save and Get Predictions'),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
       bottomNavigationBar: BottomNavContainer(
         selectedIndex: 2,
         studentId: widget.studentId,
