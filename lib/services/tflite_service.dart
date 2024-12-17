@@ -115,8 +115,17 @@ class TFLiteService {
 
       // Convert output to map of career paths and probabilities
       Map<String, double> predictions = {};
+      double sum = 0;
+      
+      // First pass to calculate sum for normalization
       for (var i = 0; i < _labels!['career_paths'].length; i++) {
-        predictions[_labels!['career_paths'][i]] = outputArray[0][i];
+        sum += outputArray[0][i];
+      }
+
+      // Second pass to create normalized probabilities
+      for (var i = 0; i < _labels!['career_paths'].length; i++) {
+        final probability = outputArray[0][i] / sum; // Normalize to get percentage
+        predictions[_labels!['career_paths'][i]] = probability;
       }
 
       developer.log('Predictions: $predictions', name: 'TFLiteService');

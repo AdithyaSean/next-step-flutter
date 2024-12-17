@@ -7,6 +7,7 @@ import '../constants/education_constants.dart';
 import 'package:get_it/get_it.dart';
 import '../services/tflite_service.dart';
 import 'package:drift/drift.dart' hide Column;  // Add this import
+import 'package:next_step/screens/home.dart';  // Add this import if missing
 
 class ProfileEditScreen extends StatefulWidget {
   final String studentId;
@@ -37,6 +38,33 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       setState(() {
         _student = StudentData.fromJson(data);  // Use generated fromJson
       });
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+    _formKey.currentState!.save();
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Create a new StudentData object with updated values
+      final updatedStudent = _student.copyWith(
+        // Update other fields as necessary
+      );
+
+      await _repository.updateStudent(updatedStudent);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => ProfileScreen(studentId: widget.studentId)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -112,30 +140,28 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   }
 
   Widget _buildOLResults() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: _student.olResults.entries.map((entry) {
+        return Row(
           children: [
-            const Text(
-              'O/L Results',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Expanded(child: Text(entry.key)),
+            DropdownButton<String>(
+              value: entry.value,
+              items: EducationConstants.grades.map((grade) {
+                return DropdownMenuItem(
+                  value: grade,
+                  child: Text(grade),
+                );
+              }).toList(),
+              onChanged: (newGrade) {
+                setState(() {
+                  _student.olResults[entry.key] = newGrade!;
+                });
+              },
             ),
-            const SizedBox(height: 10),
-            ...EducationConstants.olSubjects.map((subject) => _buildGradeSelector(
-                  subject,
-                  EducationConstants.grades,
-                  _student.olResults[subject],
-                  (grade) => setState(() {
-                    final newResults = Map<String, String>.from(_student.olResults);
-                    newResults[subject] = grade;
-                    _student = _student.copyWith(alResults: newResults);
-                  }),
-                )),
           ],
-        ),
-      ),
+        );
+      }).toList(),
     );
   }
 
@@ -281,11 +307,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       // Get predictions using TFLite model
       final predictions = await _tfliteService.predict(_student.toJson());
       
-      // Update student with new data including predictions
-      await _repository.createStudent({
+      // Create updated student data with predictions
+      final updatedStudentData = {
         ..._student.toJson(),
         'predictions': predictions,
-      });
+      };
+
+      // Update student data in repository
+      await _repository.createStudent(updatedStudentData);
 
       if (!mounted) return;
 
@@ -293,11 +322,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         const SnackBar(content: Text('Profile updated successfully!')),
       );
 
-      // Navigate to profile view
+      // Navigate to home screen to show predictions
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(studentId: widget.studentId),
+          builder: (context) => HomeScreen(studentId: widget.studentId),
         ),
       );
     } catch (e) {

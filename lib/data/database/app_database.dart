@@ -37,6 +37,10 @@ class AppDatabase extends _$AppDatabase {
     final file = File(p.join(dbFolder.path, 'next_step.db'));
     return file.path;
   }
+
+  Future<void> updateStudent(StudentData student) async {
+    await update(students).replace(student);
+  }
 }
 
 LazyDatabase _openConnection() {

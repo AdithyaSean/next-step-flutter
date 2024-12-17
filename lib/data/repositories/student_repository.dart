@@ -25,4 +25,8 @@ class StudentRepository {
   Stream<Map<String, dynamic>?> watchStudent(String studentId) {
     return _firebaseDB.streamStudentData(studentId);
   }
+
+  Future<void> updateStudent(StudentData student) async {
+    await _localDB.updateStudent(student);
+  }
 }
