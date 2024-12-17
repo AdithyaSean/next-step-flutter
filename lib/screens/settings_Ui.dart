@@ -3,7 +3,9 @@ import 'package:next_step/widgets/nav_bar.dart';
 
 
 class ResponsiveSettings extends StatefulWidget {
-  const ResponsiveSettings({super.key});
+  final String studentId;
+
+  const ResponsiveSettings({super.key, required this.studentId});
 
   @override
   _ResponsiveSettingsState createState() => _ResponsiveSettingsState();
@@ -119,7 +121,10 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3), // Use the BottomNavContainer widget here
+      bottomNavigationBar: BottomNavContainer(
+        selectedIndex: 3,
+        studentId: widget.studentId,
+      ),
     );
 
   }

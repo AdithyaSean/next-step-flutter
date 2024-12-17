@@ -226,10 +226,14 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            _authController.signInWithGoogle().then((_) {
+                            _authController.signInWithGoogle().then((user) {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => const HomeScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(
+                                    studentId: _authController.getCurrentUserId() ?? '',
+                                  ),
+                                ),
                               );
                             }).catchError((e) {
                               ScaffoldMessenger.of(context)

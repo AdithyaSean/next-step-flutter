@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/screens/home.dart';
 import 'package:next_step/screens/sign_up.dart';
+import 'package:next_step/screens/profile_edit.dart';
 import '../core/service_locator.dart';
 import '../controllers/auth_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Add this import
 
 class ResponsiveSignIn extends StatefulWidget {
   const ResponsiveSignIn({super.key});
@@ -14,6 +16,8 @@ class ResponsiveSignIn extends StatefulWidget {
 class _ResponsiveSignInState extends State<ResponsiveSignIn> {
   late final AuthController _authController;
   bool _isLoading = false;
+  final TextEditingController emailController = TextEditingController(); // Add this
+  final TextEditingController passwordController = TextEditingController(); // Add this
 
   @override
   void initState() {
@@ -21,17 +25,61 @@ class _ResponsiveSignInState extends State<ResponsiveSignIn> {
     _authController = locator<AuthController>();
   }
 
+  @override
+  void dispose() {
+    emailController.dispose(); // Dispose controllers
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSignInSuccess(String userId) async {
+    if (!mounted) return;
+
+    final isComplete = await _authController.isProfileComplete(userId);
+    
+    if (!isComplete) {
+      // Profile not complete, go to profile edit
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileEditScreen(studentId: userId),
+        ),
+      );
+    } else {
+      // Profile complete, go to home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen(studentId: userId)), // Pass user ID after authentication
+      );
+    }
+  }
+
   Widget _buildGoogleSignInButton() {
     return IconButton(
       onPressed: _isLoading ? null : () async {
         setState(() => _isLoading = true);
         try {
-          await _authController.signInWithGoogle();
+          final userId = await _authController.signInWithGoogle();
           if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-          );
+          
+          final isComplete = await _authController.isProfileComplete(userId);
+          if (!isComplete) {
+            // Profile not complete, go to profile edit
+            if (!mounted) return;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileEditScreen(studentId: userId),
+              ),
+            );
+          } else {
+            // Profile complete, go to home
+            if (!mounted) return;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen(studentId: userId)), // Pass user ID after authentication
+            );
+          }
         } catch (e) {
           if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
@@ -116,10 +164,25 @@ class _ResponsiveSignInState extends State<ResponsiveSignIn> {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {
-                        // Handle sign in action
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const HomeScreen()));
+                      onPressed: () async {
+                        try {
+                          final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                          if (!mounted) return;
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(studentId: userCredential.user!.uid),
+                            ),
+                          );
+                        } catch (e) {
+                          // Handle errors
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: $e')),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,

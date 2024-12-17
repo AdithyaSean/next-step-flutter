@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/screens/notifications.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'package:next_step/screens/profile.dart'; // Ensure this import exists
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String studentId; // Add this if studentId needs to be passed
+
+  const HomeScreen({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -12,11 +15,18 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
+        leading: IconButton( // Changed from Padding to IconButton
+          icon: const CircleAvatar(
             backgroundImage: AssetImage('images/profile.png'),
           ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(studentId: studentId),
+              ),
+            );
+          },
         ),
         title: const Text(
           'NEXT STEP',
@@ -30,9 +40,12 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.black),
             onPressed: () {
-              // Handle notification action
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const NotificationsScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsScreen(studentId: studentId),
+                ),
+              );
             },
           ),
         ],
@@ -134,7 +147,10 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
+      bottomNavigationBar: BottomNavContainer(
+        selectedIndex: 0,
+        studentId: studentId,
+      ),
     );
   }
 }

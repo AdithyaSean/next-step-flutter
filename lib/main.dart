@@ -8,6 +8,7 @@ import 'package:next_step/screens/home.dart';
 import 'package:flutter/foundation.dart';
 // Import drift separately to avoid naming conflicts
 import 'package:drift/drift.dart' hide Column;
+import 'package:next_step/screens/sign_in.dart';  // Add this import
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,19 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingScreen();
-          }
-          if (snapshot.hasData) {
-            return const HomeScreen();
-          } else {
-            return const NextStepStart();
-          }
-        },
-      ),
+      home: const ResponsiveSignIn(), // Change SignInScreen to ResponsiveSignIn
     );
   }
 }

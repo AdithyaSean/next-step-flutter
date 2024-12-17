@@ -7,7 +7,13 @@ import 'package:next_step/screens/settings_Ui.dart';
 
 class BottomNavContainer extends StatelessWidget {
   final int selectedIndex;
-  const BottomNavContainer({super.key, this.selectedIndex = 0});
+  final String studentId; // Add studentId parameter
+
+  const BottomNavContainer({
+    super.key,
+    required this.selectedIndex,
+    required this.studentId, // Add to constructor
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +35,22 @@ class BottomNavContainer extends StatelessWidget {
           gap: 8,
           padding: EdgeInsets.all(16),
           selectedIndex: selectedIndex,
+          onTabChange: (index) {
+            switch(index) {
+              case 0:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(studentId: studentId)));
+                break;
+              case 1:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RecommendationsScreen(studentId: studentId)));
+                break;
+              case 2:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ExploreScreen(studentId: studentId)));
+                break;
+              case 3:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ResponsiveSettings(studentId: studentId)));
+                break;
+            }
+          },
           tabs: [
             GButton(
               icon: Icons.home,
@@ -36,7 +58,9 @@ class BottomNavContainer extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(studentId: studentId),
+                  ),
                 );
               },
             ),
@@ -46,7 +70,9 @@ class BottomNavContainer extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const RecommendationsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => RecommendationsScreen(studentId: studentId),
+                  ),
                 );
               },
             ),
@@ -56,7 +82,9 @@ class BottomNavContainer extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ExploreScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => ExploreScreen(studentId: studentId),
+                  ),
                 );
               },
             ),
@@ -66,7 +94,9 @@ class BottomNavContainer extends StatelessWidget {
               onPressed: () {
                  Navigator.push(
                    context,
-                   MaterialPageRoute(builder: (context) => const ResponsiveSettings()),
+                   MaterialPageRoute(
+                     builder: (context) => ResponsiveSettings(studentId: studentId),
+                   ),
                  );
               },
             ),

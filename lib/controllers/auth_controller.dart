@@ -43,7 +43,7 @@ class AuthController {
     await _studentRepository.createStudent(studentData);
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<String> signInWithGoogle() async {
     try {
       print('Starting Google Sign In...');
       
@@ -53,7 +53,7 @@ class AuthController {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         print('User canceled the sign-in');
-        return;
+        return '';
       }
 
       print('Google Sign In successful, getting auth details...');
@@ -67,8 +67,13 @@ class AuthController {
       print('Got credentials, signing in to Firebase...');
       final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
       
+      if (userCredential.user == null) {
+        throw Exception('Failed to sign in with Google');
+      }
+
       print('Successfully signed in with Google: ${userCredential.user?.uid}');
       await _handleUserAfterSignIn(userCredential.user);
+      return userCredential.user!.uid;
       
     } catch (e, stackTrace) {
       print('Error during Google Sign In: $e');
@@ -113,5 +118,21 @@ class AuthController {
       print('Error handling user after sign in: $e');
       rethrow;
     }
+  }
+
+  Future<bool> isProfileComplete(String userId) async {
+    final student = await _studentRepository.getStudent(userId);
+    if (student == null) return false;
+    
+    // Check if essential profile data exists
+    return student['olResults'] != null && 
+           student['olResults'].isNotEmpty &&
+           student['district'] != null &&
+           student['interests'] != null &&
+           student['interests'].isNotEmpty;
+  }
+
+  String? getCurrentUserId() {
+    return FirebaseAuth.instance.currentUser?.uid;
   }
 }

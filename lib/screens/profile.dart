@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'package:get_it/get_it.dart';
+import '../data/repositories/student_repository.dart';
+import 'profile_edit.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  final String studentId;
+
+  const ProfileScreen({super.key, required this.studentId});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
   Widget build(BuildContext context) {
+    final repository = GetIt.instance<StudentRepository>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text.rich(
@@ -39,26 +51,47 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth > 600) {
-            return buildWideLayout(context);
-          } else {
-            return buildNarrowLayout(context);
+      body: StreamBuilder<Map<String, dynamic>?>(
+        stream: repository.watchStudent(widget.studentId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final studentData = snapshot.data;
+          if (studentData == null) {
+            return const Center(child: Text('No profile data found'));
+          }
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 600) {
+                return buildWideLayout(context, studentData);
+              } else {
+                return buildNarrowLayout(context, studentData);
+              }
+            },
+          );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
+      bottomNavigationBar: BottomNavContainer(
+        selectedIndex: 0,
+        studentId: widget.studentId,
+      ),
     );
   }
 
-  Widget buildWideLayout(BuildContext context) {
+  Widget buildWideLayout(BuildContext context, Map<String, dynamic> studentData) {
     return Row(
       children: [
         Expanded(
           flex: 1,
           child: SingleChildScrollView(
-            child: buildProfileContent(),
+            child: buildProfileContent(studentData),
           ),
         ),
         // Additional side content for wide screens
@@ -76,13 +109,13 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget buildNarrowLayout(BuildContext context) {
+  Widget buildNarrowLayout(BuildContext context, Map<String, dynamic> studentData) {
     return SingleChildScrollView(
-      child: buildProfileContent(),
+      child: buildProfileContent(studentData),
     );
   }
 
-  Widget buildProfileContent() {
+  Widget buildProfileContent(Map<String, dynamic> studentData) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -96,9 +129,9 @@ class ProfileScreen extends StatelessWidget {
                   backgroundImage: AssetImage('images/profile.png'),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Hello Sean',
-                  style: TextStyle(
+                Text(
+                  'Hello ${studentData['name'] ?? ''}',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -115,14 +148,13 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           buildSectionTitle('Personal Information'),
-          buildInfoField('Name', 'Sean Donaldson'),
-          buildInfoField('Email', 'sean@example.com'),
-          buildInfoField('Phone', '+94 XXX XXX XXX'),
+          buildInfoField('Name', studentData['name'] ?? ''),
+          buildInfoField('Email', studentData['email'] ?? ''),
+          buildInfoField('Phone', studentData['contact'] ?? ''),
 
           const SizedBox(height: 24),
           buildSectionTitle('Education'),
           buildEducationItem(
-
             'Diploma in Software Engineering',
             'Grade: Science',
           ),
@@ -161,9 +193,12 @@ class ProfileScreen extends StatelessWidget {
             icon: const Icon(Icons.edit),
             iconSize: 20,
             color: Colors.black,
-            onPressed: () {
-              // Handle edit action
-            },
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileEditScreen(studentId: widget.studentId),
+              ),
+            ),
           ),
         ],
       ),
