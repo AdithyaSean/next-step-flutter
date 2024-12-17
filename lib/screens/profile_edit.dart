@@ -140,28 +140,63 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   }
 
   Widget _buildOLResults() {
-    return Column(
-      children: _student.olResults.entries.map((entry) {
-        return Row(
+    // Define required OL subjects if not already defined
+    final requiredSubjects = [
+      'Mathematics',
+      'Science',
+      'English',
+      'Sinhala',
+      'Religion',
+      'History'
+    ];
+
+    // Initialize empty results if not already present
+    if (_student.olResults.isEmpty) {
+      for (var subject in requiredSubjects) {
+        _student.olResults[subject] = 'C'; // Default grade
+      }
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: Text(entry.key)),
-            DropdownButton<String>(
-              value: entry.value,
-              items: EducationConstants.grades.map((grade) {
-                return DropdownMenuItem(
-                  value: grade,
-                  child: Text(grade),
-                );
-              }).toList(),
-              onChanged: (newGrade) {
-                setState(() {
-                  _student.olResults[entry.key] = newGrade!;
-                });
-              },
+            const Text(
+              'O/L Results',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+            ...requiredSubjects.map((subject) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(child: Text(subject)),
+                      DropdownButton<String>(
+                        value: _student.olResults[subject],
+                        items: EducationConstants.grades
+                            .map((grade) => DropdownMenuItem(
+                                  value: grade,
+                                  child: Text(grade),
+                                ))
+                            .toList(),
+                        onChanged: (newGrade) {
+                          if (newGrade != null) {
+                            setState(() {
+                              final newResults = Map<String, String>.from(_student.olResults);
+                              newResults[subject] = newGrade;
+                              _student = _student.copyWith(olResults: newResults);
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                )),
           ],
-        );
-      }).toList(),
+        ),
+      ),
     );
   }
 
