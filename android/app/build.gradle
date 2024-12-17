@@ -31,6 +31,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -47,9 +48,9 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-base' // Add this line
-    implementation 'com.google.firebase:firebase-auth' // Ensure Firebase Auth is added
-    implementation 'com.google.firebase:firebase-firestore' // Ensure Firebase Firestore is added
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
+    implementation 'com.google.android.gms:play-services-auth'
+    implementation 'com.google.android.gms:play-services-base'
     // ...existing dependencies...
 }
 
