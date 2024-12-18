@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class TwoFactorAuthScreenMobile extends StatefulWidget {
-  const TwoFactorAuthScreenMobile({super.key});
+  final String studentId;
+
+  const TwoFactorAuthScreenMobile({super.key, required this.studentId});
 
   @override
   _TwoFactorAuthScreenState createState() => _TwoFactorAuthScreenState();
@@ -15,6 +17,8 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
+    var studentId = widget.studentId;
+    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -89,7 +93,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreenMobile> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
+      bottomNavigationBar: BottomNavContainer(selectedIndex: 3, studentId: studentId),
     );
   }
 }

@@ -4,14 +4,15 @@ import 'package:next_step/screens/two_factor_email.dart';
 import 'package:next_step/screens/two_factor_mobile.dart';
 
 class TwoFactorAuthScreen extends StatefulWidget {
-  const TwoFactorAuthScreen({super.key});
+  final String studentId;
+
+  const TwoFactorAuthScreen({super.key, required this.studentId});
 
   @override
   _TwoFactorAuthScreenState createState() => _TwoFactorAuthScreenState();
 }
 
 class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
-  String _selectedMethod = '';
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +49,13 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                         _selectMethod('mobile');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const TwoFactorAuthScreenMobile()),
-                        );},
-                      icon: const Icon(Icons.phone_android, color: Colors.white),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const TwoFactorAuthScreenMobile(studentId: studentID,)),
+                        );
+                      },
+                      icon:
+                          const Icon(Icons.phone_android, color: Colors.white),
                       label: const Text(
                         'Mobile',
                         style: TextStyle(
@@ -72,9 +77,11 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                         _selectMethod('email');
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const EmailTwoFactorAuthScreen()),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const EmailTwoFactorAuthScreen(studentId: studentId,)),
                         );
-                        },
+                      },
                       icon: const Icon(Icons.email, color: Colors.white),
                       label: const Text(
                         'Email',
@@ -98,7 +105,8 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
+      bottomNavigationBar:
+          const BottomNavContainer(selectedIndex: 3, studentId: studentId),
     );
   }
 
@@ -134,7 +142,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
 
   void _selectMethod(String method) {
     setState(() {
-      _selectedMethod = method;
+      String selectedMethod = method;
     });
   }
 }

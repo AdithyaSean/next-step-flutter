@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class AddEducation extends StatelessWidget {
-  const AddEducation({super.key});
+  final String studentId;
+
+  const AddEducation({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
     final customColor = Color(0xFF62B1D0).withOpacity(0.3);
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -174,7 +176,7 @@ class AddEducation extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 1),
+      bottomNavigationBar: BottomNavContainer(selectedIndex: 1, studentId: studentId),
     );
   }
 }

@@ -3151,7 +3151,7 @@ final class $$CoursesTableReferences
 
   $$StreamsTableProcessedTableManager get streamId {
     final manager = $$StreamsTableTableManager($_db, $_db.streams)
-        .filter((f) => f.id($_item.streamId!));
+        .filter((f) => f.id($_item.streamId));
     final item = $_typedResult.readTableOrNull(_streamIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(

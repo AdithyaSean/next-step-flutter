@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
-  const LanguageSelectionScreen({super.key});
+  final String studentId;
+  
+  const LanguageSelectionScreen({super.key, required this.studentId});
 
   @override
-  _LanguageSelectionScreenState createState() => _LanguageSelectionScreenState();
+  _LanguageSelectionScreenState createState() =>
+      _LanguageSelectionScreenState();
 }
 
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
@@ -13,6 +16,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var studentId = widget.studentId;
+    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -75,7 +80,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
+      bottomNavigationBar:
+          BottomNavContainer(selectedIndex: 3, studentId: studentId),
     );
   }
 

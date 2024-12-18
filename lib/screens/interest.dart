@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/screens/sign_in.dart';
-import 'package:get_it/get_it.dart';
-import 'package:next_step/services/tflite_service.dart';
 
 class InterestsPage extends StatefulWidget {
   const InterestsPage({super.key});

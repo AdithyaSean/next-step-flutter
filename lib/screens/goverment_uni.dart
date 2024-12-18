@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class GovernmentUniversitiesScreen extends StatelessWidget {
-  const GovernmentUniversitiesScreen({super.key});
+  final String studentId;
+
+  const GovernmentUniversitiesScreen({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class GovernmentUniversitiesScreen extends StatelessWidget {
           }
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
+      bottomNavigationBar: BottomNavContainer(selectedIndex: 0, studentId: studentId),
     );
   }
 

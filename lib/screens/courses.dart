@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class CoursesScreen extends StatelessWidget {
-  CoursesScreen({super.key});
+  final String studentId;
+
+  CoursesScreen({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class CoursesScreen extends StatelessWidget {
           }
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 2),
+      bottomNavigationBar: BottomNavContainer(selectedIndex: 2, studentId: studentId),
     );
   }
 

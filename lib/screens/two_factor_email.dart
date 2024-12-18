@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class EmailTwoFactorAuthScreen extends StatefulWidget {
-  const EmailTwoFactorAuthScreen({super.key});
+  final String studentId;
+
+  const EmailTwoFactorAuthScreen({super.key, required this.studentId});
 
   @override
-  _EmailTwoFactorAuthScreenState createState() => _EmailTwoFactorAuthScreenState();
+  _EmailTwoFactorAuthScreenState createState() =>
+      _EmailTwoFactorAuthScreenState();
 }
 
 class _EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
@@ -15,6 +18,8 @@ class _EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var studentId = widget.studentId;
+    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -90,7 +95,8 @@ class _EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
+      bottomNavigationBar:
+          BottomNavContainer(selectedIndex: 3, studentId: studentId),
     );
   }
 }

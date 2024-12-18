@@ -50,18 +50,15 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
       TextEditingController();
 
   late final AuthController _authController;
-  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
-    _isMounted = true;
     _authController = locator<AuthController>();  // Only get the controller from service locator
   }
 
   @override
   void dispose() {
-    _isMounted = false;
     super.dispose();
   }
 

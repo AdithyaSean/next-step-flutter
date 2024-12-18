@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class SetChangePasswordScreen extends StatelessWidget {
-  const SetChangePasswordScreen({super.key});
+  final String studentId;
+  
+  const SetChangePasswordScreen({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +99,8 @@ class SetChangePasswordScreen extends StatelessWidget {
           );
         },
       ),
-    bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
+      bottomNavigationBar:
+          BottomNavContainer(selectedIndex: 3, studentId: studentId),
     );
   }
 }

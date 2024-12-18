@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class PrivateUniversitiesScreen extends StatelessWidget {
-  const PrivateUniversitiesScreen({super.key});
+  final String studentId;
+
+  const PrivateUniversitiesScreen({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,8 @@ class PrivateUniversitiesScreen extends StatelessWidget {
           }
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
+      bottomNavigationBar:
+          BottomNavContainer(selectedIndex: 0, studentId: studentId),
     );
   }
 
@@ -125,7 +128,8 @@ class PrivateUniversitiesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUniversityCard(University university, BuildContext context, {bool isDesktop = false}) {
+  Widget _buildUniversityCard(University university, BuildContext context,
+      {bool isDesktop = false}) {
     return Card(
       elevation: 2,
       color: Colors.blue[50],
@@ -154,7 +158,8 @@ class PrivateUniversitiesScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
