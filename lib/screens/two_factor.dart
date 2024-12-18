@@ -16,6 +16,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var studentId = widget.studentId;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -47,11 +48,12 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                     ElevatedButton.icon(
                       onPressed: () {
                         _selectMethod('mobile');
+                        var studentID = widget.studentId;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const TwoFactorAuthScreenMobile(studentId: studentID,)),
+                                  TwoFactorAuthScreenMobile(studentId: studentID,)),
                         );
                       },
                       icon:
@@ -78,8 +80,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const EmailTwoFactorAuthScreen(studentId: studentId,)),
+                              builder: (context) => EmailTwoFactorAuthScreen(studentId: studentId,)),
                         );
                       },
                       icon: const Icon(Icons.email, color: Colors.white),
@@ -106,7 +107,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
         },
       ),
       bottomNavigationBar:
-          const BottomNavContainer(selectedIndex: 3, studentId: studentId),
+          BottomNavContainer(selectedIndex: 3, studentId: studentId),
     );
   }
 
@@ -142,7 +143,6 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
 
   void _selectMethod(String method) {
     setState(() {
-      String selectedMethod = method;
     });
   }
 }
