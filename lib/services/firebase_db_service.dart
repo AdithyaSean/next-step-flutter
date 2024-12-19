@@ -174,7 +174,7 @@ class FirebaseDBService {
           _updateLocalStudent(data);
           break;
         case DocumentChangeType.removed:
-          _localDB.delete(_localDB.students)..where((t) => t.id.equals(doc.id));
+          _localDB.delete(_localDB.students).where((t) => t.id.equals(doc.id));
           break;
       }
     }
