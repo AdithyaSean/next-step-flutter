@@ -3,7 +3,6 @@ import '../data/database/app_database.dart';
 import '../services/firebase_db_service.dart';
 import '../data/repositories/student_repository.dart';
 import '../controllers/auth_controller.dart';
-import '../services/tflite_service.dart';
 
 final GetIt locator = GetIt.instance;
 
@@ -39,11 +38,6 @@ Future<void> setupServiceLocator() async {
       AuthController(locator<StudentRepository>()),
     );
 
-    // TFLiteService
-    final tfliteService = TFLiteService();
-    locator.registerSingleton<TFLiteService>(tfliteService);
-    await tfliteService.initialize();
-    
   } catch (e, stackTrace) {
     print('Error during service locator setup: $e');
     print('Stack trace: $stackTrace');
