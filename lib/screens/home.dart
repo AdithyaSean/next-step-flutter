@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/screens/notifications.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'package:next_step/screens/profile.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,27 +13,37 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
+        leading: IconButton( // Changed from Padding to IconButton
+          icon: const CircleAvatar(
             backgroundImage: AssetImage('images/profile.png'),
           ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(),
+              ),
+            );
+          },
         ),
         title: const Text(
           'NEXT STEP',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: 24,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.black),
+            icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
-              // Handle notification action
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const NotificationsScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsScreen(),
+                ),
+              );
             },
           ),
         ],
