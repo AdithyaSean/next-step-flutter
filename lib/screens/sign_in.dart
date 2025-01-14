@@ -4,7 +4,9 @@ import 'package:next_step/screens/sign_up.dart';
 import 'package:next_step/screens/profile_edit.dart';
 import '../core/service_locator.dart';
 import '../controllers/auth_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Add this import
+import 'package:firebase_auth/firebase_auth.dart';
+import 'forgot_password.dart';
+// Add this import
 
 class ResponsiveSignIn extends StatefulWidget {
   const ResponsiveSignIn({super.key});
@@ -158,7 +160,10 @@ class _ResponsiveSignInState extends State<ResponsiveSignIn> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // Navigate to forgot password screen
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+                        },
                         child: const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
                       ),
                     ),
