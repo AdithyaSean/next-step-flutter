@@ -10,9 +10,12 @@ class Student {
   final Map<String, String> alResults;
   final String stream;
   final double zScore;
+  final double gpa;
   final List<String> interests;
   final List<String> skills;
   final List<CareerPrediction> predictions;
+  final String firebaseUid;
+  final String firebaseToken;
 
   Student({
     required this.id,
@@ -26,9 +29,12 @@ class Student {
     required this.alResults,
     required this.stream,
     required this.zScore,
+    required this.gpa,
     required this.interests,
     required this.skills,
     required this.predictions,
+    required this.firebaseUid,
+    required this.firebaseToken,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
@@ -40,16 +46,42 @@ class Student {
       school: json['school'],
       district: json['district'],
       password: json['password'],
-      olResults: Map<String, String>.from(json['olResults']),
-      alResults: Map<String, String>.from(json['alResults']),
-      stream: json['stream'],
-      zScore: json['zScore'],
-      interests: List<String>.from(json['interests']),
-      skills: List<String>.from(json['skills']),
-      predictions: (json['predictions'] as List)
-          .map((i) => CareerPrediction.fromJson(i))
-          .toList(),
+      olResults: Map<String, String>.from(json['olResults'] ?? {}),
+      alResults: Map<String, String>.from(json['alResults'] ?? {}),
+      stream: json['stream'] ?? '',
+      zScore: json['zScore'] ?? 0.0,
+      gpa: json['gpa'] ?? 0.0,
+      interests: List<String>.from(json['interests'] ?? []),
+      skills: List<String>.from(json['skills'] ?? []),
+      predictions: (json['predictions'] as List<dynamic>?)
+              ?.map((i) => CareerPrediction.fromJson(i))
+              .toList() ??
+          [],
+      firebaseUid: json['firebaseUid'],
+      firebaseToken: json['firebaseToken'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'contact': contact,
+      'school': school,
+      'district': district,
+      'password': password,
+      'olResults': olResults,
+      'alResults': alResults,
+      'stream': stream,
+      'zScore': zScore,
+      'gpa': gpa,
+      'interests': interests,
+      'skills': skills,
+      'predictions': predictions.map((prediction) => prediction.toJson()).toList(),
+      'firebaseUid': firebaseUid,
+      'firebaseToken': firebaseToken,
+    };
   }
 }
 
@@ -70,5 +102,13 @@ class CareerPrediction {
       probability: json['probability'],
       predictedAt: DateTime.parse(json['predictedAt']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'careerPath': careerPath,
+      'probability': probability,
+      'predictedAt': predictedAt.toIso8601String(),
+    };
   }
 }
