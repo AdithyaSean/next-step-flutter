@@ -3,6 +3,8 @@ import 'package:next_step/screens/sign_in.dart';
 import 'home.dart';
 
 class InterestsPage extends StatefulWidget {
+  const InterestsPage({super.key});
+
   @override
   _InterestsPageState createState() => _InterestsPageState();
 }
@@ -44,7 +46,7 @@ class _InterestsPageState extends State<InterestsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Choose Your Interests',
               style: TextStyle(
                 color: Colors.black,
@@ -52,7 +54,7 @@ class _InterestsPageState extends State<InterestsPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 40,),
+            const SizedBox(height: 40,),
             Wrap(
               spacing: 18.0,
               runSpacing: 18.0,
@@ -61,7 +63,7 @@ class _InterestsPageState extends State<InterestsPage> {
                 return ChoiceChip(
                   label: Text(
                     interest,
-                    style: TextStyle(fontSize: 17), // Increase text size
+                    style: const TextStyle(fontSize: 17), // Increase text size
                   ),
                   selected: isSelected,
                   onSelected: (selected) {
@@ -75,13 +77,13 @@ class _InterestsPageState extends State<InterestsPage> {
                   },
                   selectedColor: Colors.blue,
                   backgroundColor: Colors.grey[300],
-                  labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Increase padding
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Increase padding
                 shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),),
                 );
               }).toList(),
             ),
-            Spacer(),
+            const Spacer(),
             Center(
             child: ElevatedButton(
               onPressed: () {
@@ -92,12 +94,12 @@ class _InterestsPageState extends State<InterestsPage> {
                 // Handle the "Next" button press
                 print("Selected Interests: $selectedInterests");
               },
-              child: Text('Next'),
               style: ElevatedButton.styleFrom(
-                textStyle: TextStyle(fontSize: 18 , color: Colors.black , fontWeight: FontWeight.bold),
+                textStyle: const TextStyle(fontSize: 18 , color: Colors.black , fontWeight: FontWeight.bold),
                 backgroundColor: Colors.blue,
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
               ),
+              child: Text('Next'),
             ),
           ),
           ],

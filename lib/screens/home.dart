@@ -4,7 +4,7 @@ import 'package:next_step/widgets/nav_bar.dart';
 import 'package:next_step/screens/profile.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfileScreen(),
+                builder: (context) => const ProfileScreen(),
               ),
             );
           },
@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotificationsScreen(),
+                  builder: (context) => const NotificationsScreen(),
                 ),
               );
             },
@@ -83,9 +83,9 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
+                children: [
                   InterestCard(
                     title: 'Software Engineering',
                     imagePath: 'images/se.png',
@@ -157,8 +157,8 @@ class InterestCard extends StatelessWidget {
   const InterestCard({
     required this.title,
     required this.imagePath,
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +191,8 @@ class CareerPathProgress extends StatelessWidget {
   const CareerPathProgress({
     required this.title,
     required this.percentage,
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {

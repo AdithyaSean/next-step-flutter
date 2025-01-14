@@ -3,7 +3,7 @@ import 'package:next_step/widgets/nav_bar.dart';
 
 
 class ResponsiveSettings extends StatefulWidget {
-  const ResponsiveSettings({Key? key}) : super(key: key);
+  const ResponsiveSettings({super.key});
 
   @override
   _ResponsiveSettingsState createState() => _ResponsiveSettingsState();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
-  const ResponsiveSignUp({Key? key}) : super(key: key);
+  const ResponsiveSignUp({super.key});
 
   @override
   _ResponsiveSignUpState createState() => _ResponsiveSignUpState();

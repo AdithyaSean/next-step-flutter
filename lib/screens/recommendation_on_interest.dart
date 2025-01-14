@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class RecommendationOnInterest extends StatelessWidget {
-  const RecommendationOnInterest({Key? key}) : super(key: key);
+  const RecommendationOnInterest({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class RecommendationOnInterest extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Expanded(
             flex: 1,
             child: buildRecommendationCard(
@@ -82,7 +82,7 @@ class RecommendationOnInterest extends StatelessWidget {
               'Successfully Followed the Diploma in Software Engineering',
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           buildRecommendationCard(
             'Degree',
             '1. Degree in Computing',
@@ -111,7 +111,7 @@ class RecommendationOnInterest extends StatelessWidget {
             'Successfully Followed the Diploma in Software Engineering',
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         buildRecommendationCard(
           'Degree',
           '1. Degree in Computing',
@@ -159,28 +159,27 @@ class RecommendationOnInterest extends StatelessWidget {
           children: [
             Text(
               category,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             for (var qualification in qualifications)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Text(
                   '• $qualification',
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text('More'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -188,6 +187,7 @@ class RecommendationOnInterest extends StatelessWidget {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
+                child: Text('More'),
               ),
             ),
           ],

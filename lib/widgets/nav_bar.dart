@@ -7,12 +7,12 @@ import 'package:next_step/screens/settings_Ui.dart';
 
 class BottomNavContainer extends StatelessWidget {
   final int selectedIndex;
-  const BottomNavContainer({Key? key, this.selectedIndex = 0}) : super(key: key);
+  const BottomNavContainer({super.key, this.selectedIndex = 0});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -27,21 +27,21 @@ class BottomNavContainer extends StatelessWidget {
           activeColor: Colors.white,
           tabBackgroundColor: Colors.grey.shade800,
           gap: 8,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           selectedIndex: selectedIndex,
           onTabChange: (index) {
             switch(index) {
               case 0:
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
                 break;
               case 1:
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RecommendationsScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RecommendationsScreen()));
                 break;
               case 2:
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ExploreScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ExploreScreen()));
                 break;
               case 3:
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ResponsiveSettings()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ResponsiveSettings()));
                 break;
             }
           },

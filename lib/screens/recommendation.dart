@@ -4,7 +4,7 @@ import 'recommendation_on_interest.dart';
 import 'notifications.dart';
 
 class RecommendationsScreen extends StatelessWidget {
-  const RecommendationsScreen({Key? key}) : super(key: key);
+  const RecommendationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class RecommendationsScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotificationsScreen(),
+                  builder: (context) => const NotificationsScreen(),
                 ),
               );
             },
@@ -70,14 +70,14 @@ class RecommendationsScreen extends StatelessWidget {
   Widget _buildProfileSection() {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
+      child: const Column(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 30,
             backgroundImage: AssetImage('images/profile.png'),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16),
+          Text(
             'John Doe',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -124,7 +124,7 @@ class RecommendationsScreen extends StatelessWidget {
         onPressed: () {
           // Handle button press
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => RecommendationOnInterest()));
+              MaterialPageRoute(builder: (context) => const RecommendationOnInterest()));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,

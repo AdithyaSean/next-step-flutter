@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class AddEducation extends StatelessWidget {
-  const AddEducation({Key? key}) : super(key: key);
+  const AddEducation({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final customColor = Color(0xFF62B1D0).withOpacity(0.3);
+    final customColor = const Color(0xFF62B1D0).withOpacity(0.3);
     
     return Scaffold(
       backgroundColor: Colors.white,
@@ -46,15 +46,15 @@ class AddEducation extends StatelessWidget {
                   filled: true,
                   fillColor: customColor,
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -66,15 +66,15 @@ class AddEducation extends StatelessWidget {
                   filled: true,
                   fillColor: customColor,
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -89,15 +89,15 @@ class AddEducation extends StatelessWidget {
                         filled: true,
                         fillColor: customColor,
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                          borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                          borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                          borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -111,15 +111,15 @@ class AddEducation extends StatelessWidget {
                         filled: true,
                         fillColor: customColor,
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                          borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                          borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                          borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -135,15 +135,15 @@ class AddEducation extends StatelessWidget {
                   filled: true,
                   fillColor: customColor,
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF62B1D0)),
+                    borderSide: const BorderSide(color: Color(0xFF62B1D0)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),

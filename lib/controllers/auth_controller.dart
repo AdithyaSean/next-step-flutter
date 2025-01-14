@@ -87,28 +87,6 @@ class AuthController {
       print('Handling user after sign in: ${user.uid}');
 
       final existingStudent = await _studentService.getStudentById(user.uid);
-      if (existingStudent == null) {
-        final student = Student(
-          id: user.uid,
-          name: user.displayName ?? '',
-          email: user.email ?? '',
-          contact: '',
-          school: '',
-          district: '',
-          password: '',
-          olResults: {},
-          alResults: {},
-          stream: '',
-          zScore: 0.0,
-          gpa: 0.0,
-          interests: [],
-          skills: [],
-          predictions: [], firebaseUid: '', firebaseToken: '',
-        );
-
-        await _studentService.addStudent(student);
-        print('Successfully created/updated student data');
-      }
     } catch (e) {
       print('Error handling user after sign in: $e');
       rethrow;

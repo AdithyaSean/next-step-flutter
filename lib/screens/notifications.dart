@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
 class NotificationsScreen extends StatelessWidget {
-  const NotificationsScreen({Key? key}) : super(key: key);
+  const NotificationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +37,8 @@ class NotificationsScreen extends StatelessWidget {
                     '09:25 AM',
                   ),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       '15/9/2024',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -50,8 +50,8 @@ class NotificationsScreen extends StatelessWidget {
                     '09:20 AM',
                   ),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       '14/9/2024',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -68,8 +68,8 @@ class NotificationsScreen extends StatelessWidget {
                     '09:20 AM',
                   ),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       '13/9/2024',
                       style: TextStyle(fontWeight: FontWeight.bold),
