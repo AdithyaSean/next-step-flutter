@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
-
 class ResponsiveSettings extends StatefulWidget {
   final String studentId;
 
@@ -45,7 +44,8 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundColor: Colors.grey,
-                            child: Icon(Icons.person, size: 20, color: Colors.white),
+                            child: Icon(Icons.person,
+                                size: 20, color: Colors.white),
                           ),
                           const SizedBox(width: 8),
                           if (isLargeScreen)
@@ -100,7 +100,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     title: 'Licenses',
                     isSelected: selectedMainOption == 'Licenses',
                   ),
-                  const SizedBox(height: 240),
+                  const SizedBox(height: 170),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -111,7 +111,9 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text('Sign out', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    child: const Text('Sign out',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                   if (selectedMainOption != null && isLargeScreen)
                     Expanded(child: _buildSubSettings()),
@@ -126,7 +128,6 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
         studentId: widget.studentId,
       ),
     );
-
   }
 
   Widget _buildSettingsButton({
