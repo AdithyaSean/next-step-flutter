@@ -38,11 +38,6 @@ Future<void> setupServiceLocator() async {
       AuthController(locator<StudentRepository>()),
     );
 
-    // TFLiteService
-    final tfliteService = TFLiteService();
-    locator.registerSingleton<TFLiteService>(tfliteService);
-    await tfliteService.initialize();
-    
   } catch (e, stackTrace) {
     print('Error during service locator setup: $e');
     print('Stack trace: $stackTrace');

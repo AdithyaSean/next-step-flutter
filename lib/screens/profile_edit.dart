@@ -5,7 +5,6 @@ import '../widgets/nav_bar.dart';
 import '../screens/profile.dart';
 import '../constants/education_constants.dart';
 import 'package:get_it/get_it.dart';
-import '../services/tflite_service.dart';
 import 'package:drift/drift.dart' hide Column;  // Add this import
 import 'package:next_step/screens/home.dart';  // Add this import if missing
 
@@ -20,7 +19,6 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _repository = GetIt.instance<StudentRepository>();
-  final _tfliteService = GetIt.instance<TFLiteService>();
   bool _isLoading = false;
 
   // Initialize with empty student data
@@ -316,7 +314,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   Widget _buildInterests() {
     // Get interests from TFLite service
-    final interests = GetIt.instance<TFLiteService>().interestNames;
 
     return Card(
       child: Padding(
@@ -332,26 +329,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             Wrap(
               spacing: 8.0,
               runSpacing: 8.0,
-              children: interests.map((interest) {
-                final isSelected = _student.interests.contains(interest);
-                return FilterChip(
-                  label: Text(interest),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      if (selected) {
-                        _student = _student.copyWith(
-                            interests: [..._student.interests, interest]);
-                      } else {
-                        _student = _student.copyWith(
-                            interests: _student.interests
-                                .where((i) => i != interest)
-                                .toList());
-                      }
-                    });
-                  },
-                );
-              }).toList(),
             ),
           ],
         ),
@@ -366,17 +343,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Get predictions using TFLite model
-      final predictions = await _tfliteService.predict(_student.toJson());
-      
+      // Get predictions using microservice model
+
       // Create updated student data with predictions
-      final updatedStudentData = {
-        ..._student.toJson(),
-        'predictions': predictions,
-      };
+
 
       // Update student data in repository
-      await _repository.createStudent(updatedStudentData);
 
       if (!mounted) return;
 
