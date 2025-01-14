@@ -98,7 +98,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     title: 'Licenses',
                     isSelected: selectedMainOption == 'Licenses',
                   ),
-                  const SizedBox(height: 240),
+                  const SizedBox(height: 140),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
