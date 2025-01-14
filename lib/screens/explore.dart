@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 import 'courses.dart';
+import 'notifications.dart';
 
 class ExploreScreen extends StatelessWidget {
   final String studentId;
@@ -11,6 +12,7 @@ class ExploreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'NEXT STEP',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -20,6 +22,12 @@ class ExploreScreen extends StatelessWidget {
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
               // Handle notification action
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsScreen(studentId: studentId),
+                ),
+              );
             },
           ),
         ],
