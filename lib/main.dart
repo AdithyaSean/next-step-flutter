@@ -4,27 +4,28 @@ import 'firebase_options.dart';
 import 'core/service_locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:next_step/screens/home.dart';
-import 'package:flutter/foundation.dart';
-// Import drift separately to avoid naming conflicts
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:drift/drift.dart' hide Column;
-import 'package:next_step/screens/sign_in.dart';  // Add this import
+import 'package:next_step/screens/sign_in.dart';
+import 'package:next_step/data/database/app_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Enable verbose logging in debug mode
   if (kDebugMode) {
     driftRuntimeOptions.debugPrint = (String message) => print(message);
   }
   
-  // Initialize Firebase first
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  // Setup service locator and wait for completion
+  if (!kIsWeb) {
+    final appDatabase = AppDatabase();
+}
+
   await setupServiceLocator();
-  
+
   runApp(const MyApp());
 }
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthWrapper(), // Change SignInScreen to AuthWrapper
+      home: const AuthWrapper(),
     );
   }
 }

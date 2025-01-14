@@ -6,7 +6,7 @@ import 'package:drift/drift.dart';
 
 class FirebaseDBService {
   final FirebaseFirestore _firestore;
-  final AppDatabase _localDB;
+  final AppDatabase? _localDB;
   late final List<StreamSubscription> _subscriptions;
 
   FirebaseDBService(this._localDB)
@@ -14,16 +14,12 @@ class FirebaseDBService {
         _subscriptions = [];
 
   Future<void> initialize() async {
-    // Configure Firestore settings
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
     );
     
-    // Perform initial sync first
     await _performInitialSync();
-    
-    // Then initialize listeners
     initializeListeners();
   }
 
@@ -31,14 +27,12 @@ class FirebaseDBService {
     try {
       print('Starting initial sync...');
       
-      // Get all collections data
       final studentsSnapshot = await _firestore.collection('students').get();
       print('Found ${studentsSnapshot.docs.length} students');
       
-      // Process each document
       for (var doc in studentsSnapshot.docs) {
         final data = doc.data();
-        data['id'] = doc.id; // Ensure ID is included
+        data['id'] = doc.id;
         await _updateLocalStudent(data);
       }
       
@@ -50,8 +44,9 @@ class FirebaseDBService {
   }
 
   Future<void> _updateLocalStudent(Map<String, dynamic> data) async {
+    if (_localDB == null) return;
+
     try {
-      // Create properly formatted data structure
       final formattedData = _formatStudentData(data);
       
       final studentCompanion = StudentsCompanion(
@@ -72,7 +67,7 @@ class FirebaseDBService {
         predictions: Value(_formatPredictions(formattedData['predictions'])),
       );
 
-      await _localDB.into(_localDB.students).insertOnConflictUpdate(studentCompanion);
+      await _localDB!.into(_localDB!.students).insertOnConflictUpdate(studentCompanion);
       print('Successfully updated local student: ${formattedData['id']}');
       
     } catch (e, stackTrace) {
@@ -136,7 +131,6 @@ class FirebaseDBService {
     return {};
   }
 
-  // Initialize real-time listeners
   void initializeListeners() {
     _subscriptions.add(
       _firestore.collection('students').snapshots().listen(_handleStudentsUpdate),
@@ -155,7 +149,6 @@ class FirebaseDBService {
     );
   }
 
-  // Dispose listeners
   void dispose() {
     for (var sub in _subscriptions) {
       sub.cancel();
@@ -163,24 +156,27 @@ class FirebaseDBService {
   }
 
   void _handleStudentsUpdate(QuerySnapshot snapshot) {
+    if (_localDB == null) return;
+
     for (var change in snapshot.docChanges) {
       final doc = change.doc;
       final data = doc.data() as Map<String, dynamic>;
-      data['id'] = doc.id; // Ensure ID is included
-
+      data['id'] = doc.id;
       switch (change.type) {
         case DocumentChangeType.added:
         case DocumentChangeType.modified:
           _updateLocalStudent(data);
           break;
         case DocumentChangeType.removed:
-          _localDB.delete(_localDB.students).where((t) => t.id.equals(doc.id));
+          _localDB!.delete(_localDB!.students).where((t) => t.id.equals(doc.id));
           break;
       }
     }
   }
 
   void _handleStreamsUpdate(QuerySnapshot snapshot) {
+    if (_localDB == null) return;
+
     for (var change in snapshot.docChanges) {
       final doc = change.doc;
       final data = doc.data() as Map<String, dynamic>;
@@ -197,13 +193,13 @@ class FirebaseDBService {
       switch (change.type) {
         case DocumentChangeType.added:
         case DocumentChangeType.modified:
-          _localDB
-              .into(_localDB.streams)
+          _localDB!
+              .into(_localDB!.streams)
               .insertOnConflictUpdate(streamCompanion);
           break;
         case DocumentChangeType.removed:
-          _localDB
-              .delete(_localDB.streams)
+          _localDB!
+              .delete(_localDB!.streams)
               .delete(streamCompanion);
           break;
       }
@@ -211,6 +207,8 @@ class FirebaseDBService {
   }
 
   void _handleCoursesUpdate(QuerySnapshot snapshot) {
+    if (_localDB == null) return;
+
     for (var change in snapshot.docChanges) {
       final doc = change.doc;
       final data = doc.data() as Map<String, dynamic>;
@@ -229,13 +227,13 @@ class FirebaseDBService {
       switch (change.type) {
         case DocumentChangeType.added:
         case DocumentChangeType.modified:
-          _localDB
-              .into(_localDB.courses)
+          _localDB!
+              .into(_localDB!.courses)
               .insertOnConflictUpdate(courseCompanion);
           break;
         case DocumentChangeType.removed:
-          _localDB
-              .delete(_localDB.courses)
+          _localDB!
+              .delete(_localDB!.courses)
               .delete(courseCompanion);
           break;
       }
@@ -243,6 +241,8 @@ class FirebaseDBService {
   }
 
   void _handleCareersUpdate(QuerySnapshot snapshot) {
+    if (_localDB == null) return;
+
     for (var change in snapshot.docChanges) {
       final doc = change.doc;
       final data = doc.data() as Map<String, dynamic>;
@@ -259,13 +259,13 @@ class FirebaseDBService {
       switch (change.type) {
         case DocumentChangeType.added:
         case DocumentChangeType.modified:
-          _localDB
-              .into(_localDB.careers)
+          _localDB!
+              .into(_localDB!.careers)
               .insertOnConflictUpdate(careerCompanion);
           break;
         case DocumentChangeType.removed:
-          _localDB
-              .delete(_localDB.careers)
+          _localDB!
+              .delete(_localDB!.careers)
               .delete(careerCompanion);
           break;
       }
@@ -273,6 +273,8 @@ class FirebaseDBService {
   }
 
   void _handleInstitutionsUpdate(QuerySnapshot snapshot) {
+    if (_localDB == null) return;
+
     for (var change in snapshot.docChanges) {
       final doc = change.doc;
       final data = doc.data() as Map<String, dynamic>;
@@ -289,23 +291,21 @@ class FirebaseDBService {
       switch (change.type) {
         case DocumentChangeType.added:
         case DocumentChangeType.modified:
-          _localDB
-              .into(_localDB.institutions)
+          _localDB!
+              .into(_localDB!.institutions)
               .insertOnConflictUpdate(institutionCompanion);
           break;
         case DocumentChangeType.removed:
-          _localDB
-              .delete(_localDB.institutions)
+          _localDB!
+              .delete(_localDB!.institutions)
               .delete(institutionCompanion);
           break;
       }
     }
   }
 
-  // Update or create student data
   Future<void> updateStudent(Map<String, dynamic> studentData, String studentId) async {
     try {
-      // Format data before saving to Firestore
       final formattedData = _formatStudentData(studentData);
       await _firestore.collection('students').doc(studentId).set(formattedData);
       await _updateLocalStudent(formattedData);
@@ -316,7 +316,6 @@ class FirebaseDBService {
     }
   }
 
-  // Stream real-time updates for a student
   Stream<Map<String, dynamic>?> streamStudentData(String studentId) {
     return _firestore
         .collection('students')

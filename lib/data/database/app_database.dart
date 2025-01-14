@@ -3,7 +3,10 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/models.dart';
+import '../../services/firebase_db_service.dart';
+import '../repositories/student_repository.dart';
 
 part 'app_database.g.dart';
 
@@ -48,7 +51,6 @@ LazyDatabase _openConnection() {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'next_step.db'));
     
-    // Ensure the database directory exists
     if (!await file.parent.exists()) {
       await file.parent.create(recursive: true);
     }
@@ -61,3 +63,7 @@ LazyDatabase _openConnection() {
     );
   });
 }
+
+final appDatabase = kIsWeb ? null : AppDatabase();
+final firebaseDBService = FirebaseDBService(appDatabase);
+final studentRepository = StudentRepository(appDatabase, firebaseDBService);
