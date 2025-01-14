@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'recommendation_on_interest.dart';
+import 'notifications.dart';
 
 class RecommendationsScreen extends StatelessWidget {
   const RecommendationsScreen({Key? key}) : super(key: key);
@@ -8,12 +10,19 @@ class RecommendationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('NEXT STEP'),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
               // Handle notification action
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsScreen(),
+                ),
+              );
             },
           ),
         ],
@@ -98,22 +107,24 @@ class RecommendationsScreen extends StatelessWidget {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          _buildCareerPathButton('Software Engineering', 2),
-          _buildCareerPathButton('Data Engineering'),
-          _buildCareerPathButton('AI Engineering'),
-          _buildCareerPathButton('Cloud Engineering'),
-          _buildCareerPathButton('Network Engineering'),
+          _buildCareerPathButton(context, 'Software Engineering', 2),
+          _buildCareerPathButton(context, 'Data Engineering'),
+          _buildCareerPathButton(context, 'AI Engineering'),
+          _buildCareerPathButton(context, 'Cloud Engineering'),
+          _buildCareerPathButton(context, 'Network Engineering'),
         ],
       ),
     );
   }
 
-  Widget _buildCareerPathButton(String title, [int? notificationCount]) {
+  Widget _buildCareerPathButton(BuildContext context, String title, [int? notificationCount]) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: ElevatedButton(
         onPressed: () {
           // Handle button press
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RecommendationOnInterest()));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
