@@ -29,6 +29,22 @@ class BottomNavContainer extends StatelessWidget {
           gap: 8,
           padding: EdgeInsets.all(16),
           selectedIndex: selectedIndex,
+          onTabChange: (index) {
+            switch(index) {
+              case 0:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                break;
+              case 1:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RecommendationsScreen()));
+                break;
+              case 2:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ExploreScreen()));
+                break;
+              case 3:
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ResponsiveSettings()));
+                break;
+            }
+          },
           tabs: [
             GButton(
               icon: Icons.home,
