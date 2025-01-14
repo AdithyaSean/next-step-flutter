@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'courses.dart';
+import 'notifications.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({Key? key}) : super(key: key);
@@ -8,6 +10,7 @@ class ExploreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'NEXT STEP',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -17,6 +20,12 @@ class ExploreScreen extends StatelessWidget {
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
               // Handle notification action
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsScreen(),
+                ),
+              );
             },
           ),
         ],
@@ -40,15 +49,15 @@ class ExploreScreen extends StatelessWidget {
     return Center(
       child: Container(
         padding: const EdgeInsets.all(16),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 30,
               backgroundImage: AssetImage('images/profile.png'),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16),
+            Text(
               'John Doe',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -68,7 +77,7 @@ class ExploreScreen extends StatelessWidget {
           const SizedBox(height: 24),
           _buildSearchBar(),
           const SizedBox(height: 32),
-          _buildSectionGrid(isDesktop: true),
+          _buildSectionGrid(context, isDesktop: true),
         ],
       ),
     );
@@ -84,7 +93,7 @@ class ExploreScreen extends StatelessWidget {
           const SizedBox(height: 20),
           _buildSearchBar(),
           const SizedBox(height: 24),
-          _buildSectionGrid(isTablet: true),
+          _buildSectionGrid(context, isTablet: true),
         ],
       ),
     );
@@ -100,7 +109,7 @@ class ExploreScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _buildSearchBar(),
           const SizedBox(height: 20),
-          _buildSectionList(),
+          _buildSectionList(context),
         ],
       ),
     );
@@ -121,7 +130,7 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionGrid({bool isDesktop = false, bool isTablet = false}) {
+  Widget _buildSectionGrid(BuildContext context, {bool isDesktop = false, bool isTablet = false}) {
     return GridView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -132,93 +141,45 @@ class ExploreScreen extends StatelessWidget {
         childAspectRatio: 1.2,
       ),
       children: [
-        _buildSection('Universities', []),
-        _buildSection('Government', [
-          _buildUniversityCard(
-            'University of Colombo',
-            'images/uo_colombo.png',
-            Colors.blue[50]!,
-          ),
-          _buildUniversityCard(
-            'University of Moratuwa',
-            'images/uo_moratuwa.png',
-            Colors.red[50]!,
-          ),
-          _buildUniversityCard(
-            'Open Uni',
-            'images/open_uni.png',
-            Colors.orange[50]!,
-          ),
+        _buildSection(context, 'Universities', []),
+        _buildSection(context, 'Government', [
+          _buildUniversityCard(context, 'University of Colombo', 'images/uo_colombo.png', Colors.blue[50]!),
+          _buildUniversityCard(context, 'University of Moratuwa', 'images/uo_moratuwa.png', Colors.red[50]!),
+          _buildUniversityCard(context, 'Open Uni', 'images/open_uni.png', Colors.orange[50]!),
         ]),
-        _buildSection('Private Uni', [
-          _buildUniversityCard(
-            'NIBM',
-            'images/nibm.png',
-            Colors.blue[50]!,
-          ),
-          _buildUniversityCard(
-            'NSBM',
-            'images/nsbm.png',
-            Colors.green[50]!,
-          ),
-          _buildUniversityCard(
-            'SLIT',
-            'images/sllit.png',
-            Colors.purple[50]!,
-          ),
+        _buildSection(context, 'Private Uni', [
+          _buildUniversityCard(context, 'NIBM', 'images/nibm.png', Colors.blue[50]!),
+          _buildUniversityCard(context, 'NSBM', 'images/nsbm.png', Colors.green[50]!),
+          _buildUniversityCard(context, 'SLIT', 'images/sllit.png', Colors.purple[50]!),
         ]),
       ],
     );
   }
 
-  Widget _buildSectionList() {
+  Widget _buildSectionList(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader('Government Uni'),
         const SizedBox(height: 12),
-        _buildHorizontalScroll([
-          _buildUniversityCard(
-            'University of Colombo',
-            'images/uo_colombo.png',
-            Colors.blue[50]!,
-          ),
-          _buildUniversityCard(
-            'University of Moratuwa',
-            'images/uo_moratuwa.png',
-            Colors.red[50]!,
-          ),
-          _buildUniversityCard(
-            'Open Uni',
-            'images/open_uni.png',
-            Colors.orange[50]!,
-          ),
+        _buildHorizontalScroll(context, [
+          _buildUniversityCard(context, 'University of Colombo', 'images/uo_colombo.png', Colors.blue[50]!),
+          _buildUniversityCard(context, 'University of Moratuwa', 'images/uo_moratuwa.png', Colors.red[50]!),
+          _buildUniversityCard(context, 'Open Uni', 'images/open_uni.png', Colors.orange[50]!),
         ]),
         const SizedBox(height: 24),
         _buildSectionHeader('Private Uni'),
         const SizedBox(height: 12),
-        _buildHorizontalScroll([
-          _buildUniversityCard(
-            'NIBM',
-            'images/nibm.png',
-            Colors.blue[50]!,
-          ),
-          _buildUniversityCard(
-            'NSBM',
-            'images/nsbm.png',
-            Colors.green[50]!,
-          ),
-          _buildUniversityCard(
-            'SLIT',
-            'images/sllit.png',
-            Colors.purple[50]!,
-          ),
+        _buildHorizontalScroll(context, [
+          _buildUniversityCard(context, 'NIBM', 'images/nibm.png', Colors.blue[50]!),
+          _buildUniversityCard(context, 'NSBM', 'images/nsbm.png', Colors.green[50]!),
+          _buildUniversityCard(context, 'SLIT', 'images/sllit.png', Colors.purple[50]!),
         ]),
       ],
     );
   }
 
-  Widget _buildSection(String title, List<Widget> items) {
+  Widget _buildSection(BuildContext context, String title, List<Widget> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -239,7 +200,7 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHorizontalScroll(List<Widget> items) {
+  Widget _buildHorizontalScroll(BuildContext context, List<Widget> items) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -253,36 +214,46 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUniversityCard(String name, String logoPath, Color backgroundColor) {
+  Widget _buildUniversityCard(BuildContext context, String name, String logoPath, Color backgroundColor) {
     return Card(
       elevation: 0,
       color: backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Container(
-        width: 120,
-        height: 120,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              logoPath,
-              width: 46,
-              height: 44,
-              fit: BoxFit.contain,
+      child: InkWell( // Make the card tappable
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CoursesScreen(),
             ),
-            const SizedBox(height: 8),
-            Text(
-              name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+          );
+        },
+        child: Container(
+          width: 120,
+          height: 120,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                logoPath,
+                width: 46,
+                height: 44,
+                fit: BoxFit.contain,
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
