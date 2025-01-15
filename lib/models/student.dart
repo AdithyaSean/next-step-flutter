@@ -2,10 +2,14 @@ class Student {
   final String id;
   final String name;
   final String email;
+  final String password;
+  final String role;
+  final bool active;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final String contact;
   final String school;
   final String district;
-  final String password;
   final Map<String, double> olResults;
   final Map<String, double> alResults;
   final int stream;
@@ -21,10 +25,14 @@ class Student {
     required this.id,
     required this.name,
     required this.email,
+    required this.password,
+    required this.role,
+    required this.active,
+    required this.createdAt,
+    required this.updatedAt,
     required this.contact,
     required this.school,
     required this.district,
-    required this.password,
     required this.olResults,
     required this.alResults,
     required this.stream,
@@ -42,10 +50,14 @@ class Student {
       id: json['id'],
       name: json['name'],
       email: json['email'],
+      password: json['password'],
+      role: json['role'],
+      active: json['active'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
       contact: json['contact'],
       school: json['school'],
       district: json['district'],
-      password: json['password'],
       olResults: Map<String, double>.from(json['olResults'] ?? {}),
       alResults: Map<String, double>.from(json['alResults'] ?? {}),
       stream: json['stream'] ?? 0,
@@ -67,10 +79,14 @@ class Student {
       'id': id,
       'name': name,
       'email': email,
+      'password': password,
+      'role': role,
+      'active': active,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
       'contact': contact,
       'school': school,
       'district': district,
-      'password': password,
       'olResults': olResults,
       'alResults': alResults,
       'stream': stream,
