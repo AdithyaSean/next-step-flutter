@@ -7,10 +7,10 @@ class AuthController {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
-    hostedDomain: '', // Set to empty string to allow any domain
-    clientId: '', // Optional: Add your client ID here if needed
+    hostedDomain: '',
+    clientId: '',
   );
-  final StudentService _studentService = StudentService('http://localhost:8080');
+  final StudentService _studentService = StudentService('http://your-spring-boot-server-url');
 
   Future<void> signUp({
     required String username,
@@ -31,12 +31,14 @@ class AuthController {
       password: password,
       olResults: {},
       alResults: {},
-      stream: '',
+      stream: 0,
       zScore: 0.0,
       gpa: 0.0,
       interests: [],
       skills: [],
-      predictions: [], firebaseUid: '', firebaseToken: '',
+      predictions: [],
+      firebaseUid: '',
+      firebaseToken: '',
     );
 
     await _studentService.addStudent(student);

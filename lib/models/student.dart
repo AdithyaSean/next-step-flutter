@@ -6,9 +6,9 @@ class Student {
   final String school;
   final String district;
   final String password;
-  final Map<String, String> olResults;
-  final Map<String, String> alResults;
-  final String stream;
+  final Map<String, double> olResults;
+  final Map<String, double> alResults;
+  final int stream;
   final double zScore;
   final double gpa;
   final List<String> interests;
@@ -46,9 +46,9 @@ class Student {
       school: json['school'],
       district: json['district'],
       password: json['password'],
-      olResults: Map<String, String>.from(json['olResults'] ?? {}),
-      alResults: Map<String, String>.from(json['alResults'] ?? {}),
-      stream: json['stream'] ?? '',
+      olResults: Map<String, double>.from(json['olResults'] ?? {}),
+      alResults: Map<String, double>.from(json['alResults'] ?? {}),
+      stream: json['stream'] ?? 0,
       zScore: json['zScore'] ?? 0.0,
       gpa: json['gpa'] ?? 0.0,
       interests: List<String>.from(json['interests'] ?? []),
