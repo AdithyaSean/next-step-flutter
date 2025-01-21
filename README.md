@@ -13,9 +13,6 @@ Discover potential university fields that align with your goals
 - **Interactive Mobile App**:
 User-friendly Flutter interface for easy access to recommendations
 
-- **AI-Powered Insights**:
-Advanced machine learning models for accurate predictions
-
 ## 🏗️ Project Structure
 
 
@@ -23,7 +20,6 @@ Advanced machine learning models for accurate predictions
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.12+ (for AI model)
 - Flutter SDK (for mobile app)
 - Git
 
@@ -31,7 +27,7 @@ Advanced machine learning models for accurate predictions
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/adithyasean/Next-Step.git
+   git clone https://github.com/adithyasean/next-step-flutter.git
    ```
 
 2. Set up the Flutter App:
