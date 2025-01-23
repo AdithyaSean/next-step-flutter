@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:next_step/controllers/auth_controller.dart';
-import 'package:next_step/screens/lets_get_started.dart';
-import 'package:next_step/screens/home_screen.dart';
-import 'package:next_step/services/auth_service.dart';
+import 'controllers/auth_controller.dart';
+import 'screens/lets_get_started.dart';
+import 'screens/home.dart';
+import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const AuthWrapper(),
       getPages: [
-        GetPage(name: '/home', page: () => const HomeScreen()),
+        GetPage(name: '/home', page: () => HomeScreen()),
       ],
     );
   }
@@ -44,7 +44,7 @@ class AuthWrapper extends StatelessWidget {
 
     return Obx(() {
       if (authController.isAuthenticated.value) {
-        return const HomeScreen();
+        return HomeScreen();
       }
       return const NextStepStart();
     });

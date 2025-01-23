@@ -11,6 +11,9 @@ class AuthService extends GetxService {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
+    clientId: '114713348296-mg494lco1s815jnqolcrapv4l3qkoias.apps.googleusercontent.com',
+    hostedDomain: '',
+    signInOption: SignInOption.standard,
   );
   final _storage = const FlutterSecureStorage();
   final String _baseUrl = 'http://localhost:8080/auth';
@@ -19,24 +22,42 @@ class AuthService extends GetxService {
   Future<Map<String, dynamic>> signInWithGoogle() async {
     try {
       print('Starting Google sign-in flow...');
+      
+      // Initialize the Google Sign-In client
+      await _googleSignIn.signOut(); // Clear any existing session
+      
+      // Start the interactive sign-in flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         print('Google sign-in was cancelled by user');
         throw Exception('Google sign in cancelled');
       }
 
-      print('Google user obtained: ${googleUser.email}');
+      // Get authentication tokens
       final GoogleSignInAuthentication googleAuth = 
           await googleUser.authentication;
+          
+      if (googleAuth.idToken == null) {
+        print('No ID token received from Google');
+        throw Exception('No ID token received');
+      }
+
+      print('Google user obtained: ${googleUser.email}');
       print('Google auth tokens received - ID Token: ${googleAuth.idToken != null ? "received" : "missing"}, Access Token: ${googleAuth.accessToken != null ? "received" : "missing"}');
 
+      // Call backend auth endpoint with the new GIS flow
       print('Calling backend auth endpoint: $_baseUrl/google');
       final response = await http.post(
         Uri.parse('$_baseUrl/google'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Google-Client-ID': '114713348296-mg494lco1s815jnqolcrapv4l3qkoias.apps.googleusercontent.com'
+        },
         body: jsonEncode({
           'idToken': googleAuth.idToken,
           'accessToken': googleAuth.accessToken,
+          'clientId': '114713348296-mg494lco1s815jnqolcrapv4l3qkoias.apps.googleusercontent.com',
+          'redirectUri': 'http://localhost:3000'
         }),
       );
 
@@ -78,42 +99,56 @@ class AuthService extends GetxService {
   }
 
   Future<void> refreshToken() async {
+    print('[${DateTime.now()}] Starting token refresh...');
     final refreshToken = await _storage.read(key: 'refresh_token');
     if (refreshToken == null) {
+      print('[${DateTime.now()}] No refresh token available');
       throw Exception('No refresh token available');
     }
 
+    print('[${DateTime.now()}] Attempting token refresh with refresh token: ${refreshToken.substring(0, 10)}...');
     final response = await http.post(
       Uri.parse('$_baseUrl/refresh'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'refreshToken': refreshToken}),
     );
 
+    print('[${DateTime.now()}] Token refresh response status: ${response.statusCode}');
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
+      print('[${DateTime.now()}] Token refresh successful. New access token: ${responseData['accessToken']?.substring(0, 10)}...');
       await _storeTokens(responseData);
     } else {
+      print('[${DateTime.now()}] Token refresh failed with status ${response.statusCode}. Response body: ${response.body}');
       throw Exception('Failed to refresh token');
     }
   }
 
   Future<Map<String, dynamic>> getUserProfile() async {
+    print('[${DateTime.now()}] Fetching user profile...');
     final accessToken = await getAccessToken();
     if (accessToken == null) {
+      print('[${DateTime.now()}] No access token available');
       throw Exception('Not authenticated');
     }
 
+    print('[${DateTime.now()}] Making profile request with access token: ${accessToken.substring(0, 10)}...');
     final response = await http.get(
       Uri.parse('$_baseUrl/me'),
       headers: {'Authorization': 'Bearer $accessToken'},
     );
 
+    print('[${DateTime.now()}] Profile response status: ${response.statusCode}');
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final profileData = jsonDecode(response.body);
+      print('[${DateTime.now()}] Successfully fetched profile data: ${profileData['email']}');
+      return profileData;
     } else if (response.statusCode == 401) {
+      print('[${DateTime.now()}] Access token expired, attempting refresh...');
       await refreshToken();
       return getUserProfile();
     } else {
+      print('[${DateTime.now()}] Failed to fetch profile. Status: ${response.statusCode}, Body: ${response.body}');
       throw Exception('Failed to fetch user profile');
     }
   }
@@ -121,5 +156,30 @@ class AuthService extends GetxService {
   Future<bool> isAuthenticated() async {
     final accessToken = await getAccessToken();
     return accessToken != null;
+  }
+
+  Future<Map<String, dynamic>> signUpWithEmail({required String email, required String password}) async {
+    try {
+      print('Starting email sign-up flow...');
+      final response = await http.post(
+        Uri.parse('$_baseUrl/signup'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        await _storeTokens(responseData);
+        currentUser.value = responseData['user'];
+        return responseData;
+      } else {
+        throw Exception('Failed to sign up: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Sign up failed: ${e.toString()}');
+    }
   }
 }

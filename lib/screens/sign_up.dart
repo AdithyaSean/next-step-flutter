@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../services/auth_service.dart';
+import 'home.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
   const ResponsiveSignUp({super.key});
@@ -164,7 +167,23 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          final authService = Get.find<AuthService>();
+                          final user = await authService.signUpWithEmail(
+                            email: 'test@example.com', // TODO: Get from form fields
+                            password: 'password123', // TODO: Get from form fields
+                          );
+                          if (user != null) {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) => const HomeScreen()));
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Sign up failed: ${e.toString()}')),
+                          );
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(vertical: 16),

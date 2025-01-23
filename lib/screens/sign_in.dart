@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:next_step/screens/home.dart';
-import 'package:next_step/screens/sign_up.dart';
+import 'package:get/get.dart';
+import 'home.dart';
+import 'sign_up.dart';
+import '../services/auth_service.dart';
 
 class ResponsiveSignIn extends StatelessWidget {
   const ResponsiveSignIn({super.key});
@@ -70,10 +72,19 @@ class ResponsiveSignIn extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {
-                        // Handle sign in action
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const HomeScreen()));
+                      onPressed: () async {
+                        try {
+                          final authService = Get.find<AuthService>();
+                          final user = await authService.signInWithGoogle();
+                          if (user != null) {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) => const HomeScreen()));
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Sign in failed: ${e.toString()}')),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
