@@ -16,7 +16,7 @@ class AuthService extends GetxService {
     signInOption: SignInOption.standard,
   );
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:8080/auth';
+  final String _baseUrl = 'http://localhost:8080';
   final Rx<Map<String, dynamic>> currentUser = Rx<Map<String, dynamic>>({});
 
   Future<Map<String, dynamic>> signInWithGoogle() async {
@@ -162,7 +162,7 @@ class AuthService extends GetxService {
     try {
       print('Starting email sign-up flow...');
       final response = await http.post(
-        Uri.parse('$_baseUrl/signup'),
+        Uri.parse('$_baseUrl/users'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,
