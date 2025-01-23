@@ -73,18 +73,10 @@ class ResponsiveSignIn extends StatelessWidget {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () async {
-                        try {
-                          final authService = Get.find<AuthService>();
-                          final user = await authService.signInWithGoogle();
-                          if (user != null) {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) => const HomeScreen()));
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Sign in failed: ${e.toString()}')),
-                          );
-                        }
+                        // TODO: Implement email/password sign in
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Email/password sign in not implemented yet')),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -111,7 +103,20 @@ class ResponsiveSignIn extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              final authService = Get.find<AuthService>();
+                              final user = await authService.signInWithGoogle();
+                              if (user != null) {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) => const HomeScreen()));
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Google sign in failed: ${e.toString()}')),
+                              );
+                            }
+                          },
                           icon: Image.asset('images/google.png', width: 30, height: 30),
                         ),
                         const SizedBox(width: 16),
