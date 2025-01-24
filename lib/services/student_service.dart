@@ -1,21 +1,21 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../models/student_profile.dart';
 
 class StudentService {
-  static const String _baseUrl = 'http://localhost:8080/users';
+  static const String _baseUrl = 'http://localhost:8080/users/students';
 
-  Future<void> registerStudent({
+  Future<String> registerStudent({
     required String username,
     required String name,
     required String email,
     required String password,
     required String telephone,
     required String school,
-    required String district,
+    required String district
   }) async {
-    final uri = Uri.parse('$_baseUrl/students');
     final response = await http.post(
-      uri,
+      Uri.parse('$_baseUrl'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,
@@ -25,60 +25,51 @@ class StudentService {
         'telephone': telephone,
         'role': 'STUDENT',
         'school': school,
-        'district': district,
+        'district': district
       }),
     );
 
-    if (response.statusCode != 201) {
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body)['id'];
+    } else {
       throw Exception('Failed to register student: ${response.body}');
     }
   }
 
-  Future<void> updateStudentProfile({
-    required String studentId,
-    required int educationLevel,
-    required Map<String, double> olResults,
-    required int alStream,
-    required Map<String, double> alResults,
-    required double gpa,
-  }) async {
-    final uri = Uri.parse('$_baseUrl/students/$studentId/profile');
-    final response = await http.put(
-      uri,
+  Future<void> createStudent(Map<String, dynamic> studentData) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'educationLevel': educationLevel,
-        'olResults': olResults,
-        'alStream': alStream,
-        'alResults': alResults,
-        'gpa': gpa,
-      }),
+      body: jsonEncode(studentData),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to create student');
+    }
+  }
+
+  Future<void> updateProfile(String studentId, StudentProfile profile) async {
+    final response = await http.put(
+      Uri.parse('$_baseUrl/$studentId/profile'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(profile.toJson()),
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to update profile: ${response.body}');
+      throw Exception('Failed to update profile');
     }
   }
 
-  Future<Map<String, dynamic>> getStudentProfile(String studentId) async {
-    final uri = Uri.parse('$_baseUrl/students/$studentId/profile');
-    final response = await http.get(uri);
+  Future<Map<String, dynamic>> getProfile(String studentId) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/$studentId/profile'),
+      headers: {'Content-Type': 'application/json'},
+    );
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load profile: ${response.body}');
-    }
-  }
-
-  Future<List<dynamic>> getAllStudents() async {
-    final uri = Uri.parse('$_baseUrl/students');
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load students: ${response.body}');
+      throw Exception('Failed to load profile');
     }
   }
 }
