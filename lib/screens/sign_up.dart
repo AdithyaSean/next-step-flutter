@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../services/auth_service.dart';
+import '../services/student_service.dart';
 import 'home.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
@@ -11,6 +10,14 @@ class ResponsiveSignUp extends StatefulWidget {
 }
 
 class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController telephoneController = TextEditingController();
+  final TextEditingController schoolController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  
   final List<String> districts = [
     'Ampara',
     'Anuradhapura',
@@ -79,6 +86,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 32),
                     TextFormField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                         labelText: 'Username',
                         border: OutlineInputBorder(
@@ -88,6 +96,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: nameController,
                       decoration: InputDecoration(
                         labelText: 'Name',
                         border: OutlineInputBorder(
@@ -97,6 +106,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         labelText: 'E-mail',
                         border: OutlineInputBorder(
@@ -107,6 +117,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: telephoneController,
                       decoration: InputDecoration(
                         labelText: 'Telephone',
                         border: OutlineInputBorder(
@@ -117,6 +128,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: schoolController,
                       decoration: InputDecoration(
                         labelText: 'School',
                         border: OutlineInputBorder(
@@ -147,6 +159,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -157,6 +170,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: confirmPasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Confirm Password',
@@ -168,19 +182,32 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () async {
-                        try {
-                          final authService = Get.find<AuthService>();
-                          final user = await authService.signUpWithEmail(
-                            email: 'test@example.com', // TODO: Get from form fields
-                            password: 'password123', // TODO: Get from form fields
+                        // Validate passwords match
+                        if (passwordController.text != confirmPasswordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Passwords do not match')),
                           );
-                          if (user != null) {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) => const HomeScreen()));
-                          }
+                          return;
+                        }
+
+                        final studentService = StudentService();
+                        
+                        try {
+                          await studentService.registerStudent(
+                            username: usernameController.text,
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            telephone: telephoneController.text,
+                            school: schoolController.text,
+                            district: selectedDistrict ?? 'Colombo',
+                          );
+                          
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => const HomeScreen()));
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Sign up failed: ${e.toString()}')),
+                            SnackBar(content: Text('Registration failed: ${e.toString()}')),
                           );
                         }
                       },
