@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'package:next_step/models/student_profile.dart';
+import 'package:next_step/screens/edit_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -58,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: SingleChildScrollView(
-            child: buildProfileContent(),
+            child: buildProfileContent(context),
           ),
         ),
         // Additional side content for wide screens
@@ -78,11 +80,11 @@ class ProfileScreen extends StatelessWidget {
 
   Widget buildNarrowLayout(BuildContext context) {
     return SingleChildScrollView(
-      child: buildProfileContent(),
+      child: buildProfileContent(context),
     );
   }
 
-  Widget buildProfileContent() {
+  Widget buildProfileContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -114,15 +116,14 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          buildSectionTitle('Personal Information'),
+          buildSectionTitle(context, 'Personal Information'),
           buildInfoField('Name', 'Sean Donaldson'),
           buildInfoField('Email', 'sean@example.com'),
           buildInfoField('Phone', '+94 XXX XXX XXX'),
 
           const SizedBox(height: 24),
-          buildSectionTitle('Education'),
+          buildSectionTitle(context, 'Education'),
           buildEducationItem(
-
             'Diploma in Software Engineering',
             'Grade: Science',
           ),
@@ -132,19 +133,19 @@ class ProfileScreen extends StatelessWidget {
           ),
 
           const SizedBox(height: 24),
-          buildSectionTitle('Certifications'),
+          buildSectionTitle(context, 'Certifications'),
           buildCertificationItem('Database management'),
           buildCertificationItem('Data Analysis'),
 
           const SizedBox(height: 24),
-          buildSectionTitle('Key Interest'),
+          buildSectionTitle(context, 'Key Interest'),
           buildInterestTags(['Science', 'Hacking']),
         ],
       ),
     );
   }
 
-  Widget buildSectionTitle(String title) {
+  Widget buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -157,14 +158,38 @@ class ProfileScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.edit),
-            iconSize: 20,
-            color: Colors.black,
-            onPressed: () {
-              // Handle edit action
-            },
-          ),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                iconSize: 20,
+                color: Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfileScreen(
+                        initialProfile: StudentProfile(
+                          educationLevel: 2,
+                          olResults: {
+                            'Math': 90.0,
+                            'Science': 90.0,
+                            'English': 90.0,
+                            'History': 90.0,
+                            'Sinhala': 90.0,
+                            'Religion': 90.0
+                          },
+                          alStream: 2,
+                          alResults: {
+                            'Accounting': 90.0,
+                            'Business_Studies': 90.0,
+                            'Economics': 90.0
+                          },
+                          gpa: 4.0
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
         ],
       ),
     );

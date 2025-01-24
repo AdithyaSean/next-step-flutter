@@ -1,9 +1,9 @@
 class StudentProfile {
-  final int educationLevel;
-  final Map<String, double> olResults;
-  final int alStream;
-  final Map<String, double> alResults;
-  final double gpa;
+  int educationLevel;
+  Map<String, double> olResults;
+  int alStream;
+  Map<String, double> alResults;
+  double gpa;
 
   StudentProfile({
     required this.educationLevel,
