@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../models/student_profile.dart';
 
 class StudentService {
-  static const String _baseUrl = 'http://localhost:8080/users/students';
+  static const String _baseUrl = 'http://localhost:8080';
 
   Future<String> registerStudent({
     required String username,
@@ -38,7 +38,7 @@ class StudentService {
 
   Future<void> createStudent(Map<String, dynamic> studentData) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl'),
+      Uri.parse('$_baseUrl/users/students'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(studentData),
     );
@@ -50,7 +50,7 @@ class StudentService {
 
   Future<void> updateProfile(String studentId, StudentProfile profile) async {
     final response = await http.put(
-      Uri.parse('$_baseUrl/$studentId/profile'),
+      Uri.parse('$_baseUrl/users/students/profile/$studentId'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(profile.toJson()),
     );
@@ -62,7 +62,7 @@ class StudentService {
 
   Future<Map<String, dynamic>> getProfile(String studentId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/$studentId/profile'),
+      Uri.parse('$_baseUrl/users/students/$studentId/profile'),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -70,6 +70,23 @@ class StudentService {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load profile');
+    }
+  }
+
+  Future<String?> authenticate(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/users/authenticate'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['id'];
+    } else {
+      throw Exception('Failed to authenticate: ${response.body}');
     }
   }
 }

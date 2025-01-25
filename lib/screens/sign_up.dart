@@ -233,22 +233,6 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset('images/google.png',
-                              width: 30, height: 30),
-                        ),
-                        const SizedBox(width: 16),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset('images/facebook.png',
-                              width: 35, height: 35),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

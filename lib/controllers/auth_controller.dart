@@ -33,23 +33,6 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> signInWithGoogle() async {
-    try {
-      isLoading.value = true;
-      await _authService.signInWithGoogle();
-      isAuthenticated.value = true;
-      await loadUserProfile();
-      Get.offAllNamed('/home');
-    } catch (e) {
-      isAuthenticated.value = false;
-      currentUser.value = {};
-      Get.snackbar('Error', e.toString());
-      rethrow;
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   Future<void> signOut() async {
     try {
       isLoading.value = true;

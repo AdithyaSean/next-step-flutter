@@ -5,7 +5,8 @@ import 'sign_up.dart';
 import '../services/auth_service.dart';
 
 class ResponsiveSignIn extends StatelessWidget {
-  const ResponsiveSignIn({super.key});
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,7 @@ class ResponsiveSignIn extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     TextFormField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                         labelText: 'Username',
                         border: OutlineInputBorder(
@@ -55,6 +57,7 @@ class ResponsiveSignIn extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -73,10 +76,23 @@ class ResponsiveSignIn extends StatelessWidget {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () async {
-                        // TODO: Implement email/password sign in
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Email/password sign in not implemented yet')),
-                        );
+                        final authService = Get.find<AuthService>();
+                        try {
+                          final userId = await authService.signIn(
+                            usernameController.text,
+                            passwordController.text,
+                          );
+                          if (userId != null) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const HomeScreen()),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Sign in failed: ${e.toString()}')),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -96,34 +112,6 @@ class ResponsiveSignIn extends StatelessWidget {
                           child: Text('or sign in with'),
                         ),
                         Expanded(child: Divider()),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            try {
-                              final authService = Get.find<AuthService>();
-                              final user = await authService.signInWithGoogle();
-                              if (user != null) {
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) => const HomeScreen()));
-                              }
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Google sign in failed: ${e.toString()}')),
-                              );
-                            }
-                          },
-                          icon: Image.asset('images/google.png', width: 30, height: 30),
-                        ),
-                        const SizedBox(width: 16),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset('images/facebook.png', width: 35, height: 35),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
