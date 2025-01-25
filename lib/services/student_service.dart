@@ -15,7 +15,7 @@ class StudentService {
     required String district
   }) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl'),
+      Uri.parse('$_baseUrl/users/students'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,
