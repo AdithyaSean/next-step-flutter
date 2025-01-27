@@ -39,7 +39,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildPersonalInfoFields(),
+              const SizedBox(height: 24),
               _buildEducationLevelField(),
               const SizedBox(height: 16),
               _buildOLResultsFields(),
@@ -49,10 +52,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               _buildALResultsFields(),
               const SizedBox(height: 16),
               _buildGPAField(),
+              const SizedBox(height: 24),
+              _buildCertificationsField(),
+              const SizedBox(height: 24),
+              _buildInterestsField(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPersonalInfoFields() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Personal Information',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          initialValue: _profile.name,
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) => setState(() => _profile.name = value),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          initialValue: _profile.email,
+          decoration: const InputDecoration(
+            labelText: 'Email',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) => setState(() => _profile.email = value),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          initialValue: _profile.phone,
+          decoration: const InputDecoration(
+            labelText: 'Phone',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) => setState(() => _profile.phone = value),
+        ),
+      ],
     );
   }
 
@@ -168,6 +214,129 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _profile.gpa = double.tryParse(value) ?? 0.0;
         });
       },
+    );
+  }
+
+  Widget _buildCertificationsField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Certifications',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _profile.certifications.length + 1,
+          itemBuilder: (context, index) {
+            if (index == _profile.certifications.length) {
+              return TextButton(
+                onPressed: () {
+                  setState(() {
+                    _profile.certifications.add('');
+                  });
+                },
+                child: const Text('Add Certification'),
+              );
+            }
+            return Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    initialValue: _profile.certifications[index],
+                    decoration: const InputDecoration(
+                      labelText: 'Certification',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _profile.certifications[index] = value;
+                      });
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      _profile.certifications.removeAt(index);
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInterestsField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Interests',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: [
+            ..._profile.interests.map((interest) {
+              return Chip(
+                label: Text(interest),
+                onDeleted: () {
+                  setState(() {
+                    _profile.interests.remove(interest);
+                  });
+                },
+              );
+            }),
+            ActionChip(
+              label: const Icon(Icons.add),
+              onPressed: () {
+                _showAddInterestDialog();
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _showAddInterestDialog() {
+    final textController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Interest'),
+        content: TextField(
+          controller: textController,
+          decoration: const InputDecoration(
+            labelText: 'Interest',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (textController.text.isNotEmpty) {
+                setState(() {
+                  _profile.interests.add(textController.text);
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 

@@ -120,7 +120,6 @@ class ProfileScreen extends StatelessWidget {
           buildInfoField('Name', 'Sean Donaldson'),
           buildInfoField('Email', 'sean@example.com'),
           buildInfoField('Phone', '+94 XXX XXX XXX'),
-
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Education'),
           buildEducationItem(
@@ -131,12 +130,10 @@ class ProfileScreen extends StatelessWidget {
             'Higher National Diploma in Software Engineering',
             '',
           ),
-
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Certifications'),
           buildCertificationItem('Database management'),
           buildCertificationItem('Data Analysis'),
-
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Key Interest'),
           buildInterestTags(['Science', 'Hacking']),
@@ -158,38 +155,45 @@ class ProfileScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                iconSize: 20,
-                color: Colors.black,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditProfileScreen(
-                        initialProfile: StudentProfile(
-                          educationLevel: 2,
-                          olResults: {
-                            'Math': 90.0,
-                            'Science': 90.0,
-                            'English': 90.0,
-                            'History': 90.0,
-                            'Sinhala': 90.0,
-                            'Religion': 90.0
-                          },
-                          alStream: 2,
-                          alResults: {
-                            'Accounting': 90.0,
-                            'Business_Studies': 90.0,
-                            'Economics': 90.0
-                          },
-                          gpa: 4.0
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            iconSize: 20,
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(
+                    initialProfile: StudentProfile(
+                        name: 'Sean Donaldson',
+                        email: 'sean@example.com',
+                        phone: '+94 XXX XXX XXX',
+                        certifications: [
+                          'Database management',
+                          'Data Analysis'
+                        ],
+                        interests: ['Science', 'Hacking'],
+                        educationLevel: 2,
+                        olResults: {
+                          'Math': 90.0,
+                          'Science': 90.0,
+                          'English': 90.0,
+                          'History': 90.0,
+                          'Sinhala': 90.0,
+                          'Religion': 90.0
+                        },
+                        alStream: 2,
+                        alResults: {
+                          'Accounting': 90.0,
+                          'Business_Studies': 90.0,
+                          'Economics': 90.0
+                        },
+                        gpa: 4.0),
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
