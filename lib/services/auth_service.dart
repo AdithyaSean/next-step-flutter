@@ -1,37 +1,82 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:next_step/services/student_service.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:next_step/models/user.dart';
 
 class AuthService extends GetxService {
   final StudentService _studentService = StudentService();
   String? _currentUserId;
 
-  Future<String?> signIn(String username, String password) async {
+  Future<UserDTO?> signIn(String username, String password) async {
     try {
-      // Call the backend to authenticate the user
-      final userId = await _studentService.authenticate(username, password);
-      if (userId != null) {
-        _currentUserId = userId;
+      final response = await http.post(
+        Uri.parse('http://localhost:8080/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': username, 'password': password}),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> userData = jsonDecode(response.body);
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userId', userId);
-        return userId;
+        await prefs.setString('user', jsonEncode(userData));
+        _currentUserId = userData['id'];
+        return UserDTO.fromJson(userData);
+      } else {
+        throw Exception('Failed to sign in: ${response.body}');
       }
     } catch (e) {
       throw Exception('Failed to sign in: $e');
     }
-    return null;
+  }
+
+  Future<UserDTO?> getUserProfile() async {
+    try {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final userData = jsonDecode(userJson);
+        return UserDTO.fromJson(userData);
+    }
+      return null;
+    } catch (e) {
+      throw Exception('Failed to load user profile: $e');
+  }
   }
 
   Future<String?> getCurrentUserId() async {
     if (_currentUserId != null) return _currentUserId;
     final prefs = await SharedPreferences.getInstance();
-    _currentUserId = prefs.getString('userId');
-    return _currentUserId;
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final userData = jsonDecode(userJson);
+      _currentUserId = userData['id'];
   }
+    return _currentUserId;
+}
 
   Future<void> signOut() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('userId');
+    await prefs.remove('user');
     _currentUserId = null;
+  }
+
+  Future<void> refreshToken() async {
+    throw UnimplementedError('refreshToken not implemented');
+  }
+}
+
+class UserDTO {
+  final String userId;
+  final String username;
+
+  UserDTO({required this.userId, required this.username});
+
+  factory UserDTO.fromJson(Map<String, dynamic> json) {
+    return UserDTO(
+      userId: json['id'],
+      username: json['username'],
+    );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import '../services/auth_service.dart';
 
 class AuthController extends GetxController {
@@ -15,9 +17,15 @@ class AuthController extends GetxController {
 
   Future<void> checkAuthentication() async {
     isLoading.value = true;
-    isAuthenticated.value = await _authService.isAuthenticated();
-    if (isAuthenticated.value) {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final userData = jsonDecode(userJson);
+      currentUser.value = userData;
+      isAuthenticated.value = true;
       await loadUserProfile();
+    } else {
+      isAuthenticated.value = false;
     }
     isLoading.value = false;
   }
