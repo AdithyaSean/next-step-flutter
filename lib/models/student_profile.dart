@@ -1,4 +1,9 @@
 class StudentProfile {
+  String name;
+  String email;
+  String phone;
+  List<String> certifications;
+  List<String> interests;
   int educationLevel;
   Map<String, double> olResults;
   int alStream;
@@ -6,6 +11,11 @@ class StudentProfile {
   double gpa;
 
   StudentProfile({
+    this.name = '',
+    this.email = '',
+    this.phone = '',
+    this.certifications = const [],
+    this.interests = const [],
     required this.educationLevel,
     required this.olResults,
     required this.alStream,
