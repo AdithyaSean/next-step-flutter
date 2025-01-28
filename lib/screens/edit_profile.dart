@@ -345,7 +345,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       try {
         await _studentService.updateProfile('current-user-id', _profile);
         if (!mounted) return;
-        Navigator.pop(context);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+
+        // Return to profile screen
+        Navigator.pop(context, _profile);
       } catch (e) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

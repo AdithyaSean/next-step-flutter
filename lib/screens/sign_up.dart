@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:next_step/screens/edit_profile.dart';
 import '../services/student_service.dart';
 import 'home.dart';
+import 'package:next_step/screens/edit_profile.dart';
+import 'package:next_step/screens/profile.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
   const ResponsiveSignUp({super.key});
@@ -203,8 +206,8 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                             district: selectedDistrict ?? 'Colombo',
                           );
                           
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) => const HomeScreen()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => const ProfileScreen()));
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Registration failed: ${e.toString()}')),
