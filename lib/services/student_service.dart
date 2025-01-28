@@ -5,15 +5,14 @@ import '../models/student_profile.dart';
 class StudentService {
   static const String _baseUrl = 'http://localhost:8080/students';
 
-  Future<String> registerStudent({
-    required String username,
-    required String name,
-    required String email,
-    required String password,
-    required String telephone,
-    required String school,
-    required String district
-  }) async {
+  Future<String> registerStudent(
+      {required String username,
+      required String name,
+      required String email,
+      required String password,
+      required String telephone,
+      required String school,
+      required String district}) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/register'),
       headers: {'Content-Type': 'application/json'},
@@ -62,8 +61,8 @@ class StudentService {
 
   Future<Map<String, dynamic>> getProfile(String studentId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/students/profile'),
-      headers: {'Content-Type': 'application/json'},
+      Uri.parse('$_baseUrl/profile'),
+      headers: {'Content-Type': 'application/json', 'UUID': studentId},
     );
 
     if (response.statusCode == 200) {

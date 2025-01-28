@@ -25,16 +25,26 @@ class StudentProfile {
 
   factory StudentProfile.fromJson(Map<String, dynamic> json) {
     return StudentProfile(
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      certifications: List<String>.from(json['certifications'] ?? []),
+      interests: List<String>.from(json['interests'] ?? []),
       educationLevel: json['educationLevel'],
       olResults: Map<String, double>.from(json['olResults']),
       alStream: json['alStream'],
       alResults: Map<String, double>.from(json['alResults']),
-      gpa: json['gpa'],
+      gpa: json['gpa'].toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'certifications': certifications,
+      'interests': interests,
       'educationLevel': educationLevel,
       'olResults': olResults,
       'alStream': alStream,

@@ -2,12 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 import 'package:next_step/models/student_profile.dart';
 import 'package:next_step/screens/edit_profile.dart';
+import 'package:next_step/services/student_service.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final StudentService _studentService = StudentService();
+  StudentProfile? _profile;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final profileData = await _studentService.getProfile('_currentUserId');
+      setState(() {
+        _profile = StudentProfile.fromJson(profileData);
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load profile: $e')),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_profile == null) {
+      return const Scaffold(
+        body: Center(child: Text('Failed to load profile')),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text.rich(
@@ -117,9 +162,9 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Personal Information'),
-          buildInfoField('Name', 'Sean Donaldson'),
-          buildInfoField('Email', 'sean@example.com'),
-          buildInfoField('Phone', '+94 XXX XXX XXX'),
+          buildInfoField('Name', _profile!.name),
+          buildInfoField('Email', _profile!.email),
+          buildInfoField('Phone', _profile!.phone),
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Education'),
           buildEducationItem(
@@ -159,39 +204,21 @@ class ProfileScreen extends StatelessWidget {
             icon: const Icon(Icons.edit),
             iconSize: 20,
             color: Colors.black,
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final updatedProfile = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditProfileScreen(
-                    initialProfile: StudentProfile(
-                        name: 'Sean Donaldson',
-                        email: 'sean@example.com',
-                        phone: '+94 XXX XXX XXX',
-                        certifications: [
-                          'Database management',
-                          'Data Analysis'
-                        ],
-                        interests: ['Science', 'Hacking'],
-                        educationLevel: 2,
-                        olResults: {
-                          'Math': 90.0,
-                          'Science': 90.0,
-                          'English': 90.0,
-                          'History': 90.0,
-                          'Sinhala': 90.0,
-                          'Religion': 90.0
-                        },
-                        alStream: 2,
-                        alResults: {
-                          'Accounting': 90.0,
-                          'Business_Studies': 90.0,
-                          'Economics': 90.0
-                        },
-                        gpa: 4.0),
+                    initialProfile: _profile!,
                   ),
                 ),
               );
+
+              if (updatedProfile != null) {
+                setState(() {
+                  _profile = updatedProfile;
+                });
+              }
             },
           ),
         ],
