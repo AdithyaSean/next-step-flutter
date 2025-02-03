@@ -2,12 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 import 'package:next_step/models/student_profile.dart';
 import 'package:next_step/screens/edit_profile.dart';
+import 'package:get/get.dart';
+import '../services/auth_service.dart';
+import 'sign_in.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  UserDTO? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final authService = Get.find<AuthService>();
+    final user = await authService.getUserProfile();
+
+    if (mounted) {
+      setState(() {
+        _user = user;
+        _isLoading = false;
+      });
+
+      if (user == null) {
+        Get.offAll(() => ResponsiveSignIn());
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text.rich(
@@ -98,9 +137,9 @@ class ProfileScreen extends StatelessWidget {
                   backgroundImage: AssetImage('images/profile.png'),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Hello Sean',
-                  style: TextStyle(
+                Text(
+                  'Hello ${_user?.username ?? ""}',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -117,9 +156,9 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Personal Information'),
-          buildInfoField('Name', 'Sean Donaldson'),
-          buildInfoField('Email', 'sean@example.com'),
-          buildInfoField('Phone', '+94 XXX XXX XXX'),
+          buildInfoField('Name', _user?.username ?? ''),
+          buildInfoField('Email', _user?.email ?? ''),
+          buildInfoField('Phone', _user?.telephone ?? ''),
           const SizedBox(height: 24),
           buildSectionTitle(context, 'Education'),
           buildEducationItem(
@@ -165,9 +204,9 @@ class ProfileScreen extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => EditProfileScreen(
                     initialProfile: StudentProfile(
-                        name: 'Sean Donaldson',
-                        email: 'sean@example.com',
-                        phone: '+94 XXX XXX XXX',
+                        name: _user?.username ?? '',
+                        email: _user?.email ?? '',
+                        phone: _user?.telephone ?? '',
                         certifications: [
                           'Database management',
                           'Data Analysis'

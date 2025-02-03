@@ -1,19 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../services/auth_service.dart';
+import 'sign_in.dart';
 import 'notifications.dart';
 import '../widgets/nav_bar.dart';
 import 'profile.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  UserDTO? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    checkSession();
+  }
+
+  Future<void> checkSession() async {
+    final authService = Get.find<AuthService>();
+    final isLoggedIn = await authService.isLoggedIn();
+
+    if (!isLoggedIn && mounted) {
+      Get.offAll(() => ResponsiveSignIn());
+      return;
+    }
+
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final authService = Get.find<AuthService>();
+    final userProfile = await authService.getUserProfile();
+
+    if (mounted) {
+      setState(() {
+        _user = userProfile;
+      });
+
+      if (userProfile == null) {
+        Get.offAll(() => ResponsiveSignIn()); // Use Get for navigation
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_user == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton( // Changed from Padding to IconButton
+        leading: IconButton(
+          // Changed from Padding to IconButton
           icon: const CircleAvatar(
             backgroundImage: AssetImage('images/profile.png'),
           ),
@@ -54,9 +103,9 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Welcome Sean',
-                style: TextStyle(
+              Text(
+                'Welcome ${_user!.username}', // dynamic welcome
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -113,11 +162,16 @@ class HomeScreen extends StatelessWidget {
                 height: 300,
                 child: ListView(
                   children: const [
-                    CareerPathProgress(title: 'Software Engineering', percentage: 0.5),
-                    CareerPathProgress(title: 'Data Engineering', percentage: 0.75),
-                    CareerPathProgress(title: 'AI Engineering', percentage: 0.73),
-                    CareerPathProgress(title: 'Network Engineering', percentage: 0.75),
-                    CareerPathProgress(title: 'Cloud Computing', percentage: 0.6),
+                    CareerPathProgress(
+                        title: 'Software Engineering', percentage: 0.5),
+                    CareerPathProgress(
+                        title: 'Data Engineering', percentage: 0.75),
+                    CareerPathProgress(
+                        title: 'AI Engineering', percentage: 0.73),
+                    CareerPathProgress(
+                        title: 'Network Engineering', percentage: 0.75),
+                    CareerPathProgress(
+                        title: 'Cloud Computing', percentage: 0.6),
                   ],
                 ),
               ),
@@ -154,11 +208,7 @@ class InterestCard extends StatelessWidget {
   final String title;
   final String imagePath;
 
-  const InterestCard({
-    required this.title,
-    required this.imagePath,
-    super.key
-  });
+  const InterestCard({required this.title, required this.imagePath, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -188,11 +238,8 @@ class CareerPathProgress extends StatelessWidget {
   final String title;
   final double percentage;
 
-  const CareerPathProgress({
-    required this.title,
-    required this.percentage,
-    super.key
-  });
+  const CareerPathProgress(
+      {required this.title, required this.percentage, super.key});
 
   @override
   Widget build(BuildContext context) {
