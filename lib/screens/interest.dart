@@ -37,7 +37,6 @@ class _InterestsPageState extends State<InterestsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
@@ -54,7 +53,9 @@ class _InterestsPageState extends State<InterestsPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 40,
+            ),
             Wrap(
               spacing: 18.0,
               runSpacing: 18.0,
@@ -77,31 +78,38 @@ class _InterestsPageState extends State<InterestsPage> {
                   },
                   selectedColor: Colors.blue,
                   backgroundColor: Colors.grey[300],
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Increase padding
-                shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),),
+                  labelPadding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 8), // Increase padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
                 );
               }).toList(),
             ),
             const Spacer(),
             Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ResponsiveSignIn()));
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ResponsiveSignIn()));
 
-                // Handle the "Next" button press
-                print("Selected Interests: $selectedInterests");
-              },
-              style: ElevatedButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 18 , color: Colors.black , fontWeight: FontWeight.bold),
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  // Handle the "Next" button press
+                  print("Selected Interests: $selectedInterests");
+                },
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                  backgroundColor: Colors.blue,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                ),
+                child: const Text('Next'),
               ),
-              child: Text('Next'),
             ),
-          ),
           ],
         ),
       ),

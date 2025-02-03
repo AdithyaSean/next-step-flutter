@@ -8,9 +8,12 @@ class ResponsiveSignIn extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  ResponsiveSignIn({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // Add Scaffold to provide Material ancestor
+    return Scaffold(
+      // Add Scaffold to provide Material ancestor
       body: LayoutBuilder(
         builder: (context, constraints) {
           // Adjust the form width based on device size
@@ -70,7 +73,8 @@ class ResponsiveSignIn extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {},
-                        child: const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
+                        child: const Text('Forgot Password?',
+                            style: TextStyle(color: Colors.blue)),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -85,12 +89,15 @@ class ResponsiveSignIn extends StatelessWidget {
                           if (userId != null) {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => const HomeScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => const HomeScreen()),
                             );
                           }
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Sign in failed: ${e.toString()}')),
+                            SnackBar(
+                                content:
+                                    Text('Sign in failed: ${e.toString()}')),
                           );
                         }
                       },
@@ -101,7 +108,8 @@ class ResponsiveSignIn extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: const Text('Sign In', style: TextStyle(color: Colors.white)),
+                      child: const Text('Sign In',
+                          style: TextStyle(color: Colors.white)),
                     ),
                     const SizedBox(height: 24),
                     const Row(
@@ -122,10 +130,14 @@ class ResponsiveSignIn extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             // Navigate to sign up screen
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => const ResponsiveSignUp()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ResponsiveSignUp()));
                           },
-                          child: const Text('Sign up', style: TextStyle(color: Colors.blue)),
+                          child: const Text('Sign up',
+                              style: TextStyle(color: Colors.blue)),
                         ),
                       ],
                     ),

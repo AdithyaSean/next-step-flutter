@@ -144,7 +144,8 @@ class RecommendationOnInterest extends StatelessWidget {
     );
   }
 
-  Widget buildRecommendationCard(String category, String title, List<String> qualifications) {
+  Widget buildRecommendationCard(
+      String category, String title, List<String> qualifications) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -159,7 +160,10 @@ class RecommendationOnInterest extends StatelessWidget {
           children: [
             Text(
               category,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue),
             ),
             const SizedBox(height: 8),
             Text(
@@ -187,7 +191,7 @@ class RecommendationOnInterest extends StatelessWidget {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
-                child: Text('More'),
+                child: const Text('More'),
               ),
             ),
           ],

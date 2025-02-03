@@ -146,7 +146,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               },
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -196,7 +196,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               },
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: userId != null ? HomeScreen() : ResponsiveSignIn(),
+      home: userId != null ? const HomeScreen() : ResponsiveSignIn(),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:next_step/services/student_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:next_step/models/user.dart';
 
 class AuthService extends GetxService {
   final StudentService _studentService = StudentService();
@@ -33,16 +32,16 @@ class AuthService extends GetxService {
 
   Future<UserDTO?> getUserProfile() async {
     try {
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString('user');
-    if (userJson != null) {
-      final userData = jsonDecode(userJson);
+      final prefs = await SharedPreferences.getInstance();
+      final userJson = prefs.getString('user');
+      if (userJson != null) {
+        final userData = jsonDecode(userJson);
         return UserDTO.fromJson(userData);
-    }
+      }
       return null;
     } catch (e) {
       throw Exception('Failed to load user profile: $e');
-  }
+    }
   }
 
   Future<String?> getCurrentUserId() async {
@@ -52,9 +51,9 @@ class AuthService extends GetxService {
     if (userJson != null) {
       final userData = jsonDecode(userJson);
       _currentUserId = userData['id'];
-  }
+    }
     return _currentUserId;
-}
+  }
 
   Future<void> signOut() async {
     final prefs = await SharedPreferences.getInstance();
@@ -65,18 +64,32 @@ class AuthService extends GetxService {
   Future<void> refreshToken() async {
     throw UnimplementedError('refreshToken not implemented');
   }
+
+  Future<bool> isLoggedIn() async {
+    final userProfile = await getUserProfile();
+    return userProfile != null;
+  }
 }
 
 class UserDTO {
   final String userId;
   final String username;
+  final String email; // Add this
+  final String telephone; // Add this
 
-  UserDTO({required this.userId, required this.username});
+  UserDTO({
+    required this.userId,
+    required this.username,
+    required this.email,
+    required this.telephone,
+  });
 
   factory UserDTO.fromJson(Map<String, dynamic> json) {
     return UserDTO(
       userId: json['id'],
       username: json['username'],
+      email: json['email'] ?? '',
+      telephone: json['telephone'] ?? '',
     );
   }
 }

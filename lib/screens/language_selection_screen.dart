@@ -42,7 +42,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   // Handle button press
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>  InterestsPage()));
+                      MaterialPageRoute(
+                          builder: (context) => const InterestsPage()));
                   print('Selected Language: $_selectedLanguage');
                 },
                 style: ElevatedButton.styleFrom(
@@ -50,7 +51,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.blue, // Use backgroundColor instead of primary
+                  backgroundColor:
+                      Colors.blue, // Use backgroundColor instead of primary
                 ),
                 child: const Text(
                   'Next',
