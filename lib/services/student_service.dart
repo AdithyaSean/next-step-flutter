@@ -15,7 +15,7 @@ class StudentService {
     required String district
   }) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/register'),
+      Uri.parse('$_baseUrl'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,
@@ -36,18 +36,6 @@ class StudentService {
     }
   }
 
-  Future<void> createStudent(Map<String, dynamic> studentData) async {
-    final response = await http.post(
-      Uri.parse('$_baseUrl/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(studentData),
-    );
-
-    if (response.statusCode != 201) {
-      throw Exception('Failed to create student');
-    }
-  }
-
   Future<void> updateProfile(String studentId, StudentProfile profile) async {
     final response = await http.put(
       Uri.parse('$_baseUrl/profile'),
@@ -62,7 +50,7 @@ class StudentService {
 
   Future<Map<String, dynamic>> getProfile(String studentId) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/students/profile'),
+      Uri.parse('$_baseUrl/profile'),
       headers: {'Content-Type': 'application/json'},
     );
 
