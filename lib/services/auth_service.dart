@@ -7,6 +7,13 @@ import 'package:http/http.dart' as http;
 class AuthService extends GetxService {
   final StudentService _studentService = StudentService();
   String? _currentUserId;
+  final _isLoggedIn = false.obs;
+
+  Future<AuthService> init() async {
+    final userProfile = await getUserProfile();
+    _isLoggedIn.value = userProfile != null;
+    return this;
+  }
 
   Future<UserDTO?> signIn(String username, String password) async {
     try {
@@ -20,12 +27,14 @@ class AuthService extends GetxService {
         final Map<String, dynamic> userData = jsonDecode(response.body);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('user', jsonEncode(userData));
+        _isLoggedIn.value = true;
         _currentUserId = userData['id'];
         return UserDTO.fromJson(userData);
       } else {
         throw Exception('Failed to sign in: ${response.body}');
       }
     } catch (e) {
+      _isLoggedIn.value = false;
       throw Exception('Failed to sign in: $e');
     }
   }
@@ -59,6 +68,7 @@ class AuthService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user');
     _currentUserId = null;
+    _isLoggedIn.value = false;
   }
 
   Future<void> refreshToken() async {
@@ -66,8 +76,9 @@ class AuthService extends GetxService {
   }
 
   Future<bool> isLoggedIn() async {
-    final userProfile = await getUserProfile();
-    return userProfile != null;
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    return userJson != null;
   }
 }
 

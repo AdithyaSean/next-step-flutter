@@ -19,6 +19,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    checkSession();
+  }
+
+  Future<void> checkSession() async {
+    final authService = Get.find<AuthService>();
+    final isLoggedIn = await authService.isLoggedIn();
+
+    if (!isLoggedIn && mounted) {
+      Get.offAll(() => ResponsiveSignIn());
+      return;
+    }
+
     _loadUser();
   }
 

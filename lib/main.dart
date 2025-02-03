@@ -7,13 +7,14 @@ import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
-  final userId = prefs.getString('userId');
+  await Get.putAsync(() => AuthService().init());
 
-  // Initialize services
-  await Get.putAsync(() async => AuthService());
+  final authService = Get.find<AuthService>();
+  final isLoggedIn = await authService.isLoggedIn();
 
-  runApp(MyApp(userId: userId));
+  runApp(GetMaterialApp(
+    home: isLoggedIn ? const HomeScreen() : ResponsiveSignIn(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
