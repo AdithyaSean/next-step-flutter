@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
-
+import 'package:get/get.dart';
+import '../services/auth_service.dart';
+import 'sign_in.dart';
 
 class ResponsiveSettings extends StatefulWidget {
   const ResponsiveSettings({super.key});
@@ -43,7 +45,8 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundColor: Colors.grey,
-                            child: Icon(Icons.person, size: 20, color: Colors.white),
+                            child: Icon(Icons.person,
+                                size: 20, color: Colors.white),
                           ),
                           const SizedBox(width: 8),
                           if (isLargeScreen)
@@ -99,17 +102,40 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                     isSelected: selectedMainOption == 'Licenses',
                   ),
                   const SizedBox(height: 140),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            final authService = Get.find<AuthService>();
+                            await authService.signOut();
+                            Get.offAll(() => ResponsiveSignIn());
+                          } catch (e) {
+                            Get.snackbar(
+                              'Error',
+                              'Failed to sign out',
+                              snackPosition: SnackPosition.BOTTOM,
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text(
+                          'Sign out',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                    child: const Text('Sign out', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                   if (selectedMainOption != null && isLargeScreen)
                     Expanded(child: _buildSubSettings()),
@@ -119,9 +145,9 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3), // Use the BottomNavContainer widget here
+      bottomNavigationBar: const BottomNavContainer(
+          selectedIndex: 3), // Use the BottomNavContainer widget here
     );
-
   }
 
   Widget _buildSettingsButton({
@@ -270,6 +296,150 @@ class _SubSettingsContent extends StatelessWidget {
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),
       onTap: () {},
+    );
+  }
+}
+
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String selectedMainOption = 'General';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Desktop/Tablet layout
+          if (constraints.maxWidth > 600) {
+            return Row(
+              children: [
+                // Left side menu
+                SizedBox(
+                  width: 250,
+                  child: _buildMainSettings(),
+                ),
+                // Vertical divider
+                const VerticalDivider(width: 1),
+                // Right side content
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildSubSettings(),
+                  ),
+                ),
+              ],
+            );
+          }
+          // Mobile layout
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildMainSettings(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _buildSubSettings(),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            minimumSize: const Size(double.infinity, 50),
+          ),
+          onPressed: () async {
+            try {
+              final authService = Get.find<AuthService>();
+              await authService.signOut();
+              Get.offAll(() => ResponsiveSignIn());
+            } catch (e) {
+              Get.snackbar('Error', 'Failed to sign out');
+            }
+          },
+          child: const Text(
+            'Sign Out',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainSettings() {
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        ListTile(
+          selected: selectedMainOption == 'General',
+          leading: const Icon(Icons.settings),
+          title: const Text('General'),
+          onTap: () => setState(() => selectedMainOption = 'General'),
+        ),
+        ListTile(
+          selected: selectedMainOption == 'Privacy',
+          leading: const Icon(Icons.privacy_tip),
+          title: const Text('Privacy'),
+          onTap: () => setState(() => selectedMainOption = 'Privacy'),
+        ),
+        // Add more main options...
+      ],
+    );
+  }
+
+  Widget _buildSubSettings() {
+    if (selectedMainOption == 'General') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'General Settings',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          _buildSubSettingTile(
+            title: 'Notifications',
+            subtitle: 'Configure notification settings',
+            icon: Icons.notifications,
+          ),
+          _buildSubSettingTile(
+            title: 'Sound',
+            subtitle: 'Adjust sound settings',
+            icon: Icons.volume_up,
+          ),
+        ],
+      );
+    }
+    // Add other sub-settings...
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildSubSettingTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+  }) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        // Handle sub-setting tap
+      },
     );
   }
 }
