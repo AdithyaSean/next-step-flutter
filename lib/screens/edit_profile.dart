@@ -77,29 +77,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         border: OutlineInputBorder(),
       ),
       items: EducationConfig.educationLevels.entries
-          .map((MapEntry<int, String> entry) => 
-            DropdownMenuItem<int>(
-              value: entry.key,
-              child: Text(entry.value),
-            ),
-          ).toList(),
+          .map((entry) => DropdownMenuItem<int>(
+                value: entry.key,
+                child: Text(entry.value),
+              ))
+          .toList(),
       onChanged: (int? value) {
         if (value != null) {
           setState(() {
             _profile.educationLevel = value;
             if (value == 1) {
+              // O/L selected
               _profile.alStream = null;
               _profile.alResults.clear();
-            } else if (value == 2 && _profile.alStream == null) {
-              _profile.alStream = EducationConfig.defaultStream;
-              _initializeAlResults();
+              _profile.gpa = 0.0;
+            } else if (value == 2) {
+              // A/L selected
+              if (_profile.alStream == null) {
+                _profile.alStream = EducationConfig.defaultStream;
+                _initializeAlResults();
+              }
+              _profile.gpa = 0.0;
             }
+            // value == 3 means University, keep GPA
           });
         }
-      },
-      validator: (value) {
-        if (value == null) return 'Please select education level';
-        return null;
       },
     );
   }
@@ -204,6 +206,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildGPASection() {
+    // Only show if University level
+    if (_profile.educationLevel != 3) return const SizedBox.shrink();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -214,19 +219,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           decoration: const InputDecoration(
             labelText: 'GPA (0.0 - 4.0)',
             border: OutlineInputBorder(),
+            hintText: 'Enter your GPA',
           ),
-          initialValue: _profile.gpa.toString(),
+          initialValue: _profile.gpa.toStringAsFixed(2),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Required';
-            final gpa = double.tryParse(value);
-            if (gpa == null || gpa < 0 || gpa > 4.0) {
-              return 'Enter valid GPA (0-4.0)';
+            if (_profile.educationLevel == 3) {
+              if (value == null || value.isEmpty) return 'Required for university students';
+              final gpa = double.tryParse(value);
+              if (gpa == null || gpa < 0 || gpa > 4.0) {
+                return 'Enter valid GPA (0-4.0)';
+              }
             }
             return null;
           },
           onSaved: (value) {
-            _profile.gpa = double.parse(value ?? '0');
+            if (_profile.educationLevel == 3) {
+              _profile.gpa = double.parse(value ?? '0');
+            }
           },
         ),
       ],
