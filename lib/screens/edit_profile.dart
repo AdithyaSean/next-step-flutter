@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:next_step/controllers/student_controller.dart';
 import 'package:next_step/models/student_profile.dart';
+import 'package:next_step/screens/home.dart';
+import 'package:next_step/services/auth_service.dart';
 import 'package:next_step/services/student_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -41,8 +45,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildPersonalInfoFields(),
-              const SizedBox(height: 24),
               _buildEducationLevelField(),
               const SizedBox(height: 16),
               _buildOLResultsFields(),
@@ -52,10 +54,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               _buildALResultsFields(),
               const SizedBox(height: 16),
               _buildGPAField(),
-              const SizedBox(height: 24),
-              _buildCertificationsField(),
-              const SizedBox(height: 24),
-              _buildInterestsField(),
             ],
           ),
         ),
@@ -68,36 +66,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Personal Information',
+          'Education Information',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
-        TextFormField(
-          initialValue: _profile.name,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _profile.name = value),
-        ),
+        _buildEducationLevelField(),
         const SizedBox(height: 8),
-        TextFormField(
-          initialValue: _profile.email,
-          decoration: const InputDecoration(
-            labelText: 'Email',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _profile.email = value),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          initialValue: _profile.phone,
-          decoration: const InputDecoration(
-            labelText: 'Phone',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _profile.phone = value),
-        ),
+        _buildGPAField(),
       ],
     );
   }
@@ -114,9 +89,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         DropdownMenuItem(value: 2, child: Text('A/L')),
       ],
       onChanged: (value) {
-        setState(() {
-          _profile.educationLevel = value ?? 1;
-        });
+        if (value != null) {
+          setState(() {
+            _profile.educationLevel = value;
+          });
+        }
+      },
+      validator: (value) {
+        if (value == null) {
+          return 'Please select education level';
+        }
+        return null;
       },
     );
   }
@@ -152,8 +135,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildALStreamField() {
+    if (_profile.educationLevel < 2) {
+      return const SizedBox.shrink();
+    }
+    
     return DropdownButtonFormField<int>(
-      value: _profile.alStream,
+      value: _profile.alStream ?? 1,
       decoration: const InputDecoration(
         labelText: 'A/L Stream',
         border: OutlineInputBorder(),
@@ -164,9 +151,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         DropdownMenuItem(value: 3, child: Text('Arts')),
       ],
       onChanged: (value) {
-        setState(() {
-          _profile.alStream = value ?? 1;
-        });
+        if (value != null) {
+          setState(() {
+            _profile.alStream = value;
+          });
+        }
       },
     );
   }
@@ -217,139 +206,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildCertificationsField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Certifications',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _profile.certifications.length + 1,
-          itemBuilder: (context, index) {
-            if (index == _profile.certifications.length) {
-              return TextButton(
-                onPressed: () {
-                  setState(() {
-                    _profile.certifications.add('');
-                  });
-                },
-                child: const Text('Add Certification'),
-              );
-            }
-            return Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    initialValue: _profile.certifications[index],
-                    decoration: const InputDecoration(
-                      labelText: 'Certification',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _profile.certifications[index] = value;
-                      });
-                    },
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      _profile.certifications.removeAt(index);
-                    });
-                  },
-                ),
-              ],
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInterestsField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Interests',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            ..._profile.interests.map((interest) {
-              return Chip(
-                label: Text(interest),
-                onDeleted: () {
-                  setState(() {
-                    _profile.interests.remove(interest);
-                  });
-                },
-              );
-            }),
-            ActionChip(
-              label: const Icon(Icons.add),
-              onPressed: () {
-                _showAddInterestDialog();
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  void _showAddInterestDialog() {
-    final textController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Interest'),
-        content: TextField(
-          controller: textController,
-          decoration: const InputDecoration(
-            labelText: 'Interest',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (textController.text.isNotEmpty) {
-                setState(() {
-                  _profile.interests.add(textController.text);
-                });
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await _studentService.updateProfile('current-user-id', _profile);
-        if (!mounted) return;
-        Navigator.pop(context);
+        final authService = Get.find<AuthService>();
+        final uuid = await authService.getUUID();
+        
+        await _studentService.updateProfile(uuid!, _profile);
+        
+        // Refresh profile data in controller
+        final studentController = Get.find<StudentController>();
+        await studentController.loadProfile();
+        
+        // Navigate to home screen after first-time profile completion
+        Get.offAll(() => const HomeScreen());
       } catch (e) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile: $e')),
+        Get.snackbar(
+          'Error',
+          'Failed to update profile: $e',
+          snackPosition: SnackPosition.BOTTOM,
         );
       }
     }

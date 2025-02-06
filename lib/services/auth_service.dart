@@ -8,6 +8,7 @@ class AuthService extends GetxService {
   final StudentService _studentService = StudentService();
   String? _currentUserId;
   final _isLoggedIn = false.obs;
+  static const String UUID_KEY = 'uuid';
 
   Future<AuthService> init() async {
     final userProfile = await getUserProfile();
@@ -77,8 +78,17 @@ class AuthService extends GetxService {
 
   Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString('user');
-    return userJson != null;
+    return prefs.getString(UUID_KEY) != null;
+  }
+
+  Future<void> saveUUID(String uuid) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(UUID_KEY, uuid);
+  }
+
+  getUUID() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(UUID_KEY);
   }
 }
 

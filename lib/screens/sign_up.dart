@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../services/student_service.dart';
 import 'home.dart';
+import 'sign_in.dart';
 
 class ResponsiveSignUp extends StatefulWidget {
   const ResponsiveSignUp({super.key});
@@ -193,7 +195,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                         final studentService = StudentService();
                         
                         try {
-                          await studentService.registerStudent(
+                          final uuid = await studentService.registerStudent(
                             username: usernameController.text,
                             name: nameController.text,
                             email: emailController.text,
@@ -203,12 +205,11 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                             district: selectedDistrict ?? 'Colombo',
                           );
                           
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) => const HomeScreen()));
+                          Get.snackbar('Success', 'Registration successful! Please sign in.');
+                          Get.offAll(() => const ResponsiveSignIn());
+                          
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Registration failed: ${e.toString()}')),
-                          );
+                          Get.snackbar('Error', 'Registration failed: ${e.toString()}');
                         }
                       },
                       style: ElevatedButton.styleFrom(

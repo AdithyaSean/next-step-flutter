@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:next_step/controllers/student_controller.dart';
+import 'package:next_step/models/student_profile.dart';
+import 'package:next_step/screens/edit_profile.dart';
 import 'home.dart';
 import 'sign_up.dart';
 import '../services/auth_service.dart';
 
 class ResponsiveSignIn extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  ResponsiveSignIn({super.key});
+  const ResponsiveSignIn({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController usernameController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       // Add Scaffold to provide Material ancestor
       body: LayoutBuilder(
@@ -82,23 +85,27 @@ class ResponsiveSignIn extends StatelessWidget {
                       onPressed: () async {
                         final authService = Get.find<AuthService>();
                         try {
-                          final userId = await authService.signIn(
+                          final user = await authService.signIn(
                             usernameController.text,
                             passwordController.text,
                           );
-                          if (userId != null) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()),
-                            );
+                          if (user != null) {
+                            await authService.saveUUID(user.userId);
+                            
+                            // Check if profile exists
+                            final studentController = Get.find<StudentController>();
+                            await studentController.loadProfile();
+                            
+                            if (studentController.profile.value == null) {
+                              // No profile exists - create empty profile and navigate to edit screen
+                              final emptyProfile = StudentProfile(id: user.userId);
+                              Get.to(() => EditProfileScreen(initialProfile: emptyProfile));
+                            } else {
+                              Get.offAll(() => const HomeScreen());
+                            }
                           }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text('Sign in failed: ${e.toString()}')),
-                          );
+                          Get.snackbar('Error', 'Sign in failed: ${e.toString()}');
                         }
                       },
                       style: ElevatedButton.styleFrom(

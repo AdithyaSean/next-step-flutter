@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:next_step/controllers/student_controller.dart';
 import '../services/auth_service.dart';
 import 'sign_in.dart';
 import 'notifications.dart';
@@ -47,6 +48,40 @@ class _HomeScreenState extends State<HomeScreen> {
         Get.offAll(() => ResponsiveSignIn()); // Use Get for navigation
       }
     }
+  }
+
+  Widget _buildCareerProbabilities() {
+    final studentController = Get.find<StudentController>();
+    final profile = studentController.profile.value;
+    
+    if (profile == null || profile.careerProbabilities.isEmpty) {
+      return const SizedBox.shrink();
+    }
+  
+    final sortedProbabilities = profile.careerProbabilities.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+  
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Top career paths for you',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 300,
+          child: ListView(
+            children: sortedProbabilities.map((entry) => 
+              CareerPathProgress(
+                title: entry.key,
+                percentage: entry.value,
+              ),
+            ).toList(),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -150,31 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Top career paths for you',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 300,
-                child: ListView(
-                  children: const [
-                    CareerPathProgress(
-                        title: 'Software Engineering', percentage: 0.5),
-                    CareerPathProgress(
-                        title: 'Data Engineering', percentage: 0.75),
-                    CareerPathProgress(
-                        title: 'AI Engineering', percentage: 0.73),
-                    CareerPathProgress(
-                        title: 'Network Engineering', percentage: 0.75),
-                    CareerPathProgress(
-                        title: 'Cloud Computing', percentage: 0.6),
-                  ],
-                ),
-              ),
+              _buildCareerProbabilities(),
               const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(

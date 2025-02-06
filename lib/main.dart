@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/sign_in.dart';
 import 'screens/home.dart';
+import 'screens/profile.dart';
 import 'services/auth_service.dart';
+import 'services/student_service.dart';
+import 'controllers/student_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Get.putAsync(() => AuthService().init());
-
-  final authService = Get.find<AuthService>();
-  final isLoggedIn = await authService.isLoggedIn();
+  Get.put(StudentService());
+  Get.put(StudentController());
+  
+  final prefs = await SharedPreferences.getInstance();
+  final uuid = prefs.getString('uuid');
 
   runApp(GetMaterialApp(
-    home: isLoggedIn ? const HomeScreen() : ResponsiveSignIn(),
+    initialRoute: uuid != null ? '/home' : '/login',
+    getPages: [
+      GetPage(name: '/home', page: () => const HomeScreen()),
+      GetPage(name: '/login', page: () => const ResponsiveSignIn()),
+      GetPage(name: '/profile', page: () => const ProfileScreen()),
+    ],
   ));
 }
 

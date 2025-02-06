@@ -1,45 +1,50 @@
 class StudentProfile {
-  String name;
-  String email;
-  String phone;
-  List<String> certifications;
-  List<String> interests;
+  final String id;
   int educationLevel;
   Map<String, double> olResults;
-  int alStream;
+  int? alStream;
   Map<String, double> alResults;
+  Map<String, double> careerProbabilities;
   double gpa;
 
   StudentProfile({
-    this.name = '',
-    this.email = '',
-    this.phone = '',
-    this.certifications = const [],
-    this.interests = const [],
-    required this.educationLevel,
-    required this.olResults,
-    required this.alStream,
-    required this.alResults,
-    required this.gpa,
-  });
+    required this.id,
+    this.educationLevel = 1, // Default to O/L
+    Map<String, double>? olResults,
+    this.alStream = 1, // Default to Science stream
+    Map<String, double>? alResults,
+    Map<String, double>? careerProbabilities,
+    this.gpa = 0.0,
+  }) : 
+    this.olResults = olResults ?? {
+      'Mathematics': 0.0,
+      'Science': 0.0,
+      'English': 0.0,
+    },
+    this.alResults = alResults ?? {
+      'Subject 1': 0.0,
+      'Subject 2': 0.0,
+      'Subject 3': 0.0,
+    },
+    this.careerProbabilities = careerProbabilities ?? {};
 
-  factory StudentProfile.fromJson(Map<String, dynamic> json) {
-    return StudentProfile(
-      educationLevel: json['educationLevel'],
-      olResults: Map<String, double>.from(json['olResults']),
-      alStream: json['alStream'],
-      alResults: Map<String, double>.from(json['alResults']),
-      gpa: json['gpa'],
-    );
-  }
+  factory StudentProfile.fromJson(Map<String, dynamic> json) => StudentProfile(
+    id: json['id'],
+    educationLevel: json['educationLevel'] ?? 0,
+    olResults: Map<String, double>.from(json['olResults'] ?? {}),
+    alStream: json['alStream'],
+    alResults: Map<String, double>.from(json['alResults'] ?? {}),
+    careerProbabilities: Map<String, double>.from(json['careerProbabilities'] ?? {}),
+    gpa: json['gpa']?.toDouble() ?? 0.0,
+  );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'educationLevel': educationLevel,
-      'olResults': olResults,
-      'alStream': alStream,
-      'alResults': alResults,
-      'gpa': gpa,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'educationLevel': educationLevel,
+    'olResults': olResults,
+    'alStream': alStream,
+    'alResults': alResults,
+    'careerProbabilities': careerProbabilities,
+    'gpa': gpa,
+  };
 }
