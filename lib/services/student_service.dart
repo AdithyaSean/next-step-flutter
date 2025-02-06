@@ -1,8 +1,10 @@
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/student_profile.dart';
 
-class StudentService {
+class StudentService extends GetxService {
   static const String _baseUrl = 'http://localhost:8080/students';
 
   Future<String> registerStudent({
@@ -48,10 +50,20 @@ class StudentService {
     }
   }
 
-  Future<Map<String, dynamic>> getProfile(String studentId) async {
+  Future<Map<String, dynamic>> getProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final uuid = prefs.getString('uuid');
+    
+    if (uuid == null) {
+      throw Exception('No UUID found');
+    }
+
     final response = await http.get(
       Uri.parse('$_baseUrl/profile'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'UUID': uuid
+      },
     );
 
     if (response.statusCode == 200) {

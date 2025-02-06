@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:next_step/controllers/student_controller.dart';
 import 'package:next_step/models/student_profile.dart';
 import 'package:next_step/services/student_service.dart';
+import 'package:next_step/utils/education_config.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final StudentProfile initialProfile;
@@ -12,50 +15,53 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final _formKey = GlobalKey<FormState>();
   late StudentProfile _profile;
-  final StudentService _studentService = StudentService();
+  final _formKey = GlobalKey<FormState>();
+  final StudentService _studentService = Get.find<StudentService>();
 
   @override
   void initState() {
     super.initState();
-    _profile = widget.initialProfile;
+    _profile = StudentProfile(
+      id: widget.initialProfile.id,
+      educationLevel: widget.initialProfile.educationLevel,
+      olResults: Map<String, double>.from(widget.initialProfile.olResults),
+      alStream: widget.initialProfile.alStream,
+      alResults: Map<String, double>.from(widget.initialProfile.alResults),
+      careerProbabilities: Map<String, double>.from(widget.initialProfile.careerProbabilities),
+      gpa: widget.initialProfile.gpa,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveProfile,
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Edit Profile')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildPersonalInfoFields(),
+              _buildEducationLevelSelector(),
+              const SizedBox(height: 16),
+              _buildOLResultsSection(),
+              if (_profile.educationLevel > 1) ...[
+                const SizedBox(height: 16),
+                _buildALStreamSelector(),
+                const SizedBox(height: 16),
+                _buildALResultsSection(),
+              ],
+              if (_profile.educationLevel == 3) ...[
+                const SizedBox(height: 16),
+                _buildGPASection(),
+              ],
               const SizedBox(height: 24),
-              _buildEducationLevelField(),
-              const SizedBox(height: 16),
-              _buildOLResultsFields(),
-              const SizedBox(height: 16),
-              _buildALStreamField(),
-              const SizedBox(height: 16),
-              _buildALResultsFields(),
-              const SizedBox(height: 16),
-              _buildGPAField(),
-              const SizedBox(height: 24),
-              _buildCertificationsField(),
-              const SizedBox(height: 24),
-              _buildInterestsField(),
+              ElevatedButton(
+                onPressed: _saveProfile,
+                child: const Text('Save Changes'),
+              ),
             ],
           ),
         ),
@@ -63,294 +69,205 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildPersonalInfoFields() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Personal Information',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          initialValue: _profile.name,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _profile.name = value),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          initialValue: _profile.email,
-          decoration: const InputDecoration(
-            labelText: 'Email',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _profile.email = value),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          initialValue: _profile.phone,
-          decoration: const InputDecoration(
-            labelText: 'Phone',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _profile.phone = value),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEducationLevelField() {
+  Widget _buildEducationLevelSelector() {
     return DropdownButtonFormField<int>(
       value: _profile.educationLevel,
       decoration: const InputDecoration(
         labelText: 'Education Level',
         border: OutlineInputBorder(),
       ),
-      items: const [
-        DropdownMenuItem(value: 1, child: Text('O/L')),
-        DropdownMenuItem(value: 2, child: Text('A/L')),
-      ],
-      onChanged: (value) {
-        setState(() {
-          _profile.educationLevel = value ?? 1;
-        });
+      items: EducationConfig.educationLevels.entries
+          .map((entry) => DropdownMenuItem<int>(
+                value: entry.key,
+                child: Text(entry.value),
+              ))
+          .toList(),
+      onChanged: (int? value) {
+        if (value != null) {
+          setState(() {
+            _profile.educationLevel = value;
+            if (value == 1) {
+              // O/L selected
+              _profile.alStream = null;
+              _profile.alResults.clear();
+              _profile.gpa = 0.0;
+            } else if (value == 2) {
+              // A/L selected
+              if (_profile.alStream == null) {
+                _profile.alStream = EducationConfig.defaultStream;
+                _initializeAlResults();
+              }
+              _profile.gpa = 0.0;
+            }
+            // value == 3 means University, keep GPA
+          });
+        }
       },
     );
   }
 
-  Widget _buildOLResultsFields() {
+  Widget _buildOLResultsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'O/L Results',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        ..._profile.olResults.entries.map((entry) {
+        const Text('O/L Results', 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...EducationConfig.olSubjects.entries.map((entry) {
           return Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              initialValue: entry.value.toString(),
               decoration: InputDecoration(
                 labelText: entry.key,
                 border: const OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  _profile.olResults[entry.key] = double.tryParse(value) ?? 0.0;
-                });
+              initialValue: _profile.olResults[entry.key]?.toString() ?? '0',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value == null || value.isEmpty) return 'Required';
+                final grade = double.tryParse(value);
+                if (grade == null || grade < 0 || grade > 100) {
+                  return 'Enter valid grade (0-100)';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _profile.olResults[entry.key] = double.parse(value ?? '0');
               },
             ),
           );
-        }),
+        }).toList(),
       ],
     );
   }
 
-  Widget _buildALStreamField() {
+  Widget _buildALStreamSelector() {
     return DropdownButtonFormField<int>(
-      value: _profile.alStream,
+      value: _profile.alStream ?? EducationConfig.defaultStream,
       decoration: const InputDecoration(
         labelText: 'A/L Stream',
         border: OutlineInputBorder(),
       ),
-      items: const [
-        DropdownMenuItem(value: 1, child: Text('Science')),
-        DropdownMenuItem(value: 2, child: Text('Commerce')),
-        DropdownMenuItem(value: 3, child: Text('Arts')),
-      ],
+      items: EducationConfig.alStreams.entries.map((entry) => 
+        DropdownMenuItem(
+          value: entry.key,
+          child: Text(entry.value),
+        ),
+      ).toList(),
       onChanged: (value) {
-        setState(() {
-          _profile.alStream = value ?? 1;
-        });
+        if (value != null) {
+          setState(() {
+            _profile.alStream = value;
+            _initializeAlResults();
+          });
+        }
       },
     );
   }
 
-  Widget _buildALResultsFields() {
+  Widget _buildALResultsSection() {
+    if (_profile.alStream == null) return const SizedBox.shrink();
+    
+    final streamName = EducationConfig.alStreams[_profile.alStream];
+    final subjects = EducationConfig.streamSubjects[streamName] ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'A/L Results',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        ..._profile.alResults.entries.map((entry) {
+        const Text('A/L Results', 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...subjects.map((subject) {
           return Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextFormField(
-              initialValue: entry.value.toString(),
               decoration: InputDecoration(
-                labelText: entry.key,
+                labelText: subject,
                 border: const OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  _profile.alResults[entry.key] = double.tryParse(value) ?? 0.0;
-                });
+              initialValue: _profile.alResults[subject]?.toString() ?? '0',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value == null || value.isEmpty) return 'Required';
+                final grade = double.tryParse(value);
+                if (grade == null || grade < 0 || grade > 100) {
+                  return 'Enter valid grade (0-100)';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _profile.alResults[subject] = double.parse(value ?? '0');
               },
             ),
           );
-        }),
+        }).toList(),
       ],
     );
   }
 
-  Widget _buildGPAField() {
-    return TextFormField(
-      initialValue: _profile.gpa.toString(),
-      decoration: const InputDecoration(
-        labelText: 'GPA',
-        border: OutlineInputBorder(),
-      ),
-      keyboardType: TextInputType.number,
-      onChanged: (value) {
-        setState(() {
-          _profile.gpa = double.tryParse(value) ?? 0.0;
-        });
-      },
-    );
-  }
-
-  Widget _buildCertificationsField() {
+  Widget _buildGPASection() {
+    // Only show if University level
+    if (_profile.educationLevel != 3) return const SizedBox.shrink();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Certifications',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _profile.certifications.length + 1,
-          itemBuilder: (context, index) {
-            if (index == _profile.certifications.length) {
-              return TextButton(
-                onPressed: () {
-                  setState(() {
-                    _profile.certifications.add('');
-                  });
-                },
-                child: const Text('Add Certification'),
-              );
+        const Text('University Details', 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        TextFormField(
+          decoration: const InputDecoration(
+            labelText: 'GPA (0.0 - 4.0)',
+            border: OutlineInputBorder(),
+            hintText: 'Enter your GPA',
+          ),
+          initialValue: _profile.gpa.toStringAsFixed(2),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          validator: (value) {
+            if (_profile.educationLevel == 3) {
+              if (value == null || value.isEmpty) return 'Required for university students';
+              final gpa = double.tryParse(value);
+              if (gpa == null || gpa < 0 || gpa > 4.0) {
+                return 'Enter valid GPA (0-4.0)';
+              }
             }
-            return Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    initialValue: _profile.certifications[index],
-                    decoration: const InputDecoration(
-                      labelText: 'Certification',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _profile.certifications[index] = value;
-                      });
-                    },
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      _profile.certifications.removeAt(index);
-                    });
-                  },
-                ),
-              ],
-            );
+            return null;
+          },
+          onSaved: (value) {
+            if (_profile.educationLevel == 3) {
+              _profile.gpa = double.parse(value ?? '0');
+            }
           },
         ),
       ],
     );
   }
 
-  Widget _buildInterestsField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Interests',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            ..._profile.interests.map((interest) {
-              return Chip(
-                label: Text(interest),
-                onDeleted: () {
-                  setState(() {
-                    _profile.interests.remove(interest);
-                  });
-                },
-              );
-            }),
-            ActionChip(
-              label: const Icon(Icons.add),
-              onPressed: () {
-                _showAddInterestDialog();
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  void _showAddInterestDialog() {
-    final textController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Interest'),
-        content: TextField(
-          controller: textController,
-          decoration: const InputDecoration(
-            labelText: 'Interest',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (textController.text.isNotEmpty) {
-                setState(() {
-                  _profile.interests.add(textController.text);
-                });
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _saveProfile() async {
     if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       try {
-        await _studentService.updateProfile('current-user-id', _profile);
-        if (!mounted) return;
-        Navigator.pop(context);
+        await _studentService.updateProfile(_profile.id, _profile);
+        final studentController = Get.find<StudentController>();
+        await studentController.loadProfile();
+        Get.back();
       } catch (e) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile: $e')),
+        Get.snackbar(
+          'Error',
+          'Failed to update profile: $e',
+          snackPosition: SnackPosition.BOTTOM,
         );
+      }
+    }
+  }
+
+  void _initializeAlResults() {
+    _profile.alResults.clear();
+    final streamName = EducationConfig.alStreams[_profile.alStream];
+    if (streamName != null) {
+      final subjects = EducationConfig.streamSubjects[streamName] ?? [];
+      for (var subject in subjects) {
+        _profile.alResults[subject] = 0.0;
       }
     }
   }
