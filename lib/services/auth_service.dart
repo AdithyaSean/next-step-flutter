@@ -1,19 +1,22 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:next_step/services/student_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService extends GetxService {
-  final StudentService _studentService = StudentService();
   String? _currentUserId;
   final _isLoggedIn = false.obs;
   static const String UUID_KEY = 'uuid';
 
-  Future<AuthService> init() async {
+  @override
+  void onInit() {
+    super.onInit();
+    init();
+  }
+
+  Future<void> init() async {
     final userProfile = await getUserProfile();
     _isLoggedIn.value = userProfile != null;
-    return this;
   }
 
   Future<UserDTO?> signIn(String username, String password) async {

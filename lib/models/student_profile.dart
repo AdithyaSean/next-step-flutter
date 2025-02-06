@@ -1,3 +1,5 @@
+import 'package:next_step/utils/education_config.dart';
+
 class StudentProfile {
   final String id;
   int educationLevel;
@@ -11,21 +13,17 @@ class StudentProfile {
     required this.id,
     this.educationLevel = 1, // Default to O/L
     Map<String, double>? olResults,
-    this.alStream = 1, // Default to Science stream
+    this.alStream, // Default to Science stream
     Map<String, double>? alResults,
     Map<String, double>? careerProbabilities,
     this.gpa = 0.0,
   }) : 
-    this.olResults = olResults ?? {
-      'Mathematics': 0.0,
-      'Science': 0.0,
-      'English': 0.0,
-    },
-    this.alResults = alResults ?? {
-      'Subject 1': 0.0,
-      'Subject 2': 0.0,
-      'Subject 3': 0.0,
-    },
+    this.olResults = olResults ?? Map.fromEntries(
+      EducationConfig.olSubjects.entries.map(
+        (e) => MapEntry(e.key, 0.0)
+      )
+    ),
+    this.alResults = alResults ?? {},
     this.careerProbabilities = careerProbabilities ?? {};
 
   factory StudentProfile.fromJson(Map<String, dynamic> json) => StudentProfile(

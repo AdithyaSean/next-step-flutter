@@ -96,19 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          // Changed from Padding to IconButton
-          icon: const CircleAvatar(
-            backgroundImage: AssetImage('images/profile.png'),
+        leading: GestureDetector(
+          onTap: () => Get.to(() => const ProfileScreen()),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('images/profile.png'),
+            ),
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ProfileScreen(),
-              ),
-            );
-          },
         ),
         title: const Text(
           'NEXT STEP',

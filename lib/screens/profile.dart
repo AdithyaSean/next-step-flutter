@@ -4,8 +4,6 @@ import 'package:next_step/models/student_profile.dart';
 import 'package:next_step/screens/edit_profile.dart';
 import 'package:get/get.dart';
 import '../controllers/student_controller.dart';
-import '../services/auth_service.dart';
-import 'sign_in.dart';
 
 class ProfileScreen extends GetView<StudentController> {
   const ProfileScreen({super.key});
@@ -13,7 +11,21 @@ class ProfileScreen extends GetView<StudentController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              if (controller.profile.value != null) {
+                Get.to(() => EditProfileScreen(
+                  initialProfile: controller.profile.value!,
+                ));
+              }
+            },
+          ),
+        ],
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -21,7 +33,21 @@ class ProfileScreen extends GetView<StudentController> {
 
         final profile = controller.profile.value;
         if (profile == null) {
-          return const Center(child: Text('No profile data'));
+          return Center(
+            child: ElevatedButton(
+              onPressed: () {
+                final userId = controller.userId.value;
+                if (userId.isNotEmpty) {
+                  Get.to(() => EditProfileScreen(
+                    initialProfile: StudentProfile(id: userId),
+                  ));
+                } else {
+                  Get.snackbar('Error', 'User ID not found');
+                }
+              },
+              child: const Text('Create Profile'),
+            ),
+          );
         }
 
         return SingleChildScrollView(
@@ -29,6 +55,7 @@ class ProfileScreen extends GetView<StudentController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildProfileHeader(),
               _buildEducationSection(profile),
               _buildResultsSection('O/L Results', profile.olResults),
               if (profile.alStream != null)
@@ -38,6 +65,32 @@ class ProfileScreen extends GetView<StudentController> {
           ),
         );
       }),
+      bottomNavigationBar: const BottomNavContainer(selectedIndex: 3),
+    );
+  }
+
+  Widget _buildProfileHeader() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/images/profile.png'),
+            ),
+            const SizedBox(height: 16),
+            Obx(() => Text(
+              controller.userName.value.isEmpty 
+                ? 'Student' 
+                : controller.userName.value,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )),
+            const SizedBox(height: 8),
+            Obx(() => Text(controller.userEmail.value)),
+          ],
+        ),
+      ),
     );
   }
 
