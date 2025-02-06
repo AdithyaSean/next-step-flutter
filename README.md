@@ -1,55 +1,54 @@
 # Next Step 🎓
 
-An AI-powered educational pathway recommendation system that helps students make informed decisions about their academic and career paths.
-
-## 🌟 Features
-
-- **Stream Recommendation**:
-Get personalized recommendations for academic streams based on your interests and performance
-
-- **University Field Prediction**:
-Discover potential university fields that align with your goals
-
-- **Interactive Mobile App**:
-User-friendly Flutter interface for easy access to recommendations
-
 ## 🏗️ Project Structure
 
+This project is a student recommendation system consisting of a Spring Boot backend and a Flutter frontend.
 
+- **`docs/`**: Contains the Spring Boot backend code, including controllers, services, models, and API documentation.
+- **`lib/`**: Contains the Flutter frontend code, including UI screens, controllers, services, and models.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Flutter SDK (for mobile app)
+
+- Flutter SDK
 - Git
+- Java 17 or later
+- Maven
 
 ### Setup
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/adithyasean/next-step-flutter.git
-   ```
+1.  Clone the repository:
 
-2. Set up the Flutter App:
-   ```bash
-   flutter pub get
-   ```
+    ```bash
+    git clone https://github.com/adithyasean/next-step-flutter.git
+    ```
+
+2.  Set up the Flutter App:
+
+    ```bash
+    flutter pub get
+    ```
 
 ### Running Components Separately
 
 #### Flutter App
+
 ```bash
-flutter run  # Run the Flutter app
+flutter run -d chrome --web-port 3000 # Run the Flutter app
 ```
 
-## 🤝 Contributing
+#### Spring Boot Backend
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1.  Navigate to the `docs` directory (the Spring Boot project).
+2.  Build and run the application using Maven:
 
-## 📝 License
+    ```bash
+    mvn spring-boot:run
+    ```
 
-[Your License]
+    The backend API will be available at `http://localhost:8080`.
+
+### Authentication
+
+The application uses a simplified authentication mechanism. The user's UUID is passed in the `UUID` header for each request. There are no tokens or session management.

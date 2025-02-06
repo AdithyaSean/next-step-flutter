@@ -112,7 +112,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
                           try {
                             final authService = Get.find<AuthService>();
                             await authService.signOut();
-                            Get.offAll(() => ResponsiveSignIn());
+                            Get.offAll(() => const ResponsiveSignIn());
                           } catch (e) {
                             Get.snackbar(
                               'Error',
@@ -365,7 +365,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             try {
               final authService = Get.find<AuthService>();
               await authService.signOut();
-              Get.offAll(() => ResponsiveSignIn());
+              Get.offAll(() => const ResponsiveSignIn());
             } catch (e) {
               Get.snackbar('Error', 'Failed to sign out');
             }
