@@ -1,146 +1,141 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:next_step/models/user.dart';
-import '../services/auth_service.dart';
+import 'package:next_step/services/auth_service.dart';
 
 class AuthController extends GetxController {
-  final AuthService _authService = Get.find<AuthService>();
-  final RxBool isLoading = false.obs;
-  final RxBool isAuthenticated = false.obs;
-  final Rxn<User?> currentUser = Rxn<User?>();
-  bool _initialized = false;
+  final AuthService _authService;
+  final user = Rx<User?>(null);
+  final loading = false.obs;
+
+  // Getters for UI widgets
+  User? get currentUser => user.value;
+  bool get isAuthenticated => user.value != null;
+  bool get isLoading => loading.value;
+
+  AuthController({required AuthService authService}) : _authService = authService;
 
   @override
   void onInit() {
     super.onInit();
-    // Don't auto-initialize since we want to control the initialization flow
+    ever(user, (_) => _checkProfile());
+    initialize();
   }
 
   Future<void> initialize() async {
-    if (_initialized) return;
-    
+    await initializeUser();
+  }
+
+  Future<void> initializeUser() async {
+    loading.value = true;
     try {
-      isLoading.value = true;
-      await _authService.initAsync(); // Ensure service is initialized
-      await checkAuthentication();
-      _initialized = true;
-    } catch (e) {
-      debugPrint('${Get.currentRoute} - AuthController initialization error: $e');
-      isAuthenticated.value = false;
-      currentUser.value = null;
-      // Redirect to login if initialization fails
-      if (Get.currentRoute != '/login') {
-        Get.offAllNamed('/login');
-      }
+      await _authService.initAsync();
+      await refreshUserProfile();
     } finally {
-      isLoading.value = false;
+      loading.value = false;
     }
   }
 
-  Future<void> checkAuthentication() async {
-    debugPrint('${Get.currentRoute} - checkAuthentication called');
-    isLoading.value = true;
-    try {
-      final isLoggedIn = await _authService.isLoggedIn();
-      if (!isLoggedIn) {
-        isAuthenticated.value = false;
-        currentUser.value = null;
-        debugPrint('${Get.currentRoute} - checkAuthentication: User not logged in');
-        return;
+  void _checkProfile() {
+    if (user.value != null) {
+      switch (user.value!.educationLevel) {
+        case 0:
+          if (user.value!.olResults.isEmpty) {
+            Get.offAllNamed('/profile/edit');
+          }
+          break;
+        case 1:
+          if (user.value!.olResults.isEmpty || user.value!.alResults.isEmpty) {
+            Get.offAllNamed('/profile/edit');
+          }
+          break;
+        case 2:
+          if (user.value!.olResults.isEmpty || 
+              user.value!.alResults.isEmpty || 
+              user.value!.gpa == 0.0) {
+            Get.offAllNamed('/profile/edit');
+          }
+          break;
       }
-
-      debugPrint('${Get.currentRoute} - checkAuthentication isLoggedIn: $isLoggedIn');
-      
-      await loadUserProfile();
-      
-      // Only set authenticated if we successfully loaded the user profile
-      if (currentUser.value != null) {
-        isAuthenticated.value = true;
-      } else {
-        isAuthenticated.value = false;
-        debugPrint('${Get.currentRoute} - checkAuthentication: User profile not loaded');
-      }
-    } catch (e) {
-      debugPrint('${Get.currentRoute} - checkAuthentication error: $e');
-      isAuthenticated.value = false;
-      currentUser.value = null;
-    } finally {
-      isLoading.value = false;
     }
-    debugPrint('${Get.currentRoute} - checkAuthentication finished - isAuthenticated: $isAuthenticated, currentUser: ${currentUser.value?.toJson()}');
   }
 
-  Future<void> loadUserProfile() async {
-    debugPrint('${Get.currentRoute} - loadUserProfile called');
+  Future<void> refreshUserProfile() async {
+    loading.value = true;
     try {
-      final userDTO = await _authService.getUserProfile();
-      debugPrint('${Get.currentRoute} - loadUserProfile _authService.getUserProfile() called');
-      debugPrint('${Get.currentRoute} - loadUserProfile userDTO from SharedPreferences: ${userDTO?.toJson()}');
-      if (userDTO != null) {
-        debugPrint('${Get.currentRoute} - loadUserProfile userDTO received: ${userDTO.toJson()}');
-        currentUser.value = User(
-          id: userDTO.id,
-          username: userDTO.username,
-          name: userDTO.name,
-          email: userDTO.email,
-          password: '',
-          telephone: userDTO.telephone,
-          role: userDTO.role,
-          active: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          school: userDTO.school,
-          district: userDTO.district,
-          educationLevel: userDTO.educationLevel,
-          olResults: userDTO.olResults,
-          alStream: userDTO.alStream,
-          alResults: userDTO.alResults,
-          careerProbabilities: userDTO.careerProbabilities,
-          gpa: userDTO.gpa,
-        );
-        debugPrint('${Get.currentRoute} - loadUserProfile successful: ${currentUser.value?.toJson()}');
-      } else {
-        debugPrint('${Get.currentRoute} - loadUserProfile: userDTO is null');
-        currentUser.value = null;
-      }
-    } catch (e) {
-      debugPrint('${Get.currentRoute} - loadUserProfile error: $e');
-      isAuthenticated.value = false;
-      currentUser.value = null;
-      rethrow;
+      final currentUser = await _authService.getUserProfile();
+      user.value = currentUser;
+    } finally {
+      loading.value = false;
     }
-    debugPrint('${Get.currentRoute} - loadUserProfile finished - currentUser.value: ${currentUser.value?.toJson()}');
+  }
+
+  Future<void> signIn(String username, String password) async {
+    loading.value = true;
+    try {
+      user.value = await _authService.signIn(username, password);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> signUp({
+    required String username,
+    required String password,
+    required String name,
+    required String email,
+    required String telephone,
+    required String school,
+    required String district,
+  }) async {
+    loading.value = true;
+    try {
+      user.value = await _authService.signUp(
+        username: username,
+        password: password,
+        name: name,
+        email: email,
+        telephone: telephone,
+        school: school,
+        district: district,
+      );
+    } finally {
+      loading.value = false;
+    }
   }
 
   Future<void> signOut() async {
-    debugPrint('${Get.currentRoute} - signOut called');
+    loading.value = true;
     try {
-      isLoading.value = true;
       await _authService.signOut();
-      isAuthenticated.value = false;
-      currentUser.value = null;
-      Get.offAllNamed('/login');
-    } catch (e) {
-      debugPrint('${Get.currentRoute} - signOut error: $e');
-      Get.snackbar('Error', e.toString());
+      user.value = null;
     } finally {
-      isLoading.value = false;
+      loading.value = false;
     }
   }
 
-  Future<void> refreshSession() async {
-    debugPrint('${Get.currentRoute} - refreshSession called');
+  Future<void> updateProfile({
+    required int educationLevel,
+    required Map<String, double> olResults,
+    int? alStream,
+    Map<String, double>? alResults,
+    double? gpa,
+  }) async {
+    loading.value = true;
     try {
-      isLoading.value = true;
-      await _authService.refreshToken();
-      await loadUserProfile();
-    } catch (e) {
-      isAuthenticated.value = false;
-      currentUser.value = null;
-      debugPrint('${Get.currentRoute} - refreshSession error: $e');
-      Get.snackbar('Error', e.toString());
+      if (user.value == null) throw Exception('No user logged in');
+
+      final updatedUser = await _authService.updateProfile(
+        user.value!.id,
+        educationLevel: educationLevel,
+        olResults: olResults,
+        alStream: alStream,
+        alResults: alResults,
+        gpa: gpa,
+      );
+      
+      user.value = updatedUser;
     } finally {
-      isLoading.value = false;
+      loading.value = false;
     }
   }
 }

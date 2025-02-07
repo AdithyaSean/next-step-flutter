@@ -36,14 +36,14 @@ class EditProfileScreenState extends State<EditProfileScreen> {
 
     // Initialize OL subjects with values from profile
     for (var subject in EducationConfig.requiredOLSubjects) {
-      _olResults[subject] = widget.initialProfile.olResults[subject] ?? EducationConfig.GRADE_NOT_SET;
+      _olResults[subject] = widget.initialProfile.olResults[subject] ?? EducationConfig.gradeNotSet;
     }
 
     // Initialize AL subjects if stream is selected
     if (_alStream != null) {
       final streamSubjects = EducationConfig.streamSubjects[_alStream] ?? [];
       for (var subject in streamSubjects) {
-        _alResults[subject] = widget.initialProfile.alResults[subject] ?? EducationConfig.GRADE_NOT_SET;
+        _alResults[subject] = widget.initialProfile.alResults[subject] ?? EducationConfig.gradeNotSet;
       }
     }
   }
@@ -122,7 +122,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         labelText: 'Grade',
         border: OutlineInputBorder(),
       ),
-      value: EducationConfig.getGradeLetter(results[subject] ?? EducationConfig.GRADE_NOT_SET),
+      value: EducationConfig.getGradeLetter(results[subject] ?? EducationConfig.gradeNotSet),
       items: EducationConfig.grades.entries.map((grade) {
         return DropdownMenuItem<String>(
           value: grade.key,
@@ -155,7 +155,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
               ],
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -183,7 +183,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
               if (value != null) {
                 final subjects = EducationConfig.streamSubjects[value] ?? [];
                 for (var subject in subjects) {
-                  _alResults[subject] = EducationConfig.GRADE_NOT_SET;
+                  _alResults[subject] = EducationConfig.gradeNotSet;
                 }
               }
             });
@@ -204,7 +204,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ],
     );
@@ -214,7 +214,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     // Validate OL Results
     for (var subject in EducationConfig.requiredOLSubjects) {
       if (!_olResults.containsKey(subject) || 
-          _olResults[subject] == EducationConfig.GRADE_NOT_SET) {
+          _olResults[subject] == EducationConfig.gradeNotSet) {
         Get.snackbar(
           'Error', 
           'Please select a grade for $subject',
@@ -235,7 +235,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
       final streamSubjects = EducationConfig.streamSubjects[_alStream] ?? [];
       for (var subject in streamSubjects) {
         if (!_alResults.containsKey(subject) || 
-            _alResults[subject] == EducationConfig.GRADE_NOT_SET) {
+            _alResults[subject] == EducationConfig.gradeNotSet) {
           Get.snackbar(
             'Error', 
             'Please select a grade for $subject',

@@ -1,142 +1,337 @@
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../models/user.dart';
-import '../screens/edit_profile.dart';
-import '../screens/home.dart';
+import 'package:next_step/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
+class AuthService {
+  static const String baseUrl = 'http://localhost:8080';
+  static const String uuidKey = 'UUID';
+  final http.Client client;
+  final bool isTest;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-class AuthService extends GetxService {
-    String? _currentUserId;
-  final _isLoggedIn = false.obs;
-  static const String uuidKey = 'uuid';
-
-  @override
-  void onInit() {
-    super.onInit();
-    initAsync(); // Don't await here, but start the initialization
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    // Additional setup after the widget is rendered if needed
-  }
+  AuthService(this.client, {this.isTest = false});
 
   Future<void> initAsync() async {
-    try {
-      final userProfile = await getUserProfile();
-      _isLoggedIn.value = userProfile != null;
-      if (userProfile != null) {
-        _currentUserId = userProfile.id;
+    debugPrint('Initializing AuthService');
+    final prefs = await _prefs;
+    final uuid = prefs.getString(uuidKey);
+    if (uuid != null) {
+      debugPrint('Found existing UUID: $uuid');
+      try {
+        await refreshToken();
+      } catch (e) {
+        debugPrint('Token refresh failed: $e');
+        await signOut();
       }
+    }
+  }
+
+  Future<bool> isLoggedIn() async {
+    final uuid = await getCurrentUserId();
+    return uuid != null;
+  }
+
+  Future<String?> getCurrentUserId() async {
+    final prefs = await _prefs;
+    return prefs.getString(uuidKey);
+  }
+
+  String _handleConnectionError(dynamic error) {
+    final errorStr = error.toString().toLowerCase();
+    if (errorStr.contains('connection refused') || 
+        errorStr.contains('failed to fetch') ||
+        errorStr.contains('socket') ||
+        errorStr.contains('cors')) {
+      return 'Unable to connect to server. Please ensure the server is running and accessible.';
+    }
+    return 'An unexpected error occurred. Please try again.';
+  }
+
+  Future<User?> getUserProfile([String? uuid]) async {
+    debugPrint('getUserProfile called');
+    try {
+      final userId = uuid ?? await getCurrentUserId();
+      if (userId == null) {
+        debugPrint('getUserProfile: No user data found in SharedPreferences');
+        return null;
+      }
+
+      final response = await client.get(
+        Uri.parse('$baseUrl/students/profile'),
+        headers: {
+          'Content-Type': 'application/json',
+          'UUID': userId,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (response.body.isEmpty) {
+          debugPrint('getUserProfile: Empty response body');
+          return null;
+        }
+        try {
+          final profileData = json.decode(response.body);
+          if (profileData == null) {
+            debugPrint('getUserProfile: Null profile data after JSON decode');
+            return null;
+          }
+          return User.fromProfile(profileData);
+        } catch (e) {
+          debugPrint('getUserProfile JSON decode error: $e');
+          return null;
+        }
+      }
+      return null;
     } catch (e) {
-      debugPrint('${Get.currentRoute} - AuthService initialization error: $e');
-      _isLoggedIn.value = false;
-      _currentUserId = null;
+      debugPrint('getUserProfile error: $e');
+      return null;
+    }
+  }
+
+  Future<bool> _isProfileComplete(User user) {
+    switch (user.educationLevel) {
+      case 0: // OL
+        return Future.value(user.olResults.isNotEmpty);
+      case 1: // AL
+        return Future.value(user.olResults.isNotEmpty && 
+                          user.alStream != null && 
+                          user.alResults.isNotEmpty);
+      case 2: // University
+        return Future.value(user.olResults.isNotEmpty && 
+                          user.alStream != null && 
+                          user.alResults.isNotEmpty && 
+                          user.gpa != 0.0);
+      default:
+        return Future.value(false);
+    }
+  }
+
+  Future<bool> refreshToken() async {
+    debugPrint('Refreshing token');
+    try {
+      final uuid = await getCurrentUserId();
+      if (uuid == null) return false;
+
+      final user = await getUserProfile(uuid);
+      return user != null;
+    } catch (e) {
+      debugPrint('Token refresh failed: $e');
+      return false;
     }
   }
 
   Future<User?> signIn(String username, String password) async {
-    debugPrint('${Get.currentRoute} - signIn called with username: $username, password: $password');
+    debugPrint('signIn called with username: $username');
     try {
-      final response = await http.post(
-        Uri.parse('http://localhost:8080/login'),
+      final response = await client.post(
+        Uri.parse('$baseUrl/login'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'username': username, 'password': password}),
+        body: json.encode({
+          'username': username,
+          'password': password,
+        }),
       );
 
-      debugPrint('${Get.currentRoute} - signIn response status code: ${response.statusCode}');
+      debugPrint('signIn response status code: ${response.statusCode}');
+
       if (response.statusCode == 200) {
-        final userJson = jsonDecode(response.body);
-        final user = User.fromJson(userJson);
+        final userData = json.decode(response.body);
+        final user = User.fromJson(userData);
 
-        final prefs = await SharedPreferences.getInstance();
+        // First save UUID
+        final prefs = await _prefs;
         await prefs.setString(uuidKey, user.id);
-        await prefs.setString('user', jsonEncode(user.toJson()));
+        debugPrint('UUID saved: ${user.id}');
 
-        _currentUserId = user.id;
-        _isLoggedIn.value = true;
+        final savedUuid = await prefs.getString(uuidKey);
+        if (savedUuid == null) {
+          throw Exception('Failed to save UUID');
+        }
+        
+        // Then load student profile
+        debugPrint('Fetching student profile from: $baseUrl/students/profile');
+        final profileResponse = await client.get(
+          Uri.parse('$baseUrl/students/profile'),
+          headers: {
+            'Content-Type': 'application/json',
+            'UUID': savedUuid,
+          },
+        );
 
-        debugPrint('${Get.currentRoute} - UUID saved: ${user.id}');
+        debugPrint('Student profile response status: ${profileResponse.statusCode}');
+        debugPrint('Student profile response body: ${profileResponse.body}');
 
-        // Debug: Log user object before isProfileComplete check
-        debugPrint('${Get.currentRoute} - signIn user object before isProfileComplete check: ${user.toJson()}');
+        if (profileResponse.statusCode == 200) {
+          if (profileResponse.body.isEmpty) {
+            debugPrint('Empty profile response body, redirecting to EditProfile');
+            if (!isTest) {
+              Get.offAllNamed('/profile/edit');
+            }
+            return user;
+          }
 
-        // Check if the profile is complete using the new method
-        debugPrint('${Get.currentRoute} - signIn isProfileComplete: ${user.isProfileComplete()}');
-        if (!user.isProfileComplete()) {
-          debugPrint('${Get.currentRoute} - signIn navigating to EditProfileScreen');
-          Get.offAll(() => EditProfileScreen(initialProfile: user));
-        } else {
-          debugPrint('${Get.currentRoute} - signIn navigating to HomeScreen');
-          Get.offAll(() => const HomeScreen());
+          try {
+            final profileData = json.decode(profileResponse.body);
+            if (profileData == null) {
+              debugPrint('Null profile data after JSON decode, redirecting to EditProfile');
+              if (!isTest) {
+                Get.offAllNamed('/profile/edit');
+              }
+              return user;
+            }
+            user.updateFromProfile(profileData);
+            debugPrint('Complete user profile: ${user.toJson()}');
+
+            final isComplete = await _isProfileComplete(user);
+            debugPrint('signIn profile completion check: $isComplete');
+            if (isComplete) {
+              debugPrint('signIn navigating to HomeScreen');
+              if (!isTest) {
+                Get.offAllNamed('/home');
+              }
+            } else {
+              debugPrint('signIn navigating to EditProfile');
+              if (!isTest) {
+                Get.offAllNamed('/profile/edit');
+              }
+            }
+            return user;
+          } catch (e) {
+            debugPrint('Profile JSON decode error: $e, returning user without profile');
+            return user;
+          }
         }
 
-        return user;
-      } else {
-        debugPrint('${Get.currentRoute} - signIn failed: ${response.body}'); // Log error response
-        throw Exception('Failed to sign in: ${response.body}');
+        debugPrint('Failed to load student profile status: ${profileResponse.statusCode}');
+        return user; // Return user even if profile fetch fails
       }
+      final errorMessage = response.statusCode == 500 ? 
+        'Invalid username or password' : 'Server error, please try again';
+      throw Exception(errorMessage);
     } catch (e) {
-      _isLoggedIn.value = false;
-      debugPrint('${Get.currentRoute} - signIn exception: $e'); // Log exceptions
-      throw Exception('Failed to sign in: $e');
+      debugPrint('signIn exception: $e');
+      throw Exception(_handleConnectionError(e));
     }
   }
 
-  Future<User?> getUserProfile() async {
-    debugPrint('${Get.currentRoute} - getUserProfile called');
+  Future<User> signUp({
+    required String username,
+    required String password,
+    required String name,
+    required String email,
+    required String telephone,
+    required String school,
+    required String district,
+  }) async {
+    debugPrint('signUp called with username: $username');
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final userJson = prefs.getString('user');
-      if (userJson != null) {
-        final user = User.fromJson(jsonDecode(userJson));
-        debugPrint('${Get.currentRoute} - getUserProfile successful: ${user.toJson()}');
+      final response = await client.post(
+        Uri.parse('$baseUrl/students'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'username': username,
+          'name': name,
+          'email': email,
+          'password': password,
+          'telephone': telephone,
+          'role': 'STUDENT',
+          'school': school,
+          'district': district,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        final userData = json.decode(response.body);
+        final user = User.fromJson(userData);
+
+        final prefs = await _prefs;
+        await prefs.setString(uuidKey, user.id);
+        debugPrint('UUID saved after sign up: ${user.id}');
+
         return user;
       }
-      debugPrint('${Get.currentRoute} - getUserProfile: No user data found in SharedPreferences');
-      return null;
-    } catch (e) {
-      debugPrint('${Get.currentRoute} - getUserProfile exception: $e');
-      throw Exception('Failed to load user profile: $e');
-    }
-  }
 
-  Future<String?> getCurrentUserId() async {
-    debugPrint('${Get.currentRoute} - getCurrentUserId called');
-    if (_currentUserId != null) {
-      debugPrint('${Get.currentRoute} - getCurrentUserId returning cached ID: $_currentUserId');
-      return _currentUserId;
+      if (response.statusCode == 500 && response.body.toLowerCase().contains("duplicate")) {
+        throw Exception(response.body); // Preserve original error for test
+      }
+      throw Exception('Failed to create account');
+    } catch (e) {
+      debugPrint('signUp exception: $e');
+      if (e is Exception) {
+        rethrow; // Re-throw if it's already an Exception
+      }
+      throw Exception(_handleConnectionError(e));
     }
-    final prefs = await SharedPreferences.getInstance();
-    _currentUserId = prefs.getString(uuidKey);
-    debugPrint('${Get.currentRoute} - UUID retrieved from SharedPreferences: $_currentUserId');
-    return _currentUserId;
   }
 
   Future<void> signOut() async {
-    debugPrint('${Get.currentRoute} - signOut called');
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(uuidKey);
-    await prefs.remove('user');
-    _currentUserId = null;
-    _isLoggedIn.value = false;
-    debugPrint('${Get.currentRoute} - signOut successful');
+    debugPrint('/HomeScreen - signOut called');
+    try {
+      final prefs = await _prefs;
+      await prefs.clear();
+      debugPrint('/HomeScreen - signOut successful');
+      if (!isTest) {
+        Get.offAllNamed('/login');
+      }
+    } catch (e) {
+      debugPrint('/HomeScreen - signOut failed: $e');
+      rethrow;
+    }
   }
 
-  Future<bool> isLoggedIn() async {
-    debugPrint('${Get.currentRoute} - isLoggedIn called');
-    final prefs = await SharedPreferences.getInstance();
-    final loggedIn = prefs.containsKey(uuidKey);
-    debugPrint('${Get.currentRoute} - isLoggedIn returning: $loggedIn');
-    return loggedIn;
-  }
+  Future<User> updateProfile(
+    String uuid, {
+    required int educationLevel,
+    required Map<String, double> olResults,
+    int? alStream,
+    Map<String, double>? alResults,
+    double? gpa,
+  }) async {
+    debugPrint('updateProfile called with UUID: $uuid');
+    try {
+      final Map<String, dynamic> profileData = {
+        'educationLevel': educationLevel,
+        'olResults': olResults,
+      };
 
-  Future<void> refreshToken() async {
-    debugPrint('${Get.currentRoute} - refreshToken called');
-    throw UnimplementedError('refreshToken not implemented');
+      if (alStream != null) {
+        profileData['alStream'] = alStream;
+      }
+
+      if (alResults != null) {
+        profileData['alResults'] = alResults;
+      }
+
+      if (gpa != null) {
+        profileData['gpa'] = gpa;
+      }
+
+      final response = await client.put(
+        Uri.parse('$baseUrl/students/profile'),
+        headers: {
+          'Content-Type': 'application/json',
+          'UUID': uuid,
+        },
+        body: json.encode(profileData),
+      );
+
+      debugPrint('updateProfile response status code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final updatedProfileData = json.decode(response.body);
+        final user = User.fromProfile(updatedProfileData);
+        debugPrint('Profile updated successfully: ${user.toJson()}');
+        return user;
+      }
+
+      debugPrint('Failed to update profile: ${response.body}');
+      throw Exception('Failed to update profile. Please try again.');
+    } catch (e) {
+      debugPrint('updateProfile exception: $e');
+      throw Exception(_handleConnectionError(e));
+    }
   }
 }

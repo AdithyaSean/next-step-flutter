@@ -115,6 +115,25 @@ class ResponsiveSignUp extends StatelessWidget {
                         final studentService = Get.find<StudentService>();
                         final authService = Get.find<AuthService>();
                         try {
+                          // First try to sign in to check if user exists
+                          try {
+                            await authService.signIn(
+                              usernameController.text,
+                              passwordController.text,
+                            );
+                            // If sign in succeeds, user already exists
+                            Get.snackbar(
+                              'Error',
+                              'Username already exists. Please try a different username.',
+                              backgroundColor: Colors.red[100],
+                              duration: const Duration(seconds: 5),
+                            );
+                            return;
+                          } catch (_) {
+                            // Sign in failed which is expected for new user
+                          }
+
+                          // Proceed with registration
                           final uuid = await studentService.registerStudent(
                             username: usernameController.text,
                             name: nameController.text,
@@ -127,15 +146,36 @@ class ResponsiveSignUp extends StatelessWidget {
 
                           // Save the UUID in SharedPreferences
                           final prefs = await SharedPreferences.getInstance();
-                          await prefs.setString('uuid', uuid);
+                          await prefs.setString(AuthService.uuidKey, uuid);
 
-                          await authService.signIn(
+                          // Now sign in with the new account
+                          final user = await authService.signIn(
                             usernameController.text,
                             passwordController.text,
                           );
-                          Get.offAll(() => const HomeScreen());
+
+                          if (user != null) {
+                            Get.offAll(() => const HomeScreen());
+                          } else {
+                            throw Exception('Failed to sign in after registration');
+                          }
                         } catch (e) {
-                          Get.snackbar('Error', 'Failed to sign up');
+                          final error = e.toString().toLowerCase();
+                          if (error.contains('duplicate') && error.contains('email')) {
+                            Get.snackbar(
+                              'Error',
+                              'This email is already registered. Please use a different email or sign in.',
+                              backgroundColor: Colors.red[100],
+                              duration: const Duration(seconds: 5),
+                            );
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Failed to sign up. Please try again.',
+                              backgroundColor: Colors.red[100],
+                              duration: const Duration(seconds: 3),
+                            );
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

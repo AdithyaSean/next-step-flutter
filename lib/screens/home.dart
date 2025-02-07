@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:next_step/controllers/student_controller.dart';
-import 'package:next_step/models/user.dart';
 import 'package:next_step/screens/profile.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
@@ -16,19 +15,11 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final StudentController _studentController = Get.find<StudentController>();
-  User? _user;
 
   @override
   void initState() {
     super.initState();
-    _loadUserProfile();
-  }
-
-  Future<void> _loadUserProfile() async {
-    await _studentController.loadProfile();
-    setState(() {
-      _user = _studentController.profile.value;
-    });
+    _studentController.loadProfile();
   }
 
   @override
@@ -69,26 +60,28 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _user == null
-          ? Center(
-              child: ElevatedButton(
-                onPressed: () => Get.to(() => const ProfileScreen()),
-                child: const Text('Complete Profile'),
-              ),
-            )
+      body: Obx(() => _studentController.isLoading.value 
+          ? const Center(child: CircularProgressIndicator())
+          : _studentController.profile.value == null
+              ? Center(
+                  child: ElevatedButton(
+                    onPressed: () => Get.to(() => const ProfileScreen()),
+                    child: const Text('Complete Profile'),
+                  ),
+                )
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Welcome ${_user!.username}',
+                    Obx(() => Text(
+                      'Welcome ${_studentController.profile.value?.username ?? ""}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
+                    )),
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -117,9 +110,9 @@ class HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Column(
+                    Obx(() => Column(
                       children: _buildCareerProbabilities(),
-                    ),
+                    )),
                     const SizedBox(height: 30),
                     Center(
                       child: ElevatedButton(
@@ -140,17 +133,19 @@ class HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            ),
+            )),
       bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
     );
   }
 
   List<Widget> _buildCareerProbabilities() {
-    if (_user == null || _user!.careerProbabilities.isEmpty) {
+    final user = _studentController.profile.value;
+    debugPrint('Building career probabilities, user: ${user?.toJson()}');
+    if (user == null || user.careerProbabilities.isEmpty) {
       return [const Text('No career probabilities available.')];
     }
 
-    return _user!.careerProbabilities.entries.map<Widget>((entry) {
+    return user.careerProbabilities.entries.map<Widget>((entry) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
