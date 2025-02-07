@@ -13,16 +13,19 @@ class StudentService extends GetxService {
   final _isServerAvailable = true.obs;
 
   bool get isServerAvailable => _isServerAvailable.value;
+  set isServerAvailable(bool value) => _isServerAvailable.value = value;
 
   String _handleConnectionError(dynamic error) {
     final errorStr = error.toString().toLowerCase();
-    if (errorStr.contains('connection refused') || 
-        errorStr.contains('failed to fetch') ||
+    _isServerAvailable.value = false;
+    if (errorStr.contains('failed to fetch') ||
+        errorStr.contains('connection refused') ||
         errorStr.contains('socket') ||
         errorStr.contains('cors')) {
       _isServerAvailable.value = false;
       return 'Unable to connect to server. Please ensure the server is running and accessible.';
     }
+    // Don't set _isServerAvailable to true here, let successful API calls do that
     return 'An unexpected error occurred. Please try again.';
   }
 

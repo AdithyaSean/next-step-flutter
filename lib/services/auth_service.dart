@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:next_step/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:next_step/services/student_service.dart';
 
 class AuthService {
   static const String baseUrl = 'http://localhost:8080';
@@ -41,12 +42,24 @@ class AuthService {
 
   String _handleConnectionError(dynamic error) {
     final errorStr = error.toString().toLowerCase();
-    if (errorStr.contains('connection refused') || 
-        errorStr.contains('failed to fetch') ||
-        errorStr.contains('socket') ||
-        errorStr.contains('cors')) {
+    final bool isConnectionError = errorStr.contains('failed to fetch') ||
+                                 errorStr.contains('connection refused') ||
+                                 errorStr.contains('socket') ||
+                                 errorStr.contains('cors');
+
+    if (isConnectionError) {
+      // Update both services' server status
+      try {
+        final studentService = Get.find<StudentService>();
+        studentService.isServerAvailable = false;
+      } catch (_) {
+        // StudentService might not be initialized yet
+        debugPrint('StudentService not found for error sync');
+      }
       return 'Unable to connect to server. Please ensure the server is running and accessible.';
     }
+    
+    // Don't update server status for non-connection errors
     return 'An unexpected error occurred. Please try again.';
   }
 
