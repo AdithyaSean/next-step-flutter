@@ -1,48 +1,59 @@
-import 'package:next_step/utils/education_config.dart';
-
 class StudentProfile {
-  final String id;
+  String? id;
   int educationLevel;
   Map<String, double> olResults;
   int? alStream;
   Map<String, double> alResults;
   Map<String, double> careerProbabilities;
-  double gpa;
+  double? gpa;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   StudentProfile({
-    required this.id,
-    this.educationLevel = 1, // Default to O/L
+    this.id,
+    required this.educationLevel,
     Map<String, double>? olResults,
-    this.alStream, // Default to Science stream
+    this.alStream,
     Map<String, double>? alResults,
     Map<String, double>? careerProbabilities,
-    this.gpa = 0.0,
-  }) : 
-    this.olResults = olResults ?? Map.fromEntries(
-      EducationConfig.olSubjects.entries.map(
-        (e) => MapEntry(e.key, 0.0)
-      )
-    ),
-    this.alResults = alResults ?? {},
-    this.careerProbabilities = careerProbabilities ?? {};
+    this.gpa,
+    this.createdAt,
+    this.updatedAt,
+  })  : olResults = olResults ?? {},
+        alResults = alResults ?? {},
+        careerProbabilities = careerProbabilities ?? {};
 
-  factory StudentProfile.fromJson(Map<String, dynamic> json) => StudentProfile(
-    id: json['id'],
-    educationLevel: json['educationLevel'] ?? 0,
-    olResults: Map<String, double>.from(json['olResults'] ?? {}),
-    alStream: json['alStream'],
-    alResults: Map<String, double>.from(json['alResults'] ?? {}),
-    careerProbabilities: Map<String, double>.from(json['careerProbabilities'] ?? {}),
-    gpa: json['gpa']?.toDouble() ?? 0.0,
-  );
+  factory StudentProfile.fromJson(Map<String, dynamic> json) {
+    return StudentProfile(
+      id: json['id'] as String?,
+      educationLevel: json['educationLevel'] as int? ?? 0, // Default if null
+      olResults: (json['olResults'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ) ?? {},
+      alStream: json['alStream'] as int?,
+      alResults: (json['alResults'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ) ?? {},
+      careerProbabilities: (json['careerProbabilities'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ) ?? {},
+      gpa: (json['gpa'] as num?)?.toDouble(),
+      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null ? null : DateTime.parse(json['updatedAt'] as String),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'educationLevel': educationLevel,
-    'olResults': olResults,
-    'alStream': alStream,
-    'alResults': alResults,
-    'careerProbabilities': careerProbabilities,
-    'gpa': gpa,
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'educationLevel': educationLevel,
+      'olResults': olResults,
+      'alStream': alStream,
+      'alResults': alResults,
+      'careerProbabilities': careerProbabilities,
+      'gpa': gpa,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+    };
+  }
 }

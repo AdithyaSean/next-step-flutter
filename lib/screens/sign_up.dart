@@ -1,60 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:next_step/screens/sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/student_service.dart';
+import '../services/auth_service.dart';
 import 'home.dart';
-import 'sign_in.dart';
 
-class ResponsiveSignUp extends StatefulWidget {
+class ResponsiveSignUp extends StatelessWidget {
   const ResponsiveSignUp({super.key});
 
   @override
-  _ResponsiveSignUpState createState() => _ResponsiveSignUpState();
-}
-
-class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController telephoneController = TextEditingController();
-  final TextEditingController schoolController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  
-  final List<String> districts = [
-    'Ampara',
-    'Anuradhapura',
-    'Badulla',
-    'Batticaloa',
-    'Colombo',
-    'Galle',
-    'Gampaha',
-    'Hambantota',
-    'Jaffna',
-    'Kalutara',
-    'Kandy',
-    'Kegalle',
-    'Kilinochchi',
-    'Kurunegala',
-    'Mannar',
-    'Matale',
-    'Matara',
-    'Monaragala',
-    'Mullaitivu',
-    'Nuwara Eliya',
-    'Polonnaruwa',
-    'Puttalam',
-    'Ratnapura',
-    'Trincomalee',
-    'Vavuniya'
-  ];
-  String? selectedDistrict;
-
-  @override
   Widget build(BuildContext context) {
+    final TextEditingController usernameController = TextEditingController();
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final TextEditingController telephoneController = TextEditingController();
+    final TextEditingController schoolController = TextEditingController();
+    final TextEditingController districtController = TextEditingController();
+
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          // Adjust the form width based on device size
           double formWidth = constraints.maxWidth;
           if (constraints.maxWidth > 600) {
             formWidth = constraints.maxWidth * 0.5;
@@ -72,21 +39,6 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (constraints.maxWidth > 400)
-                      Image.asset(
-                        'images/signup.png',
-                        height: constraints.maxWidth > 1200 ? 200 : 150,
-                      ),
-                    const SizedBox(height: 32),
-                    const Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
                     TextFormField(
                       controller: usernameController,
                       decoration: InputDecoration(
@@ -110,54 +62,11 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        labelText: 'E-mail',
+                        labelText: 'Email',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: telephoneController,
-                      decoration: InputDecoration(
-                        labelText: 'Telephone',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      keyboardType: TextInputType.phone,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: schoolController,
-                      decoration: InputDecoration(
-                        labelText: 'School',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'District',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      value: selectedDistrict,
-                      items: districts.map((String district) {
-                        return DropdownMenuItem<String>(
-                          value: district,
-                          child: Text(district),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedDistrict = newValue;
-                        });
-                      },
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -172,10 +81,29 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      controller: confirmPasswordController,
-                      obscureText: true,
+                      controller: telephoneController,
                       decoration: InputDecoration(
-                        labelText: 'Confirm Password',
+                        labelText: 'Telephone',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: schoolController,
+                      decoration: InputDecoration(
+                        labelText: 'School',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: districtController,
+                      decoration: InputDecoration(
+                        labelText: 'District',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -184,16 +112,8 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () async {
-                        // Validate passwords match
-                        if (passwordController.text != confirmPasswordController.text) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Passwords do not match')),
-                          );
-                          return;
-                        }
-
-                        final studentService = StudentService();
-                        
+                        final studentService = Get.find<StudentService>();
+                        final authService = Get.find<AuthService>();
                         try {
                           final uuid = await studentService.registerStudent(
                             username: usernameController.text,
@@ -202,14 +122,20 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                             password: passwordController.text,
                             telephone: telephoneController.text,
                             school: schoolController.text,
-                            district: selectedDistrict ?? 'Colombo',
+                            district: districtController.text,
                           );
-                          
-                          Get.snackbar('Success', 'Registration successful! Please sign in.');
-                          Get.offAll(() => const ResponsiveSignIn());
-                          
+
+                          // Save the UUID in SharedPreferences
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString('uuid', uuid);
+
+                          await authService.signIn(
+                            usernameController.text,
+                            passwordController.text,
+                          );
+                          Get.offAll(() => const HomeScreen());
                         } catch (e) {
-                          Get.snackbar('Error', 'Registration failed: ${e.toString()}');
+                          Get.snackbar('Error', 'Failed to sign up');
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -219,8 +145,7 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: const Text('Sign Up',
-                          style: TextStyle(color: Colors.white)),
+                      child: const Text('Sign Up', style: TextStyle(color: Colors.white)),
                     ),
                     const SizedBox(height: 24),
                     const Row(
@@ -234,15 +159,13 @@ class _ResponsiveSignUpState extends State<ResponsiveSignUp> {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text("Already have an account?"),
                         TextButton(
                           onPressed: () {
-                            // Navigate to sign in screen
-                            Navigator.pop(context);
+                            Get.to(() => const ResponsiveSignIn());
                           },
                           child: const Text('Sign In',
                               style: TextStyle(color: Colors.blue)),
