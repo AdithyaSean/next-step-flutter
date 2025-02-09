@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/auth_controller.dart';
+import 'package:next_step/controllers/auth_controller.dart';
+import 'package:next_step/widgets/server_status_banner.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final Widget child;
+  final bool showServerStatus;
 
-  const LoadingOverlay({super.key, required this.child});
+  const LoadingOverlay({
+    super.key, 
+    required this.child,
+    this.showServerStatus = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(
-      global: true,
-      autoRemove: false,
-      init: Get.find<AuthController>(),
-      builder: (controller) => Stack(
+    final controller = Get.find<AuthController>();
+
+    return Stack(
       children: [
-        child,
+        Column(
+          children: [
+            if (showServerStatus) ServerStatusBanner(),
+            Expanded(child: child),
+          ],
+        ),
         Obx(() {
-          return controller.isLoading.value
+          return controller.isLoading
               ? Container(
-                  color: Colors.black54,
+                  color: Colors.black.withAlpha(77), // 30% opacity
                   child: const Center(
                     child: CircularProgressIndicator(),
                   ),
@@ -27,6 +36,6 @@ class LoadingOverlay extends StatelessWidget {
               : const SizedBox.shrink();
         }),
       ],
-    ));
+    );
   }
 }

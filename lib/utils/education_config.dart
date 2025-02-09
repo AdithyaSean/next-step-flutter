@@ -15,7 +15,7 @@ class EducationConfig {
     'F': 35.0,
   };
 
-  static const double GRADE_NOT_SET = 0.0;
+  static const double gradeNotSet = 0.0;
 
   // AL Streams
   static const Map<String, int> alStreams = {
@@ -45,7 +45,7 @@ class EducationConfig {
 
   // Helper method to get grade letter from percentage
   static String? getGradeLetter(double percentage) {
-    if (percentage == GRADE_NOT_SET) return null;
+    if (percentage == gradeNotSet) return null;
     return grades.entries
         .firstWhere((entry) => entry.value == percentage,
             orElse: () => const MapEntry('', 0.0))

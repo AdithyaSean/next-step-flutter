@@ -5,9 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:next_step/middleware/route_guard.dart';
 import 'package:next_step/widgets/loading_overlay.dart';
 import 'package:next_step/controllers/auth_controller.dart';
+import 'package:next_step/models/user.dart';
 import 'screens/sign_in.dart';
 import 'screens/home.dart';
 import 'screens/profile.dart';
+import 'screens/edit_profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,14 +18,7 @@ void main() async {
   final binding = AppBinding();
   binding.dependencies();
   
-  final prefs = await SharedPreferences.getInstance();
-  final uuid = prefs.getString('uuid');
-
-  // Wait for auth controller to initialize
-  final authController = Get.find<AuthController>();
-  await authController.initialize();
-
-  runApp(MyApp(initialRoute: uuid != null ? '/home' : '/login'));
+  runApp(const MyApp(initialRoute: '/login'));
 }
 
 class MyApp extends StatelessWidget {
@@ -40,7 +35,6 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/login', 
             page: () => const ResponsiveSignIn(),
-            middlewares: [RouteGuard()]
           ),
           GetPage(
             name: '/home', 
@@ -50,6 +44,17 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/profile', 
             page: () => LoadingOverlay(child: const ProfileScreen()),
+            middlewares: [AuthGuard()]
+          ),
+          GetPage(
+            name: '/profile/edit',
+            page: () => LoadingOverlay(
+              child: GetBuilder<AuthController>(
+                builder: (controller) => EditProfileScreen(
+                  initialProfile: controller.currentUser ?? User.empty()
+                ),
+              ),
+            ),
             middlewares: [AuthGuard()]
           ),
         ],

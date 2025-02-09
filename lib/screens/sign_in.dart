@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'sign_up.dart';
-import '../services/auth_service.dart';
+import '../controllers/auth_controller.dart';
 
 class ResponsiveSignIn extends StatelessWidget {
   const ResponsiveSignIn({super.key});
@@ -54,17 +54,20 @@ class ResponsiveSignIn extends StatelessWidget {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () async {
-                        final authService = Get.find<AuthService>();
+                        final authController = Get.find<AuthController>();
                         try {
-                          final user = await authService.signIn(
+                          await authController.signIn(
                             usernameController.text,
                             passwordController.text,
                           );
-                          if (user != null) {
-                            // Navigation is handled within the signIn method
-                          }
                         } catch (e) {
-                          Get.snackbar('Error', 'Failed to sign in');
+                          Get.snackbar(
+                            'Error', 
+                            e.toString(),
+                            backgroundColor: Colors.red[100],
+                            colorText: Colors.red[900],
+                            duration: const Duration(seconds: 5),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(

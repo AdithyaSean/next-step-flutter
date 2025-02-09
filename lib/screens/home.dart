@@ -16,18 +16,13 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final StudentController _studentController = Get.find<StudentController>();
-  User? _user;
 
   @override
   void initState() {
     super.initState();
-    _loadUserProfile();
-  }
-
-  Future<void> _loadUserProfile() async {
-    await _studentController.loadProfile();
-    setState(() {
-      _user = _studentController.profile.value;
+    // Schedule the profile load for after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _studentController.loadProfile();
     });
   }
 
@@ -69,88 +64,97 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: _user == null
-          ? Center(
+      body: GetX<StudentController>(
+        builder: (controller) {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          if (controller.profile.value == null) {
+            return Center(
               child: ElevatedButton(
                 onPressed: () => Get.to(() => const ProfileScreen()),
                 child: const Text('Complete Profile'),
               ),
-            )
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome ${_user!.username}',
-                      style: const TextStyle(
-                        fontSize: 18,
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome ${controller.profile.value?.username ?? ""}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search Careers',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      'Top Career Matches For You',
+                      style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search Careers',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[200],
+                  ),
+                  const SizedBox(height: 20),
+                  ...buildCareerProbabilities(controller.profile.value!),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        'Top Career Matches For You',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: const Text(
+                        'PREDICT',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Column(
-                      children: _buildCareerProbabilities(),
-                    ),
-                    const SizedBox(height: 30),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: const Text(
-                          'PREDICT',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+          );
+        },
+      ),
       bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
     );
   }
 
-  List<Widget> _buildCareerProbabilities() {
-    if (_user == null || _user!.careerProbabilities.isEmpty) {
+  List<Widget> buildCareerProbabilities(User user) {
+    debugPrint('Building career probabilities, user: ${user.toJson()}');
+    if (user.careerProbabilities.isEmpty) {
       return [const Text('No career probabilities available.')];
     }
 
-    return _user!.careerProbabilities.entries.map<Widget>((entry) {
+    return user.careerProbabilities.entries.map<Widget>((entry) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
@@ -169,7 +173,7 @@ class HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: SizedBox(
-                  height: 20, // Increased height
+                  height: 20,
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: [
@@ -192,7 +196,11 @@ class HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(right: 8.0),
                         child: Text(
                           '${(entry.value * 100).toStringAsFixed(1)}%',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Colors.black),
+                          style: const TextStyle(
+                            fontSize: 16, 
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black
+                          ),
                         ),
                       ),
                     ],
