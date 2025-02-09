@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:next_step/widgets/nav_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CoursesScreen extends StatelessWidget {
   CoursesScreen({super.key});
@@ -47,7 +48,8 @@ class CoursesScreen extends StatelessWidget {
                 childAspectRatio: 2.5,
               ),
               itemCount: courses.length,
-              itemBuilder: (context, index) => buildCourseCard(context, courses[index]),
+              itemBuilder: (context, index) =>
+                  buildCourseCard(context, courses[index]),
             ),
           ),
         ],
@@ -71,7 +73,8 @@ class CoursesScreen extends StatelessWidget {
                 childAspectRatio: 2.0,
               ),
               itemCount: courses.length,
-              itemBuilder: (context, index) => buildCourseCard(context, courses[index]),
+              itemBuilder: (context, index) =>
+                  buildCourseCard(context, courses[index]),
             ),
           ),
         ],
@@ -126,8 +129,24 @@ class CoursesScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        onTap: () {
-          // Handle course selection
+        onTap: () async {
+          if (course['url'] != null && course['url']!.isNotEmpty) {
+            final Uri url = Uri.parse(course['url']!);
+            if (await canLaunchUrl(url)) {
+              await launchUrl(
+                url,
+                mode: LaunchMode.externalApplication, // Add this line
+              );
+            } else {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Could not launch course URL'),
+                  ),
+                );
+              }
+            }
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Container(
@@ -162,8 +181,8 @@ class CoursesScreen extends StatelessWidget {
                     Text(
                       course['name']!,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -171,8 +190,8 @@ class CoursesScreen extends StatelessWidget {
                     Text(
                       'NIBM',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                   ],
                 ),
@@ -185,9 +204,23 @@ class CoursesScreen extends StatelessWidget {
   }
 
   final List<Map<String, String>> courses = [
-    {'name': 'Diploma in Software engineer'},
-    {'name': 'High National Diploma in Network Engineering'},
-    {'name': 'BSc (Hons) Ethical Hacking and Network Security'},
-    {'name': 'High National Diploma in Logistics'},
+    {
+      'name': 'Diploma in Software Engineering',
+      'url': 'https://nibm.lk/course/diploma-in-software-engineering-full-time'
+    },
+    {
+      'name': 'Higher National Diploma in Software Engineering',
+      'url':
+          'https://nibm.lk/course/higher-national-diploma-in-software-engineering-full-time'
+    },
+    {
+      'name': 'BSc (Hons) Ethical Hacking and Network Security',
+      'url':
+          'https://nibm.lk/course/bsc-hons-ethical-hacking-and-network-security'
+    },
+    {
+      'name': 'High National Diploma in Logistics',
+      'url': '' // Add URL when available
+    },
   ];
 }

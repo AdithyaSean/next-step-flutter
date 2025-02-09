@@ -7,7 +7,7 @@ import '../services/auth_service.dart';
 import 'dart:convert';
 
 class StudentService extends GetxService {
-  static const String _baseUrl = 'http://localhost:8080';
+  static const String _baseUrl = 'http://10.0.2.2:8080';
   static const String _studentsEndpoint = '/students';
   final _isInitialized = false.obs;
   final _isServerAvailable = true.obs;

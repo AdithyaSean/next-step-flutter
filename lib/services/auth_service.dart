@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:next_step/services/student_service.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://localhost:8080';
+  static const String baseUrl = 'http://10.0.2.2:8080';
   static const String uuidKey = 'UUID';
   final http.Client client;
   final bool isTest;
