@@ -136,10 +136,19 @@ class StudentService extends GetxService {
 
       debugPrint('${Get.currentRoute} - getProfile response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
-        final profileData = jsonDecode(response.body);
-        debugPrint('${Get.currentRoute} - getProfile successful: $profileData');
-        _isServerAvailable.value = true;
-        return profileData;
+        if (response.body.isEmpty) {
+          debugPrint('${Get.currentRoute} - getProfile: Empty response body');
+          return {}; // Return empty map for empty response
+        }
+        try {
+          final profileData = jsonDecode(response.body);
+          debugPrint('${Get.currentRoute} - getProfile successful: $profileData');
+          _isServerAvailable.value = true;
+          return profileData;
+        } catch (e) {
+          debugPrint('${Get.currentRoute} - getProfile JSON decode error: $e');
+          return {}; // Return empty map for invalid JSON
+        }
       } else {
         debugPrint('${Get.currentRoute} - Error getting profile: ${response.body}');
         throw Exception('Failed to load profile');

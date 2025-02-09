@@ -25,7 +25,7 @@ class AuthService {
         await refreshToken();
       } catch (e) {
         debugPrint('Token refresh failed: $e');
-        await signOut();
+        // await signOut(); // Removed signOut() here
       }
     }
   }
@@ -82,8 +82,8 @@ class AuthService {
 
       if (response.statusCode == 200) {
         if (response.body.isEmpty) {
-          debugPrint('getUserProfile: Empty response body');
-          return null;
+          debugPrint('getUserProfile: Empty response body - returning null');
+          return null; // Return null for empty body
         }
         try {
           final profileData = json.decode(response.body);
@@ -98,8 +98,8 @@ class AuthService {
         }
       }
       return null;
-    } catch (e) {
-      debugPrint('getUserProfile error: $e');
+    } catch (error) { // Renamed e to error for clarity
+      debugPrint('getUserProfile error: $error');
       return null;
     }
   }
@@ -179,39 +179,19 @@ class AuthService {
 
         if (profileResponse.statusCode == 200) {
           if (profileResponse.body.isEmpty) {
-            debugPrint('Empty profile response body, redirecting to EditProfile');
-            if (!isTest) {
-              Get.offAllNamed('/profile/edit');
-            }
-            return user;
+            debugPrint('Empty profile response body');
+            return user; // Return user without profile, let AuthController handle navigation
           }
 
           try {
             final profileData = json.decode(profileResponse.body);
             if (profileData == null) {
-              debugPrint('Null profile data after JSON decode, redirecting to EditProfile');
-              if (!isTest) {
-                Get.offAllNamed('/profile/edit');
-              }
-              return user;
+              debugPrint('Null profile data after JSON decode');
+              return user; // Return user without profile, let AuthController handle navigation
             }
             user.updateFromProfile(profileData);
             debugPrint('Complete user profile: ${user.toJson()}');
-
-            final isComplete = await _isProfileComplete(user);
-            debugPrint('signIn profile completion check: $isComplete');
-            if (isComplete) {
-              debugPrint('signIn navigating to HomeScreen');
-              if (!isTest) {
-                Get.offAllNamed('/home');
-              }
-            } else {
-              debugPrint('signIn navigating to EditProfile');
-              if (!isTest) {
-                Get.offAllNamed('/profile/edit');
-              }
-            }
-            return user;
+            return user; // Let AuthController determine where to navigate based on profile completion
           } catch (e) {
             debugPrint('Profile JSON decode error: $e, returning user without profile');
             return user;

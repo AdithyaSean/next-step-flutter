@@ -9,10 +9,29 @@ class AuthController extends GetxController {
 
   // Getters for UI widgets
   User? get currentUser => user.value;
-  bool get isAuthenticated => user.value != null;
   bool get isLoading => loading.value;
 
-  AuthController({required AuthService authService}) : _authService = authService;
+  // Consider user authenticated only if they have a valid profile
+  bool get isAuthenticated {
+    if (user.value == null) return false;
+
+    switch (user.value!.educationLevel) {
+      case 0: // OL
+        return user.value!.olResults.isNotEmpty;
+      case 1: // AL
+        return user.value!.olResults.isNotEmpty &&
+            user.value!.alResults.isNotEmpty;
+      case 2: // University
+        return user.value!.olResults.isNotEmpty &&
+            user.value!.alResults.isNotEmpty &&
+            user.value!.gpa != 0.0;
+      default:
+        return false;
+    }
+  }
+
+  AuthController({required AuthService authService})
+      : _authService = authService;
 
   @override
   void onInit() {
@@ -36,26 +55,33 @@ class AuthController extends GetxController {
   }
 
   void _checkProfile() {
-    if (user.value != null) {
-      switch (user.value!.educationLevel) {
-        case 0:
-          if (user.value!.olResults.isEmpty) {
-            Get.offAllNamed('/profile/edit');
-          }
-          break;
-        case 1:
-          if (user.value!.olResults.isEmpty || user.value!.alResults.isEmpty) {
-            Get.offAllNamed('/profile/edit');
-          }
-          break;
-        case 2:
-          if (user.value!.olResults.isEmpty || 
-              user.value!.alResults.isEmpty || 
-              user.value!.gpa == 0.0) {
-            Get.offAllNamed('/profile/edit');
-          }
-          break;
-      }
+    if (user.value == null) return;
+
+    // If they have a complete profile, take them to home
+    if (isAuthenticated) {
+      Get.offAllNamed('/home');
+      return;
+    }
+
+    // Otherwise direct them to edit profile
+    switch (user.value!.educationLevel) {
+      case 0:
+        if (user.value!.olResults.isEmpty) {
+          Get.offAllNamed('/profile/edit');
+        }
+        break;
+      case 1:
+        if (user.value!.olResults.isEmpty || user.value!.alResults.isEmpty) {
+          Get.offAllNamed('/profile/edit');
+        }
+        break;
+      case 2:
+        if (user.value!.olResults.isEmpty ||
+            user.value!.alResults.isEmpty ||
+            user.value!.gpa == 0.0) {
+          Get.offAllNamed('/profile/edit');
+        }
+        break;
     }
   }
 
@@ -132,7 +158,7 @@ class AuthController extends GetxController {
         alResults: alResults,
         gpa: gpa,
       );
-      
+
       user.value = updatedUser;
     } finally {
       loading.value = false;

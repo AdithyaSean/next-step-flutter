@@ -1,3 +1,6 @@
+import "package:next_step/utils/education_config.dart";
+import 'package:flutter/foundation.dart';
+
 class User {
   final String id;
   final String username;
@@ -23,25 +26,24 @@ class User {
     required this.id,
     required this.username,
     required this.name,
-      required this.email,
-      this.password = '',
-      required this.telephone,
-      required this.role,
-      required this.school,
-      required this.district,
-      required this.active,
-      required this.createdAt,
-      required this.updatedAt,
+    required this.email,
+    this.password = '',
+    required this.telephone,
+    required this.role,
+    required this.school,
+    required this.district,
+    required this.active,
+    required this.createdAt,
+    required this.updatedAt,
     this.educationLevel = 0,
     Map<String, double>? olResults,
     this.alStream,
     Map<String, double>? alResults,
     Map<String, double>? careerProbabilities,
     this.gpa = 0.0,
-  }) : 
-    olResults = olResults ?? {},
-    alResults = alResults ?? {},
-    careerProbabilities = careerProbabilities ?? {};
+  })  : olResults = olResults ?? {},
+        alResults = alResults ?? {},
+        careerProbabilities = careerProbabilities ?? {};
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -54,12 +56,28 @@ class User {
       school: json['school']?.toString() ?? '',
       district: json['district']?.toString() ?? '',
       active: json['active'] as bool? ?? false,
-      createdAt: json['createdAt'] != null 
+      createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'].toString())
           : DateTime.now(),
-      updatedAt: json['updatedAt'] != null 
+      updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'].toString())
           : DateTime.now(),
+    );
+  }
+
+  factory User.empty() {
+    return User(
+      id: '',
+      username: '',
+      name: '',
+      email: '',
+      telephone: '',
+      role: 'STUDENT',
+      school: '',
+      district: '',
+      active: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
   }
 
@@ -70,55 +88,81 @@ class User {
   }
 
   void updateFromProfile(Map<String, dynamic> json) {
+    // First update education level as this affects what other fields we expect
     educationLevel = json['educationLevel'] ?? 0;
-    
+
+    // Always clear existing profile data
+    olResults = {};
+    alResults = {};
+    alStream = null;
+    gpa = 0.0;
+    careerProbabilities = {};
+
+    // All education levels need OL results
     if (json['olResults'] != null) {
       try {
         final Map rawMap = json['olResults'] as Map;
-        olResults = Map<String, double>.fromEntries(
-          rawMap.entries.map((e) => MapEntry(e.key.toString(), (e.value as num).toDouble()))
-        );
+        olResults = Map<String, double>.fromEntries(rawMap.entries.map(
+            (e) => MapEntry(e.key.toString(), (e.value as num).toDouble())));
       } catch (e) {
+        debugPrint('Error parsing OL results: $e');
         olResults = {};
       }
     }
 
-    if (json['alStream'] != null) {
-      try {
-        alStream = (json['alStream'] as num).toInt();
-      } catch (e) {
-        alStream = null;
+    // AL and University students need AL stream and results
+    if (educationLevel >= 1) {
+      if (json['alStream'] != null) {
+        try {
+          alStream = (json['alStream'] as num).toInt();
+        } catch (e) {
+          debugPrint('Error parsing AL stream: $e');
+          alStream = null;
+        }
+      }
+
+      if (json['alResults'] != null) {
+        try {
+          final Map rawMap = json['alResults'] as Map;
+          alResults = Map<String, double>.fromEntries(rawMap.entries.map(
+              (e) => MapEntry(e.key.toString(), (e.value as num).toDouble())));
+        } catch (e) {
+          debugPrint('Error parsing AL results: $e');
+          alResults = {};
+        }
       }
     }
 
-    if (json['alResults'] != null) {
+    // Only University students need GPA
+    if (educationLevel == 2 && json['gpa'] != null) {
       try {
-        final Map rawMap = json['alResults'] as Map;
-        alResults = Map<String, double>.fromEntries(
-          rawMap.entries.map((e) => MapEntry(e.key.toString(), (e.value as num).toDouble()))
-        );
+        gpa = (json['gpa'] as num).toDouble();
       } catch (e) {
-        alResults = {};
+        debugPrint('Error parsing GPA: $e');
+        gpa = 0.0;
       }
     }
 
+    // Career probabilities are optional for all levels
     if (json['careerProbabilities'] != null) {
       try {
         final Map rawMap = json['careerProbabilities'] as Map;
         careerProbabilities = Map<String, double>.fromEntries(
-          rawMap.entries.map((e) => MapEntry(e.key.toString(), (e.value as num).toDouble()))
-        );
+            rawMap.entries.map((e) => MapEntry(e.key.toString(), (e.value as num).toDouble())));
       } catch (e) {
+        debugPrint('Error parsing career probabilities: $e');
         careerProbabilities = {};
       }
     }
 
-    if (json['gpa'] != null) {
-      try {
-        gpa = (json['gpa'] as num).toDouble();
-      } catch (e) {
-        gpa = 0.0;
-      }
+    debugPrint('Profile updated with educationLevel: $educationLevel');
+    debugPrint('OL Results: $olResults');
+    if (educationLevel >= 1) {
+      debugPrint('AL Stream: $alStream');
+      debugPrint('AL Results: $alResults');
+    }
+    if (educationLevel == 2) {
+      debugPrint('GPA: $gpa');
     }
   }
 
@@ -159,9 +203,36 @@ class User {
       olResults: olResults ?? Map<String, double>.from(this.olResults),
       alStream: alStream ?? this.alStream,
       alResults: alResults ?? Map<String, double>.from(this.alResults),
-      careerProbabilities: careerProbabilities ?? Map<String, double>.from(this.careerProbabilities),
+      careerProbabilities: careerProbabilities ??
+          Map<String, double>.from(this.careerProbabilities),
       gpa: gpa ?? this.gpa,
     );
+  }
+
+  // Validation methods for profile completeness
+  bool hasValidOLResults() {
+    return EducationConfig.requiredOLSubjects.every((subject) => 
+      olResults.containsKey(subject) && olResults[subject] != EducationConfig.gradeNotSet);
+  }
+
+  bool hasValidALResults() {
+    if (alStream == null) return false;
+    final requiredSubjects = EducationConfig.streamSubjects[alStream] ?? [];
+    return requiredSubjects.every((subject) => 
+      alResults.containsKey(subject) && alResults[subject] != EducationConfig.gradeNotSet);
+  }
+
+  bool isProfileComplete() {
+    if (!hasValidOLResults()) return false;
+    
+    switch (educationLevel) {
+      case 1: // AL
+        return hasValidALResults();
+      case 2: // University
+        return hasValidALResults() && gpa > 0 && gpa <= 4.0;
+      default:
+        return true; // OL only needs valid OL results
+    }
   }
 
   Map<String, dynamic> toJson() {

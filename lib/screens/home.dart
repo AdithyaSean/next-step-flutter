@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:next_step/controllers/student_controller.dart';
+import 'package:next_step/models/user.dart';
 import 'package:next_step/screens/profile.dart';
 import 'package:next_step/widgets/nav_bar.dart';
 
@@ -19,7 +20,10 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _studentController.loadProfile();
+    // Schedule the profile load for after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _studentController.loadProfile();
+    });
   }
 
   @override
@@ -60,88 +64,93 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Obx(() => _studentController.isLoading.value 
-          ? const Center(child: CircularProgressIndicator())
-          : _studentController.profile.value == null
-              ? Center(
-                  child: ElevatedButton(
-                    onPressed: () => Get.to(() => const ProfileScreen()),
-                    child: const Text('Complete Profile'),
+      body: GetX<StudentController>(
+        builder: (controller) {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          if (controller.profile.value == null) {
+            return Center(
+              child: ElevatedButton(
+                onPressed: () => Get.to(() => const ProfileScreen()),
+                child: const Text('Complete Profile'),
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome ${controller.profile.value?.username ?? ""}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                )
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() => Text(
-                      'Welcome ${_studentController.profile.value?.username ?? ""}',
-                      style: const TextStyle(
-                        fontSize: 18,
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search Careers',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      'Top Career Matches For You',
+                      style: TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
-                    )),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search Careers',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[200],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ...buildCareerProbabilities(controller.profile.value!),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        'Top Career Matches For You',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: const Text(
+                        'PREDICT',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Obx(() => Column(
-                      children: _buildCareerProbabilities(),
-                    )),
-                    const SizedBox(height: 30),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: const Text(
-                          'PREDICT',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )),
+            ),
+          );
+        },
+      ),
       bottomNavigationBar: const BottomNavContainer(selectedIndex: 0),
     );
   }
 
-  List<Widget> _buildCareerProbabilities() {
-    final user = _studentController.profile.value;
-    debugPrint('Building career probabilities, user: ${user?.toJson()}');
-    if (user == null || user.careerProbabilities.isEmpty) {
+  List<Widget> buildCareerProbabilities(User user) {
+    debugPrint('Building career probabilities, user: ${user.toJson()}');
+    if (user.careerProbabilities.isEmpty) {
       return [const Text('No career probabilities available.')];
     }
 
@@ -164,7 +173,7 @@ class HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: SizedBox(
-                  height: 20, // Increased height
+                  height: 20,
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: [
@@ -187,7 +196,11 @@ class HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(right: 8.0),
                         child: Text(
                           '${(entry.value * 100).toStringAsFixed(1)}%',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Colors.black),
+                          style: const TextStyle(
+                            fontSize: 16, 
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black
+                          ),
                         ),
                       ),
                     ],

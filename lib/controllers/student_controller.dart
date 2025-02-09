@@ -35,7 +35,7 @@ class StudentController extends GetxController {
       isLoading.value = true;
       final uuid = await _authService.getCurrentUserId();
       debugPrint('${Get.currentRoute} - Loading profile for UUID: $uuid');
-      
+
       if (uuid == null) {
         debugPrint('${Get.currentRoute} - No UUID found, clearing profile');
         profile.value = null;
@@ -52,7 +52,8 @@ class StudentController extends GetxController {
 
       // Get the student profile data
       final studentData = await _studentService.getProfile();
-      debugPrint('${Get.currentRoute} - Student profile data received: $studentData');
+      debugPrint(
+          '${Get.currentRoute} - Student profile data received: $studentData');
 
       // Merge the data
       profile.value = User(
@@ -64,26 +65,30 @@ class StudentController extends GetxController {
         telephone: authUser.telephone,
         role: authUser.role,
         active: authUser.active,
-        createdAt: DateTime.parse(studentData['createdAt'] ?? DateTime.now().toIso8601String()),
-        updatedAt: DateTime.parse(studentData['updatedAt'] ?? DateTime.now().toIso8601String()),
+        createdAt: DateTime.parse(
+            studentData['createdAt'] ?? DateTime.now().toIso8601String()),
+        updatedAt: DateTime.parse(
+            studentData['updatedAt'] ?? DateTime.now().toIso8601String()),
         school: authUser.school,
         district: authUser.district,
         educationLevel: studentData['educationLevel'] ?? 0,
         olResults: Map<String, double>.from(studentData['olResults'] ?? {}),
         alStream: studentData['alStream'],
         alResults: Map<String, double>.from(studentData['alResults'] ?? {}),
-        careerProbabilities: Map<String, double>.from(studentData['careerProbabilities'] ?? {}),
+        careerProbabilities:
+            Map<String, double>.from(studentData['careerProbabilities'] ?? {}),
         gpa: studentData['gpa']?.toDouble() ?? 0.0,
       );
 
-      debugPrint('${Get.currentRoute} - Profile updated: ${profile.value?.toJson()}');
-
+      debugPrint(
+          '${Get.currentRoute} - Profile updated: ${profile.value?.toJson()}');
     } catch (e) {
       debugPrint('${Get.currentRoute} - Error loading profile: $e');
       profile.value = null;
     } finally {
       isLoading.value = false;
-      debugPrint('${Get.currentRoute} - loadProfile finished - isLoading.value: ${isLoading.value}');
+      debugPrint(
+          '${Get.currentRoute} - loadProfile finished - isLoading.value: ${isLoading.value}');
     }
   }
 
@@ -92,12 +97,13 @@ class StudentController extends GetxController {
     try {
       final uuid = await _authService.getCurrentUserId();
       final userProfile = await _authService.getUserProfile();
-      
+
       if (userProfile != null) {
         userId.value = uuid ?? '';
         userName.value = userProfile.username;
         userEmail.value = userProfile.email;
-        debugPrint('${Get.currentRoute} - User info loaded: id=$uuid, name=${userProfile.username}, email=${userProfile.email}');
+        debugPrint(
+            '${Get.currentRoute} - User info loaded: id=$uuid, name=${userProfile.username}, email=${userProfile.email}');
       } else {
         debugPrint('${Get.currentRoute} - No user profile found');
       }
@@ -122,10 +128,11 @@ class StudentController extends GetxController {
         gpa: updatedProfile.gpa,
       );
 
-      debugPrint('${Get.currentRoute} - Updating profile: ${studentProfile.toJson()}');
+      debugPrint(
+          '${Get.currentRoute} - Updating profile: ${studentProfile.toJson()}');
       await _studentService.updateProfile(uuid, studentProfile);
       await loadProfile(); // Reload the profile after update
-      
+
       Get.snackbar(
         'Success',
         'Profile updated successfully',
