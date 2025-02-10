@@ -31,6 +31,8 @@ class ResponsiveSignIn extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Image.asset('images/signup.png', width: 150, height: 150),
+                    const SizedBox(height: 24),
                     TextFormField(
                       controller: usernameController,
                       decoration: InputDecoration(
@@ -62,7 +64,7 @@ class ResponsiveSignIn extends StatelessWidget {
                           );
                         } catch (e) {
                           Get.snackbar(
-                            'Error', 
+                            'Error',
                             e.toString(),
                             backgroundColor: Colors.red[100],
                             colorText: Colors.red[900],
@@ -88,6 +90,15 @@ class ResponsiveSignIn extends StatelessWidget {
                           child: Text('or sign in with'),
                         ),
                         Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('images/google.png', width: 40, height: 40),
+                        const SizedBox(width: 16),
+                        Image.asset('images/facebook.png', width: 40, height: 40),
                       ],
                     ),
                     const SizedBox(height: 24),
