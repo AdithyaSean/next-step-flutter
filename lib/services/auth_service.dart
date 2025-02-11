@@ -104,23 +104,6 @@ class AuthService {
     }
   }
 
-  Future<bool> _isProfileComplete(User user) {
-    switch (user.educationLevel) {
-      case 0: // OL
-        return Future.value(user.olResults.isNotEmpty);
-      case 1: // AL
-        return Future.value(user.olResults.isNotEmpty && 
-                          user.alStream != null && 
-                          user.alResults.isNotEmpty);
-      case 2: // University
-        return Future.value(user.olResults.isNotEmpty && 
-                          user.alStream != null && 
-                          user.alResults.isNotEmpty && 
-                          user.gpa != 0.0);
-      default:
-        return Future.value(false);
-    }
-  }
 
   Future<bool> refreshToken() async {
     debugPrint('Refreshing token');

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:next_step/bindings/app_binding.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:next_step/middleware/route_guard.dart';
 import 'package:next_step/widgets/loading_overlay.dart';
 import 'package:next_step/controllers/auth_controller.dart';
