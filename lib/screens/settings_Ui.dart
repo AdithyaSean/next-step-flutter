@@ -8,10 +8,10 @@ class ResponsiveSettings extends StatefulWidget {
   const ResponsiveSettings({super.key});
 
   @override
-  _ResponsiveSettingsState createState() => _ResponsiveSettingsState();
+  ResponsiveSettingsState createState() => ResponsiveSettingsState();
 }
 
-class _ResponsiveSettingsState extends State<ResponsiveSettings> {
+class ResponsiveSettingsState extends State<ResponsiveSettings> {
   String? selectedMainOption;
 
   @override
@@ -167,7 +167,7 @@ class _ResponsiveSettingsState extends State<ResponsiveSettings> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      tileColor: isSelected ? Colors.blue.withOpacity(0.1) : null,
+      tileColor: isSelected ? Colors.blue.withAlpha(25) : null,
       onTap: () {
         setState(() {
           selectedMainOption = title;

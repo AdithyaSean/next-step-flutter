@@ -6,7 +6,7 @@ class AddEducation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final customColor = const Color(0xFF62B1D0).withOpacity(0.3);
+    final customColor = const Color(0xFF62B1D0).withAlpha((0.3 * 255).round());
     
     return Scaffold(
       backgroundColor: Colors.white,

@@ -5,10 +5,10 @@ class InterestsPage extends StatefulWidget {
   const InterestsPage({super.key});
 
   @override
-  _InterestsPageState createState() => _InterestsPageState();
+  InterestsPageState createState() => InterestsPageState();
 }
 
-class _InterestsPageState extends State<InterestsPage> {
+class InterestsPageState extends State<InterestsPage> {
   List<String> interests = [
     "AI",
     "Science",
@@ -95,7 +95,7 @@ class _InterestsPageState extends State<InterestsPage> {
                           builder: (context) => const ResponsiveSignIn()));
 
                   // Handle the "Next" button press
-                  print("Selected Interests: $selectedInterests");
+                  debugPrint('Selected Interests: $selectedInterests');
                 },
                 style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(

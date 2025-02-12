@@ -5,10 +5,10 @@ class TwoFactorAuthScreenMobile extends StatefulWidget {
   const TwoFactorAuthScreenMobile({super.key});
 
   @override
-  _TwoFactorAuthScreenState createState() => _TwoFactorAuthScreenState();
+  TwoFactorAuthScreenState createState() => TwoFactorAuthScreenState();
 }
 
-class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreenMobile> {
+class TwoFactorAuthScreenState extends State<TwoFactorAuthScreenMobile> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   bool _otpSent = false;

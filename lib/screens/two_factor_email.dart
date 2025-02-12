@@ -5,10 +5,10 @@ class EmailTwoFactorAuthScreen extends StatefulWidget {
   const EmailTwoFactorAuthScreen({super.key});
 
   @override
-  _EmailTwoFactorAuthScreenState createState() => _EmailTwoFactorAuthScreenState();
+  EmailTwoFactorAuthScreenState createState() => EmailTwoFactorAuthScreenState();
 }
 
-class _EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
+class EmailTwoFactorAuthScreenState extends State<EmailTwoFactorAuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   bool _otpSent = false;

@@ -5,11 +5,11 @@ class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
 
   @override
-  _LanguageSelectionScreenState createState() =>
-      _LanguageSelectionScreenState();
+  LanguageSelectionScreenState createState() =>
+      LanguageSelectionScreenState();
 }
 
-class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
+class LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   String _selectedLanguage = 'English';
 
   @override
@@ -44,7 +44,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const InterestsPage()));
-                  print('Selected Language: $_selectedLanguage');
+                  debugPrint('Selected Language: $_selectedLanguage');
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -72,7 +72,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
   Widget _buildLanguageOption(String language) {
     return Card(
-      color: Colors.white.withOpacity(0.7),
+      color: Colors.white.withAlpha(179),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
