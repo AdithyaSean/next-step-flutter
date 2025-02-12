@@ -142,7 +142,7 @@ class AuthService {
         await prefs.setString(uuidKey, user.id);
         debugPrint('UUID saved: ${user.id}');
 
-        final savedUuid = await prefs.getString(uuidKey);
+        final savedUuid = prefs.getString(uuidKey);
         if (savedUuid == null) {
           throw Exception('Failed to save UUID');
         }

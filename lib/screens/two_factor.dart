@@ -7,11 +7,10 @@ class TwoFactorAuthScreen extends StatefulWidget {
   const TwoFactorAuthScreen({super.key});
 
   @override
-  _TwoFactorAuthScreenState createState() => _TwoFactorAuthScreenState();
+  TwoFactorAuthScreenState createState() => TwoFactorAuthScreenState();
 }
 
-class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
-  String _selectedMethod = '';
+class TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -102,39 +101,8 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
     );
   }
 
-  Widget _buildAuthOption(String title, IconData icon,
-      {required VoidCallback onTap, required bool isSelected}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey,
-            width: isSelected ? 2 : 1,
-          ),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: ListTile(
-          leading: Icon(icon, color: Colors.white), // Icon color always white
-          title: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white, // Text color always white
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          trailing: isSelected
-              ? const Icon(Icons.check_circle, color: Colors.blue)
-              : null,
-        ),
-      ),
-    );
-  }
-
   void _selectMethod(String method) {
     setState(() {
-      _selectedMethod = method;
     });
   }
 }
